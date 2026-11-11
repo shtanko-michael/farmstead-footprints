@@ -52,6 +52,12 @@ public final class SurfaceRules {
         return s == NONE ? null : s;
     }
 
+    /** On the exclude list (ids or tags): no prints of any kind, wet ones included. */
+    public static boolean excluded(BlockState state) {
+        if (includeIds == null) parseLists();
+        return excludeIds.contains(BuiltInRegistries.BLOCK.getKey(state.getBlock())) || anyTag(state, excludeTags);
+    }
+
     private static Surface resolve(BlockState state) {
         if (includeIds == null) parseLists();
         ResourceLocation id = BuiltInRegistries.BLOCK.getKey(state.getBlock());

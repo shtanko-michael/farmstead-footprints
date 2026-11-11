@@ -32,11 +32,15 @@ public final class FootprintPool {
         return p;
     }
 
-    /** Retires expired prints. Call once per client tick. */
-    public void tick(long nowTick) {
+    /**
+     * Retires expired prints. Call once per client tick. {@code weatherWear} > 0 while it rains or snows: prints
+     * open to the sky age that many extra ticks per tick.
+     */
+    public void tick(long nowTick, int weatherWear) {
         int count = 0;
         for (Footprint p : prints) {
             if (!p.alive) continue;
+            if (weatherWear > 0 && p.exposed) p.bornTick -= weatherWear;
             if (nowTick - p.bornTick >= p.lifeTicks) {
                 p.alive = false;
             } else {

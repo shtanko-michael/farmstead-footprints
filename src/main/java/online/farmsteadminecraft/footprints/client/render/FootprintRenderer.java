@@ -110,7 +110,7 @@ public final class FootprintRenderer {
             // a tiny per-print lift keeps overlapping prints from z-fighting each other
             float y = (float) (p.y - camera.y) + lift + (n & 15) * 0.0004f;
             int rgb = rim ? p.rimRgb : p.shadowRgb;
-            int a = Math.min(255, (int) (alphas[n] * opacity * 255));
+            int a = Math.min(255, (int) (alphas[n] * opacity * (rim ? p.rim : 1f) * 255));
             int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF;
             float[] c = p.corners;
             vertex(vc, matrix, cx + c[0], y, cz + c[1], p.u0, p.v0, r, g, b, a, p.light);

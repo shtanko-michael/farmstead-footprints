@@ -59,7 +59,9 @@ public final class FootprintsClient {
         if (level == null || !FootprintsConfig.ENABLED.on() || mc.isPaused()) return;
         long now = level.getGameTime();
         TRACKER.tick(level, cameraPos(mc), now);
-        POOL.tick(now);
+        // rain and snowfall wear exposed prints away faster
+        int wear = level.isRaining() ? (int) Math.round(FootprintsConfig.RAIN_WEAR.value() - 1.0) : 0;
+        POOL.tick(now, wear);
     }
 
     /** Unit vector the camera looks along. */

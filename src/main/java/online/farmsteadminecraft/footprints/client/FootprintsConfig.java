@@ -50,6 +50,15 @@ public final class FootprintsConfig {
             + "cloven, bird, big, bear, or the file name of your own picture in config/farmstead_footprints/textures. "
             + "Example: \"minecraft:fox = shape:paw size:0.8\".");
 
+    public static final BoolValue WET_PRINTS = FILE.bool("effects", "wetPrints", true)
+        .comment("After water or rain, feet leave damp prints on hard ground too (stone, planks) that dry in half a minute.");
+    public static final IntValue WET_SECONDS = FILE.integer("effects", "wetSeconds", 10, 1, 120)
+        .comment("How long feet stay wet after leaving water or rain, in seconds.");
+    public static final DoubleValue RAIN_WEAR = FILE.number("effects", "rainWear", 3.0, 1.0, 20.0)
+        .comment("Prints under open sky age this many times faster while it rains or snows. 1: weather does nothing.");
+    public static final EnumValue<Dust> DUST = FILE.choice("effects", "dust", Dust.ALL)
+        .comment("A puff of snow, sand or dust from under the feet on loose ground.");
+
     public static final DoubleValue HARDNESS = FILE.number("surfaces", "hardnessGate", 0.7, 0.0, 5.0)
         .comment("Any block softer than this takes prints, so modded soil and sand work out of the box "
             + "(sand 0.5, grass and gravel 0.6, wool 0.8). 0: only the blocks listed below.");
@@ -65,6 +74,8 @@ public final class FootprintsConfig {
         .comment("Blocks that never take prints, by id or #tag; wins over the list above and the hardness rule.");
 
     public enum Sneaking { SHALLOW, NONE }
+
+    public enum Dust { OFF, PLAYERS, ALL }
 
     static {
         FILE.preset("vanilla_plus", Map.of(

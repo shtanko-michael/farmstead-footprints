@@ -19,6 +19,8 @@ public record Surface(String name, float depth, int lifeSecs, float darken) {
     public static final Surface GRASS = new Surface("grass", 0.55f, 120, 0.35f);
     /** Wool, carpets: a soft dent. */
     public static final Surface CLOTH = new Surface("cloth", 0.50f, 90, 0.30f);
+    /** A wet foot on hard ground (stone, planks): a dark damp print with no lip that dries in half a minute. */
+    public static final Surface WET = new Surface("wet", 0.45f, 30, 0.45f);
     /** Any other block soft enough by the hardness rule. */
     public static final Surface SOFT = new Surface("soft", 0.60f, 120, 0.40f);
 }

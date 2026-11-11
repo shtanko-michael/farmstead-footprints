@@ -22,6 +22,8 @@ public final class StepTracker {
     private final Int2ObjectMap<Track> tracks = new Int2ObjectOpenHashMap<>();
     private final FootprintPool pool;
     private final java.util.Random random = new java.util.Random();
+    /** Wetness of the entity being stepped right now, 0..1 (set per entity in tick). */
+    private float wetNow;
 
     public StepTracker(FootprintPool pool) {
         this.pool = pool;
@@ -29,6 +31,8 @@ public final class StepTracker {
 
     private static final class Track {
         double lastX, lastZ;
+        /** Ticks the feet stay wet after water or rain. */
+        int wet;
         double walked;
         boolean right;
         long seen;
@@ -49,6 +53,10 @@ public final class StepTracker {
             if (e.position().distanceToSqr(camera) > maxDistSq) continue;
             Track track = tracks.computeIfAbsent(e.getId(), id -> new Track());
             track.seen = now;
+            int wetTicks = FootprintsConfig.WET_SECONDS.value() * 20;
+            if (living.isInWaterOrRain()) track.wet = wetTicks;
+            else if (track.wet > 0) track.wet--;
+            wetNow = FootprintsConfig.WET_PRINTS.on() ? track.wet / (float) wetTicks : 0f;
             if (!canStep(level, living)) {
                 track.valid = false;
                 continue;
@@ -217,7 +225,16 @@ public final class StepTracker {
             state = level.getBlockState(pos);
             surface = SurfaceRules.of(state);
         }
-        if (surface == null) return;
+        boolean wetOnHard = false;
+        if (surface == null) {
+            // a wet foot marks hard ground too: whatever solid block it stands on, unless excluded
+            if (wetNow <= 0.05f) return;
+            pos = BlockPos.containing(x, y - 0.05, z);
+            state = level.getBlockState(pos);
+            if (!state.isSolid() || SurfaceRules.excluded(state)) return;
+            surface = Surface.WET;
+            wetOnHard = true;
+        }
         net.minecraft.world.phys.shapes.VoxelShape outline = state.getShape(level, pos);
         double top = outline.isEmpty() ? pos.getY() : pos.getY() + outline.max(net.minecraft.core.Direction.Axis.Y);
         Footprint p = pool.add();
@@ -231,12 +248,40 @@ public final class StepTracker {
         p.depth = surface.depth() * (e.isShiftKeyDown() ? 0.55f : 1f) * (0.85f + random.nextFloat() * 0.2f)
             * (e.isSprinting() ? 1.1f : 1f);
         int ground = state.getMapColor(level, pos).col;
-        p.shadowRgb = shadowColour(ground, surface);
-        p.rimRgb = rimColour(ground);
+        if (wetOnHard) {
+            // water darkens stone and wood; no lip, and it fades as the foot dries
+            p.depth *= Math.min(1f, wetNow * 1.4f);
+            p.shadowRgb = scale(ground, 0.45f, 0);
+            p.rimRgb = ground;
+            p.rim = 0f;
+        } else {
+            p.shadowRgb = shadowColour(ground, surface);
+            // still-wet feet leave a darker print on soft ground too
+            if (wetNow > 0.05f) p.shadowRgb = scale(p.shadowRgb, 1f - 0.25f * wetNow, 0);
+            p.rimRgb = rimColour(ground);
+            p.rim = 1f;
+        }
+        p.exposed = level.canSeeSky(pos.above());
         p.bornTick = now;
         p.lifeTicks = (int) Math.max(40, surface.lifeSecs() * 20 * FootprintsConfig.LIFETIME.value()
             * (0.9f + random.nextFloat() * 0.2f));
         p.prepare();
+        dust(level, e, state, surface, p.x, p.y, p.z);
+    }
+
+    /** A puff from under the foot on loose ground (snow, sand, gravel, soil), more when running. */
+    private void dust(ClientLevel level, LivingEntity e, BlockState state, Surface surface, double x, double y, double z) {
+        FootprintsConfig.Dust mode = FootprintsConfig.DUST.get();
+        if (mode == FootprintsConfig.Dust.OFF) return;
+        if (mode == FootprintsConfig.Dust.PLAYERS && !(e instanceof net.minecraft.world.entity.player.Player)) return;
+        if (surface != Surface.SNOW && surface != Surface.SAND && surface != Surface.GRAVEL && surface != Surface.SOIL
+            && surface != Surface.SOUL) return;
+        int n = e.isSprinting() ? 3 : random.nextFloat() < 0.35f ? 1 : 0;
+        for (int i = 0; i < n; i++) {
+            level.addParticle(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK, state),
+                x + (random.nextDouble() - 0.5) * 0.2, y + 0.05, z + (random.nextDouble() - 0.5) * 0.2,
+                (random.nextDouble() - 0.5) * 0.08, 0.08 + random.nextDouble() * 0.06, (random.nextDouble() - 0.5) * 0.08);
+        }
     }
 
     private static float luminance(int rgb) {

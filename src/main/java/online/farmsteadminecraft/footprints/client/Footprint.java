@@ -23,6 +23,10 @@ public final class Footprint {
     /** Colour of the displaced lip around the hollow. */
     public int rimRgb;
     public float depth;
+    /** How strongly the raised lip shows: 1 for a print pressed into soft ground, 0 for a wet print on stone. */
+    public float rim = 1f;
+    /** Open to the sky: rain and snowfall wear it away faster. */
+    public boolean exposed;
     public long bornTick;
     public int lifeTicks;
     public boolean alive;

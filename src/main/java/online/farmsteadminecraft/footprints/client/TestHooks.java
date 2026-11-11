@@ -104,6 +104,8 @@ public final class TestHooks {
             p.rimRgb = 0xE0D2A8;
             p.bornTick = now;
             p.lifeTicks = 20 * 60 * 30;
+            p.rim = 1f;
+            p.exposed = false;
             p.prepare();
         }
         Footprints.LOGGER.info("test hook stress: {} prints", FootprintsClient.POOL.alive());
