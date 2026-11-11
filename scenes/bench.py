@@ -14,8 +14,8 @@ import time
 
 Y = 100
 SIZE = 40
-MOBS = [("cow", 40), ("sheep", 30), ("pig", 30), ("horse", 10), ("chicken", 30), ("villager", 10)]
-FILL_SECONDS = 90
+MOBS = [("cow", 80), ("sheep", 60), ("pig", 60), ("horse", 20), ("chicken", 60), ("villager", 20)]
+FILL_SECONDS = 120
 MEASURE_SECONDS = 20
 
 

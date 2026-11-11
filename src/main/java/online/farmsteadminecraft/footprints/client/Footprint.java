@@ -54,9 +54,10 @@ public final class Footprint {
         corners[5] = -az;
         corners[6] = -bx; // toe-right mirrors heel-left
         corners[7] = -bz;
-        u0 = shape.u0();
+        // the shadow half of the atlas; the lip is the same cell in the right half (+0.5)
+        u0 = shape.u0() * 0.5f;
         v0 = shape.v0();
-        u1 = shape.u1();
+        u1 = shape.u1() * 0.5f;
         v1 = shape.v1();
         lightTick = Long.MIN_VALUE;
     }

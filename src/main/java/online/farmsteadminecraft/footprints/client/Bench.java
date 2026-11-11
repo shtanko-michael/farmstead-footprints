@@ -13,14 +13,14 @@ import online.farmsteadminecraft.footprints.Footprints;
 public final class Bench {
     private static boolean on;
     private static String label;
-    private static long startNs, endNs, frames, renderNs, ticks, tickNs, drawn;
+    private static long startNs, endNs, frames, renderNs, ticks, tickNs, drawn, fpsSum, fpsSamples;
 
     private Bench() {
     }
 
     static void start(String name, int seconds) {
         label = name;
-        frames = renderNs = ticks = tickNs = drawn = 0;
+        frames = renderNs = ticks = tickNs = drawn = fpsSum = fpsSamples = 0;
         startNs = System.nanoTime();
         endNs = startNs + seconds * 1_000_000_000L;
         on = true;
@@ -49,12 +49,17 @@ public final class Bench {
             tickNs += System.nanoTime() - t0;
             ticks++;
         }
+        // the game's own fps counter, sampled once a second: comparable with or without our mod running
+        if (ticks % 20 == 0) {
+            fpsSum += Minecraft.getInstance().getFps();
+            fpsSamples++;
+        }
         long t = System.nanoTime();
         if (t < endNs) return;
         on = false;
         double secs = (t - startNs) / 1e9;
-        Footprints.LOGGER.info("bench {}: fps={} frameMs={} renderUs={} tickUs={} alive={} drawn={} (vanilla fps {})",
-            label, fmt(frames / secs), fmt(secs * 1000 / Math.max(1, frames)), fmt(renderNs / 1000.0 / Math.max(1, frames)),
+        Footprints.LOGGER.info("bench {}: gameFps={} fps={} frameMs={} renderUs={} tickUs={} alive={} drawn={} (last vanilla fps {})",
+            label, fmt(fpsSum / (double) Math.max(1, fpsSamples)), fmt(frames / secs), fmt(secs * 1000 / Math.max(1, frames)), fmt(renderNs / 1000.0 / Math.max(1, frames)),
             fmt(tickNs / 1000.0 / Math.max(1, ticks)), FootprintsClient.POOL.alive(), drawn / Math.max(1, frames),
             Minecraft.getInstance().getFps());
     }

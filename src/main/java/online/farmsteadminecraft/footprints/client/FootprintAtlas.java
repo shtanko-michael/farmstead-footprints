@@ -18,7 +18,7 @@ import online.farmsteadminecraft.footprints.Footprints;
 import online.farmsteadminecraft.footprints.ModLoaderAccess;
 
 /**
- * The two print textures (the hollow's shadow and the lip around it), built at runtime: the mod's own
+ * The print texture (the hollow's shadow and the lip around it, side by side), built at runtime: the mod's own
  * 13 shapes plus every picture the player put in {@code config/farmstead_footprints/textures/}.
  *
  * <p>A player's picture can be anything with a foot on it: dark on white, or a shape on a transparent
@@ -40,8 +40,8 @@ public final class FootprintAtlas {
     private static int grid = BUILT_IN_GRID;
     private static boolean built;
     private static int generation;
-    private static ResourceLocation shadowId = Footprints.id("textures/footprints_shadow.png");
-    private static ResourceLocation rimId = Footprints.id("textures/footprints_rim.png");
+    /** One texture, two halves: the hollow's shadow on the left, the lip on the right (one draw for both). */
+    private static ResourceLocation textureId = Footprints.id("textures/footprints_shadow.png");
     private static final List<String> customNames = new ArrayList<>();
 
     private FootprintAtlas() {
@@ -51,12 +51,8 @@ public final class FootprintAtlas {
         return grid;
     }
 
-    public static ResourceLocation shadow() {
-        return shadowId;
-    }
-
-    public static ResourceLocation rim() {
-        return rimId;
+    public static ResourceLocation texture() {
+        return textureId;
     }
 
     /** Names of the player's pictures found by the last build. */
@@ -122,8 +118,16 @@ public final class FootprintAtlas {
             }
         }
         generation++;
-        shadowId = register("shadow", shadow);
-        rimId = register("rim", rim);
+        NativeImage both = new NativeImage(size * 2, size, true);
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                set(both, x, y, get(shadow, x, y));
+                set(both, size + x, y, get(rim, x, y));
+            }
+        }
+        shadow.close();
+        rim.close();
+        textureId = register("prints", both);
         // cached texture coordinates and resolved profiles point at the old layout
         FootprintsClient.POOL.forEachAlive(Footprint::prepare);
         FootProfiles.reset();

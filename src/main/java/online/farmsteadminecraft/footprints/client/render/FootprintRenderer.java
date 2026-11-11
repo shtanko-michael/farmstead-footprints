@@ -60,15 +60,15 @@ public final class FootprintRenderer {
         Minecraft mc = Minecraft.getInstance();
         ClientLevel level = mc.level;
         if (level == null || !FootprintsConfig.ENABLED.on() || FootprintsClient.POOL.alive() == 0) return;
+        long t0 = online.farmsteadminecraft.footprints.client.Bench.now();
         Matrix4f matrix = new Matrix4f(view);
         MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
         FootprintAtlas.ensure();
-        RenderType shadow = renderType(FootprintAtlas.shadow());
-        emit(buffers.getBuffer(shadow), matrix, camera, level, false);
-        buffers.endBatch(shadow);
-        RenderType rim = renderType(FootprintAtlas.rim());
-        emit(buffers.getBuffer(rim), matrix, camera, level, true);
-        buffers.endBatch(rim);
+        // one texture, one batch, one draw for both layers
+        RenderType type = renderType(FootprintAtlas.texture());
+        emit(buffers.getBuffer(type), matrix, camera, level);
+        buffers.endBatch(type);
+        online.farmsteadminecraft.footprints.client.Bench.render(t0, visibleCount);
     }
     //?} else {
     /*/^* 26+ path: hand our geometry to the frame's submit collector. ^/
@@ -78,8 +78,11 @@ public final class FootprintRenderer {
         if (level == null || !FootprintsConfig.ENABLED.on() || FootprintsClient.POOL.alive() == 0) return;
         Matrix4f matrix = new Matrix4f(pose.last().pose());
         FootprintAtlas.ensure();
-        collector.submitCustomGeometry(pose, renderType(FootprintAtlas.shadow()), (p, vc) -> emit(vc, matrix, camera, level, false));
-        collector.submitCustomGeometry(pose, renderType(FootprintAtlas.rim()), (p, vc) -> emit(vc, matrix, camera, level, true));
+        collector.submitCustomGeometry(pose, renderType(FootprintAtlas.texture()), (p, vc) -> {
+            long t0 = online.farmsteadminecraft.footprints.client.Bench.now();
+            emit(vc, matrix, camera, level);
+            online.farmsteadminecraft.footprints.client.Bench.render(t0, visibleCount);
+        });
     }
     *///?}
 
@@ -95,31 +98,38 @@ public final class FootprintRenderer {
      * stale light values; the rim pass reuses that list. Each print then costs four vertex writes per
      * layer: corners, texture cell and light were worked out when it was placed.
      */
-    private static void emit(VertexConsumer vc, Matrix4f matrix, Vec3 camera, ClientLevel level, boolean rim) {
-        long t0 = online.farmsteadminecraft.footprints.client.Bench.now();
+    private static void emit(VertexConsumer vc, Matrix4f matrix, Vec3 camera, ClientLevel level) {
         Footprint[] prints = FootprintsClient.POOL.array();
-        if (!rim) {
-            frames++;
-            collect(prints, camera, level);
-        }
-        float opacity = rim ? 0.85f : 1f;
-        float lift = LIFT + (rim ? 0.0002f : 0f);
+        frames++;
+        collect(prints, camera, level);
         for (int n = 0; n < visibleCount; n++) {
             Footprint p = prints[visible[n]];
             float cx = (float) (p.x - camera.x), cz = (float) (p.z - camera.z);
             // a tiny per-print lift keeps overlapping prints from z-fighting each other
-            float y = (float) (p.y - camera.y) + lift + (n & 15) * 0.0004f;
-            int rgb = rim ? p.rimRgb : p.shadowRgb;
-            int a = Math.min(255, (int) (alphas[n] * opacity * (rim ? p.rim : 1f) * 255));
-            int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF;
+            float y = (float) (p.y - camera.y) + LIFT + (n & 15) * 0.0004f;
             float[] c = p.corners;
-            vertex(vc, matrix, cx + c[0], y, cz + c[1], p.u0, p.v0, r, g, b, a, p.light);
-            vertex(vc, matrix, cx + c[2], y, cz + c[3], p.u0, p.v1, r, g, b, a, p.light);
-            vertex(vc, matrix, cx + c[4], y, cz + c[5], p.u1, p.v1, r, g, b, a, p.light);
-            vertex(vc, matrix, cx + c[6], y, cz + c[7], p.u1, p.v0, r, g, b, a, p.light);
+            int light = p.light;
+            // the hollow's shadow (left half of the atlas)
+            int rgb = p.shadowRgb, a = Math.min(255, (int) (alphas[n] * 255));
+            int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF;
+            vertex(vc, matrix, cx + c[0], y, cz + c[1], p.u0, p.v0, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[2], y, cz + c[3], p.u0, p.v1, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[4], y, cz + c[5], p.u1, p.v1, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[6], y, cz + c[7], p.u1, p.v0, r, g, b, a, light);
+            if (p.rim <= 0f) continue;
+            // the lip around it (right half), a hair higher
+            float yr = y + 0.0002f;
+            rgb = p.rimRgb;
+            a = Math.min(255, (int) (alphas[n] * 0.85f * p.rim * 255));
+            r = (rgb >> 16) & 0xFF;
+            g = (rgb >> 8) & 0xFF;
+            b = rgb & 0xFF;
+            vertex(vc, matrix, cx + c[0], yr, cz + c[1], p.u0 + 0.5f, p.v0, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[2], yr, cz + c[3], p.u0 + 0.5f, p.v1, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[4], yr, cz + c[5], p.u1 + 0.5f, p.v1, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[6], yr, cz + c[7], p.u1 + 0.5f, p.v0, r, g, b, a, light);
         }
-        if (!rim) lastDrawn = visibleCount;
-        online.farmsteadminecraft.footprints.client.Bench.render(t0, rim ? 0 : visibleCount);
+        lastDrawn = visibleCount;
     }
 
     private static void collect(Footprint[] prints, Vec3 camera, ClientLevel level) {
