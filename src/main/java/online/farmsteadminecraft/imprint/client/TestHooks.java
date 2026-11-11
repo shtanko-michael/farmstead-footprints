@@ -17,12 +17,23 @@ import online.farmsteadminecraft.imprint.Imprint;
  */
 public final class TestHooks {
     private static final boolean ENABLED = Boolean.getBoolean("farmstead.testhooks");
+    /** Forge 1.20.1 quickPlay joins as a vanilla client and never finishes the FML handshake,
+     *  so there the runner passes the address here and the hook connects from the title screen. */
+    private static final String JOIN = System.getProperty("farmstead.testhooks.join");
+    private static boolean joined;
 
     private TestHooks() {
     }
 
     public static void tick(Minecraft mc) {
         if (!ENABLED) return;
+        //? if forge {
+        /*if (JOIN != null && !joined && mc.level == null
+            && mc.screen instanceof net.minecraft.client.gui.screens.TitleScreen title) {
+            joined = true;
+            join(mc, title);
+        }
+        *///?}
         if (mc.level != null && mc.level.getGameTime() % 100 == 0) {
             Imprint.LOGGER.info("test hook stats: prints alive={} drawn last frame={} render calls={}",
                 ImprintClient.POOL.alive(), online.farmsteadminecraft.imprint.client.render.FootprintRenderer.lastDrawn,
@@ -43,6 +54,14 @@ public final class TestHooks {
             Imprint.LOGGER.warn("test hook failed", e);
         }
     }
+
+    //? if forge {
+    /*private static void join(Minecraft mc, net.minecraft.client.gui.screens.Screen parent) {
+        net.minecraft.client.gui.screens.ConnectScreen.startConnecting(parent, mc,
+            net.minecraft.client.multiplayer.resolver.ServerAddress.parseString(JOIN),
+            new net.minecraft.client.multiplayer.ServerData("test", JOIN, false), false);
+    }
+    *///?}
 
     private static void shoot(Minecraft mc, String name) {
         File gameDir = mc.gameDirectory;

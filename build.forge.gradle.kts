@@ -51,6 +51,8 @@ legacyForge {
             providers.gradleProperty("clientSize").orNull?.split("x")?.let { programArguments.addAll("--width", it[0], "--height", it[1]) }
             // `-PtestHooks` lets the test runner request screenshots through files (see TestHooks)
             if (providers.gradleProperty("testHooks").isPresent) jvmArguments.add("-Dfarmstead.testhooks=true")
+            // quickPlay on Forge 1.20.1 skips the FML handshake; TestHooks joins from the title screen instead
+            providers.gradleProperty("testJoin").orNull?.let { jvmArguments.add("-Dfarmstead.testhooks.join=$it") }
         }
 
         register("server") {
