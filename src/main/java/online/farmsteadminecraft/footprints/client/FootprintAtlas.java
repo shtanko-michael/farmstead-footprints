@@ -331,7 +331,7 @@ public final class FootprintAtlas {
 
     private static ResourceLocation register(String layer, NativeImage image) {
         ResourceLocation id = Footprints.id("runtime/" + layer + "_" + generation);
-        //? if >=1.21.11 {
+        //? if >=1.21.5 {
         /*DynamicTexture texture = new DynamicTexture(() -> "footprints " + layer, image);
         *///?} else
         DynamicTexture texture = new DynamicTexture(image);
@@ -512,14 +512,14 @@ public final class FootprintAtlas {
     }
 
     private static int get(NativeImage img, int x, int y) {
-        //? if >=1.21.11 {
+        //? if >=1.21.2 {
         /*return img.getPixel(x, y);
         *///?} else
         return img.getPixelRGBA(x, y);
     }
 
     private static void set(NativeImage img, int x, int y, int pixel) {
-        //? if >=1.21.11 {
+        //? if >=1.21.2 {
         /*img.setPixel(x, y, pixel);
         *///?} else
         img.setPixelRGBA(x, y, pixel);

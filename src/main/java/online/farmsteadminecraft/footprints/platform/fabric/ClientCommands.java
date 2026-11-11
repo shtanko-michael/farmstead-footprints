@@ -35,7 +35,7 @@ public final class ClientCommands {
             Minecraft mc = Minecraft.getInstance();
             Component msg = Component.literal(e.getMessage()).withStyle(ChatFormatting.RED);
             if (mc.player == null) return true;
-            //? if >=1.21.11 && <26.1 {
+            //? if >=1.21.2 && <26.1 {
             /*mc.player.displayClientMessage(msg, false);
             *///?} else
             mc.player.sendSystemMessage(msg);

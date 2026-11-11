@@ -10,11 +10,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /*import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
-*///?} else if >=1.21.11 {
-/*import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.state.LevelRenderState;
+*///?} else if >=1.21.3 {
+/*import net.minecraft.client.Minecraft;
 import online.farmsteadminecraft.footprints.client.FootprintsClient;
 import org.joml.Matrix4f;
 *///?} else if >=1.21 {
@@ -42,12 +39,22 @@ public abstract class LevelRendererMixin {
     private void footprints$submit(LevelRenderState state, SubmitNodeCollector collector, boolean renderOutline, CallbackInfo ci) {
         FootprintRenderer.submit(collector, new PoseStack(), state.cameraRenderState.pos);
     }
-    *///?} else if >=1.21.11 {
-    /*// after the entities and their batches, where NeoForge fires AfterEntities; the model-view stack has the camera
+    *///?} else if >=1.21.3 {
+    /*// after the entities and block entities (the main pass is a lambda from 1.21.2 on, so hook the next named
+    // method); the model-view stack has the camera rotation, so the pose is identity
     @Inject(method = "renderBlockDestroyAnimation", at = @At("HEAD"))
-    private void footprints$render(PoseStack pose, MultiBufferSource.BufferSource buffers, LevelRenderState state, CallbackInfo ci) {
-        FootprintRenderer.renderImmediate(new Matrix4f(), state.cameraRenderState.pos, FootprintRenderer.PASS_GROUND);
+    private void footprints$render(CallbackInfo ci) {
+        FootprintRenderer.renderImmediate(new Matrix4f(), FootprintsClient.cameraPos(Minecraft.getInstance()), FootprintRenderer.PASS_GROUND);
     }
+    //? if <1.21.6 {
+    @Inject(method = "renderSectionLayer", at = @At("TAIL"))
+    private void footprints$afterLayer(net.minecraft.client.renderer.RenderType layer, double x, double y, double z, Matrix4f frustum,
+                                       Matrix4f projection, CallbackInfo ci) {
+        if (layer == net.minecraft.client.renderer.RenderType.translucent()) {
+            FootprintRenderer.renderImmediate(new Matrix4f(), FootprintsClient.cameraPos(Minecraft.getInstance()), FootprintRenderer.PASS_WATER);
+        }
+    }
+    //?}
     *///?} else if >=1.21 {
     // the global model-view matrix carries the camera rotation here, so the pose is identity
     @Inject(method = "renderLevel", at = @At(value = "INVOKE",

@@ -38,7 +38,7 @@ public class PickerScreen extends Screen {
         this.modId = modId;
         if (list.picker() == StringListValue.Picker.BLOCKS) {
             for (ResourceLocation id : BuiltInRegistries.BLOCK.keySet()) {
-                //? if >=1.21.11 {
+                //? if >=1.21.2 {
                 /*Component name = BuiltInRegistries.BLOCK.getValue(id).getName();
                 *///?} else
                 Component name = BuiltInRegistries.BLOCK.get(id).getName();
@@ -46,7 +46,7 @@ public class PickerScreen extends Screen {
             }
         } else {
             for (ResourceLocation id : BuiltInRegistries.ENTITY_TYPE.keySet()) {
-                //? if >=1.21.11 {
+                //? if >=1.21.2 {
                 /*Component name = BuiltInRegistries.ENTITY_TYPE.getValue(id).getDescription();
                 *///?} else
                 Component name = BuiltInRegistries.ENTITY_TYPE.get(id).getDescription();
@@ -54,6 +54,13 @@ public class PickerScreen extends Screen {
             }
         }
         all.sort((a, b) -> a.id().compareTo(b.id()));
+    }
+
+    /** Types a search, as if the player did (test hooks). */
+    public void search(String text) {
+        preset(text);
+        page = 0;
+        rebuildWidgets();
     }
 
     /** Starts with this search typed in. */

@@ -26,6 +26,11 @@ import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+*///?} else if >=1.21.5 {
+/*import java.util.ArrayList;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 *///?} else {
 import net.minecraft.client.renderer.block.model.BakedQuad;
 //?}
@@ -95,6 +100,28 @@ public final class PixelStyle {
             zs[i] = quad.position(i).z();
             us[i] = UVPair.unpackU(quad.packedUV(i));
             vs[i] = UVPair.unpackV(quad.packedUV(i));
+        }
+        tintIndex = quad.tintIndex();
+        *///?} else if >=1.21.5 {
+        /*BlockStateModel model = mc.getBlockRenderer().getBlockModel(state);
+        List<BlockModelPart> parts = new ArrayList<>();
+        model.collectParts(RANDOM, parts);
+        BakedQuad quad = null;
+        for (BlockModelPart part : parts) {
+            List<BakedQuad> quads = part.getQuads(Direction.UP);
+            if (!quads.isEmpty()) {
+                quad = quads.get(quads.size() - 1);
+                break;
+            }
+        }
+        if (quad == null) return false;
+        int[] data = quad.vertices();
+        int stride = data.length / 4;
+        for (int i = 0; i < 4; i++) {
+            xs[i] = Float.intBitsToFloat(data[i * stride]);
+            zs[i] = Float.intBitsToFloat(data[i * stride + 2]);
+            us[i] = Float.intBitsToFloat(data[i * stride + 4]);
+            vs[i] = Float.intBitsToFloat(data[i * stride + 5]);
         }
         tintIndex = quad.tintIndex();
         *///?} else {

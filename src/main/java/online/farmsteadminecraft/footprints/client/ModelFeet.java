@@ -85,14 +85,14 @@ final class ModelFeet {
         return out;
     }
 
-    //? if >=1.21.11 {
+    //? if >=1.21.2 {
     /*private static Object model(LivingEntity e) {
         EntityRenderer<?, ?> renderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(e);
         return renderer instanceof LivingEntityRenderer<?, ?, ?> living ? living.getModel() : null;
     }
 
     private static List<ModelPart> roots(Object model) {
-        return model instanceof net.minecraft.client.model.Model<?> m ? List.of(m.root()) : List.of();
+        return model instanceof net.minecraft.client.model.Model m ? List.of(m.root()) : List.of();
     }
     *///?} else {
     private static Object model(LivingEntity e) {

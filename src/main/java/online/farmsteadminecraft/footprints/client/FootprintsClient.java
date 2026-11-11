@@ -73,6 +73,7 @@ public final class FootprintsClient {
 
     private static void tickInner(Minecraft mc) {
         TestHooks.tick(mc);
+        Recorder.tick(mc);
         if (openConfig) {
             openConfig = false;
             //? if >=26.2 {

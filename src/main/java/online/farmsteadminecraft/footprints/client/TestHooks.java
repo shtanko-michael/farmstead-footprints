@@ -68,6 +68,7 @@ public final class TestHooks {
                     String[] arg = Files.readString(req).trim().split(" ", 2);
                     Files.deleteIfExists(req);
                     if (screen(mc) instanceof online.farmsteadminecraft.footprints.config.ConfigScreen cs) cs.openPicker(arg[0], arg.length > 1 ? arg[1] : "");
+                    else if (screen(mc) instanceof online.farmsteadminecraft.footprints.config.PickerScreen ps) ps.search(arg.length > 1 ? arg[1] : "");
                 } else if (file.equals("try.it")) {
                     Files.deleteIfExists(req);
                     //? if >=26.2 {
@@ -107,6 +108,15 @@ public final class TestHooks {
                             }
                         }
                     }
+                } else if (file.equals("record")) {
+                    // "<name> <seconds>": every tick's frame to recordings/<name>/
+                    String[] arg = Files.readString(req).trim().split(" ");
+                    Files.deleteIfExists(req);
+                    Recorder.start(mc, arg[0], arg.length > 1 ? Float.parseFloat(arg[1]) : 4f);
+                } else if (file.equals("style")) {
+                    String v = Files.readString(req).trim().toUpperCase(java.util.Locale.ROOT);
+                    Files.deleteIfExists(req);
+                    FootprintsConfig.STYLE.set(FootprintsConfig.Style.valueOf(v));
                 } else if (file.equals("config.reload")) {
                     Files.deleteIfExists(req);
                     Footprints.LOGGER.info("test hook reload: problems={}", FootprintsConfig.load());
@@ -164,7 +174,7 @@ public final class TestHooks {
         File gameDir = mc.gameDirectory;
         //? if >=26.2 {
         /*Screenshot.grab(gameDir, name + ".png", mc.gameRenderer.mainRenderTarget(), 1, msg -> Footprints.LOGGER.info("test hook: {}", msg.getString()));
-        *///?} else if >=1.21.11 {
+        *///?} else if >=1.21.6 {
         /*Screenshot.grab(gameDir, name + ".png", mc.getMainRenderTarget(), 1, msg -> Footprints.LOGGER.info("test hook: {}", msg.getString()));
         *///?} else
         Screenshot.grab(gameDir, name + ".png", mc.getMainRenderTarget(), msg -> Footprints.LOGGER.info("test hook: {}", msg.getString()));

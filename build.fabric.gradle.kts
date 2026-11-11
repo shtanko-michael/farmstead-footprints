@@ -124,7 +124,7 @@ tasks {
 
         val mixinJava = "JAVA_${requiredJava.majorVersion}"
         // mixins that only exist for some versions
-        val extraClient = if (sc.current.parsed >= "1.21.11" && sc.current.parsed < "26.1") ", \"ChunkSectionsToRenderMixin\"" else ""
+        val extraClient = if (sc.current.parsed >= "1.21.6" && sc.current.parsed < "26.1") ", \"ChunkSectionsToRenderMixin\"" else ""
         inputs.property("extraClient", extraClient)
         filesMatching("*.mixins.json") { expand("java" to mixinJava, "extraClient" to extraClient) }
 

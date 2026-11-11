@@ -2,7 +2,7 @@ package online.farmsteadminecraft.footprints.platform.fabric.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 
-//? if >=1.21.11 && <26.1 {
+//? if >=1.21.6 && <26.1 {
 /*import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayerGroup;
 import online.farmsteadminecraft.footprints.client.FootprintsClient;
@@ -19,9 +19,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(targets = "net.minecraft.client.renderer.chunk.ChunkSectionsToRender")
 public abstract class ChunkSectionsToRenderMixin {
-    //? if >=1.21.11 && <26.1 {
+    //? if >=1.21.6 && <26.1 {
     /*@Inject(method = "renderGroup", at = @At("TAIL"))
+    //? if >=1.21.11 {
     private void footprints$afterGroup(ChunkSectionLayerGroup group, com.mojang.blaze3d.textures.GpuSampler sampler, CallbackInfo ci) {
+    //?} else
+    /^private void footprints$afterGroup(ChunkSectionLayerGroup group, CallbackInfo ci) {^/
         if (group == ChunkSectionLayerGroup.TRANSLUCENT) {
             FootprintRenderer.renderImmediate(new Matrix4f(), FootprintsClient.cameraPos(Minecraft.getInstance()), FootprintRenderer.PASS_WATER);
         }
