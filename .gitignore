@@ -32,3 +32,8 @@ Thumbs.db
 .stonecutter/cache/
 tmp/
 *.log
+
+# Stonecutter / Loom
+run/
+versions/*/build/
+versions/*/.gradle/

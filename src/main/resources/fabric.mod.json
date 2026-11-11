@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "The world remembers your steps: footprints in snow, sand and mud, mob tracks, wet prints and trails worn into the grass. Client-side.",
+  "authors": ["Farmstead"],
+  "contact": {
+    "homepage": "https://farmsteadminecraft.online/"
+  },
+  "license": "MIT",
+  "icon": "assets/imprint/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["online.farmsteadminecraft.imprint.platform.fabric.ImprintFabric"],
+    "client": ["online.farmsteadminecraft.imprint.platform.fabric.ImprintFabricClient"]
+  },
+  "mixins": ["imprint.mixins.json"],
+  "accessWidener": "imprint.ct",
+  "depends": {
+    "fabricloader": ">=${loader}",
+    "minecraft": "${minecraft}",
+    "fabric-lifecycle-events-v1": "*",
+    "fabric-rendering-v1": "*",
+    "fabric-resource-loader-v0": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}
