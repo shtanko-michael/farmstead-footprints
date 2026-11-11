@@ -44,7 +44,8 @@ public final class FootProfiles {
         for (String id : new String[]{"iron_golem", "ravager", "warden"}) {
             BY_ID.put("minecraft:" + id, FootProfile.GIANT);
         }
-        for (String id : new String[]{"polar_bear", "panda", "sniffer", "camel"}) {
+        BY_ID.put("minecraft:camel", FootProfile.CAMEL);
+        for (String id : new String[]{"polar_bear", "panda", "sniffer"}) {
             BY_ID.put("minecraft:" + id, FootProfile.GIANT_PAW);
         }
     }

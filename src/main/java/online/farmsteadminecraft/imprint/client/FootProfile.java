@@ -7,7 +7,7 @@ package online.farmsteadminecraft.imprint.client;
  * @param right      mask for the right foot
  * @param stride     blocks travelled between two prints
  * @param spacing    sideways distance of a foot from the body centre
- * @param quadruped  four-legged: each step leaves a front and a back print
+ * @param quadruped  four-legged: the hind foot lands in the front print of its side (a doubled print)
  * @param scale      size multiplier for the mask
  */
 public record FootProfile(FootShape left, FootShape right, float stride, float spacing, boolean quadruped, float scale) {
@@ -21,5 +21,7 @@ public record FootProfile(FootShape left, FootShape right, float stride, float s
     public static final FootProfile BIRD = new FootProfile(FootShape.BIRD, FootShape.BIRD, 0.30f, 0.09f, false, 0.8f);
     public static final FootProfile GIANT = new FootProfile(FootShape.BIG_LEFT, FootShape.BIG_RIGHT, 1.45f, 0.42f, false, 1f);
     public static final FootProfile CLOVEN = new FootProfile(FootShape.CLOVEN, FootShape.CLOVEN, 0.95f, 0.22f, true, 1.25f);
+    /** Camels walk on two broad toes: the cloven mask, much larger. */
+    public static final FootProfile CAMEL = new FootProfile(FootShape.CLOVEN, FootShape.CLOVEN, 1.2f, 0.36f, true, 1.9f);
     public static final FootProfile GIANT_PAW = new FootProfile(FootShape.BEAR, FootShape.BEAR, 1.1f, 0.38f, true, 1.2f);
 }

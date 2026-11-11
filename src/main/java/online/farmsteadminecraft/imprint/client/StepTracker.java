@@ -33,7 +33,14 @@ public final class StepTracker {
         boolean right;
         long seen;
         boolean valid;
+        /** Distance walked since the track started; hind prints wait for it. */
+        double odometer;
+        /** Quadrupeds: the hind foot still to come down in the last front print (at most one per side). */
+        final HindStep[] hind = new HindStep[2];
     }
+
+    /** A hind foot that lands in the front print of its side once the body has moved on by its length. */
+    private record HindStep(double x, double z, float yaw, FootShape shape, double dueAt) {}
 
     public void tick(ClientLevel level, Vec3 camera, long now) {
         double maxDistSq = (double) ImprintConfig.RENDER_DISTANCE.value() * ImprintConfig.RENDER_DISTANCE.value();
@@ -52,6 +59,7 @@ public final class StepTracker {
                 track.lastX = x;
                 track.lastZ = z;
                 track.walked = 0;
+                track.hind[0] = track.hind[1] = null;
                 track.valid = true;
                 continue;
             }
@@ -60,16 +68,25 @@ public final class StepTracker {
             track.lastZ = z;
             if (moved > TELEPORT_DISTANCE) {
                 track.walked = 0;
+                track.hind[0] = track.hind[1] = null;
                 continue;
             }
             FootProfile profile = FootProfiles.of(living);
             if (profile == null) continue;
             track.walked += moved;
+            track.odometer += moved;
+            for (int side = 0; side < 2; side++) {
+                HindStep h = track.hind[side];
+                if (h != null && track.odometer >= h.dueAt()) {
+                    track.hind[side] = null;
+                    hindPrint(level, living, profile, h, now);
+                }
+            }
             float stride = profile.stride() * Math.max(0.5f, e.getBbWidth() / 0.6f * 0.6f + 0.4f);
             if (track.walked >= stride) {
                 track.walked -= stride;
                 if (track.walked > stride) track.walked = 0;
-                step(level, living, profile, track.right, now);
+                step(level, living, profile, track, track.right, now);
                 track.right = !track.right;
             }
         }
@@ -97,7 +114,7 @@ public final class StepTracker {
         return Math.abs(e.getY() - top) < 0.02;
     }
 
-    private void step(ClientLevel level, LivingEntity e, FootProfile profile, boolean right, long now) {
+    private void step(ClientLevel level, LivingEntity e, FootProfile profile, Track track, boolean right, long now) {
         float yaw = e.getYRot();
         if (!(e instanceof net.minecraft.world.entity.player.Player)) yaw = e.yBodyRot;
         double rad = Math.toRadians(yaw);
@@ -106,12 +123,27 @@ public final class StepTracker {
         double rx = -Math.cos(rad), rz = -Math.sin(rad);
         double side = (right ? 1 : -1) * profile.spacing() * Math.max(1f, e.getBbWidth() / 0.6f);
         if (profile.quadruped()) {
+            // A walking four-legged animal "registers": the hind foot comes down in (or just behind) the
+            // print the front foot of the SAME side left. So the trail is one alternating line, left,
+            // right, left, each print doubled, not pairs of prints per side. The front foot prints now;
+            // the hind foot of this side follows once the body has moved on by its length.
             double half = Math.max(0.25, e.getBbWidth() * 0.45);
-            place(level, e, profile, right ? profile.right() : profile.left(), e.getX() + rx * side + fx * half, e.getZ() + rz * side + fz * half, yaw, now);
-            place(level, e, profile, right ? profile.left() : profile.right(), e.getX() - rx * side - fx * half, e.getZ() - rz * side - fz * half, yaw, now);
+            double px = e.getX() + rx * side + fx * half, pz = e.getZ() + rz * side + fz * half;
+            FootShape shape = right ? profile.right() : profile.left();
+            place(level, e, profile, shape, px, pz, yaw, now);
+            HindStep pending = track.hind[right ? 1 : 0];
+            if (pending != null) hindPrint(level, e, profile, pending, now);  // never drop a foot
+            track.hind[right ? 1 : 0] = new HindStep(px, pz, yaw, shape, track.odometer + 2 * half);
         } else {
             place(level, e, profile, right ? profile.right() : profile.left(), e.getX() + rx * side, e.getZ() + rz * side, yaw, now);
         }
+    }
+
+    /** The hind foot lands a little short of the front print, so the pair reads as one doubled print. */
+    private void hindPrint(ClientLevel level, LivingEntity e, FootProfile profile, HindStep h, long now) {
+        double rad = Math.toRadians(h.yaw());
+        double back = 0.12 * profile.scale();
+        place(level, e, profile, h.shape(), h.x() + Math.sin(rad) * back, h.z() - Math.cos(rad) * back, h.yaw(), now);
     }
 
     private void place(ClientLevel level, LivingEntity e, FootProfile profile, FootShape shape, double x, double z, float yaw, long now) {
