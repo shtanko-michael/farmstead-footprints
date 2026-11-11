@@ -1,0 +1,28 @@
+{
+  "title": "Footprints",
+  "summary": "Realistic footprints for players and every mob: pressed into snow, sand and mud, crumbling with time, boat wakes and ripples. Client-side, no dependencies.",
+  "categories": ["decoration"],
+  "additional_categories": ["game-mechanics"],
+  "client_side": "required",
+  "server_side": "unsupported",
+  "license_id": "MIT",
+  "license_url": "https://github.com/shtanko-michael/farmstead-footprints/blob/main/LICENSE",
+  "source_url": "https://github.com/shtanko-michael/farmstead-footprints",
+  "issues_url": "https://github.com/shtanko-michael/farmstead-footprints/issues",
+  "wiki_url": "https://github.com/shtanko-michael/farmstead-footprints#readme",
+  "body": "listing/modrinth.md",
+  "icon": "docs/media/icon-512.png",
+  "gallery": [
+    {"file": "docs/media/gallery/01-snow-trail.jpg", "title": "Your trail", "description": "Every step stays behind you, lit like the ground around it.", "featured": true},
+    {"file": "docs/media/gallery/02-wolf-pack.jpg", "title": "A wolf pack", "description": "Each mob leaves its own prints."},
+    {"file": "docs/media/gallery/03-savanna.jpg", "title": "Red sand", "description": "A camel and a player crossing the badlands."},
+    {"file": "docs/media/gallery/04-chicken.jpg", "title": "Down to the smallest feet", "description": "Three-toed chicken prints up close."},
+    {"file": "docs/media/gallery/05-polar-bear.jpg", "title": "Polar bear", "description": "Huge clawed paws, slightly pigeon-toed."},
+    {"file": "docs/media/gallery/06-gait-top-view.jpg", "title": "Real gaits", "description": "From above: the hind foot lands in the front print of its side."},
+    {"file": "docs/media/gifs/styles.gif", "title": "Two looks", "description": "The same prints, detailed and pixel style."},
+    {"file": "docs/media/gifs/crumble.gif", "title": "Prints age", "description": "Old prints crumble from the edges in."},
+    {"file": "docs/media/gifs/wake.gif", "title": "Boat wake", "description": "Boats leave a foam wake on the water."},
+    {"file": "docs/media/gifs/tryit.gif", "title": "Try it", "description": "The settings stamp a sample of prints where you look."},
+    {"file": "docs/media/gallery/07-settings.jpg", "title": "Settings", "description": "Presets, tabs and searchable block and mob lists."}
+  ]
+}

@@ -1,0 +1,29 @@
+name: Listing
+
+# By hand (Actions -> Listing -> Run workflow): makes the Modrinth project page match the repository
+# (listing/modrinth.json + listing/modrinth.md: summary, description, categories, sides, links,
+# license, icon, gallery). The token stays a secret here; nothing is published as a version.
+# CurseForge has no API for project pages: paste listing/curseforge.md there by hand.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only show what would change"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  modrinth:
+    runs-on: ubuntu-latest
+    env:
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      MODRINTH_ID: ${{ vars.MODRINTH_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync the Modrinth page
+        if: env.MODRINTH_TOKEN != '' && env.MODRINTH_ID != ''
+        run: python3 tools/modrinth_listing.py ${{ inputs.dry_run && '--dry-run' || '' }}
