@@ -29,8 +29,8 @@ public final class FootprintsClient {
             online.farmsteadminecraft.footprints.Footprints.NAME, version,
             () -> online.farmsteadminecraft.footprints.brand.FarmsteadBrand.newerThan(version),
             java.util.List.of(
-                new online.farmsteadminecraft.footprints.config.ConfigScreen.Link("modrinth", "Modrinth page", "https://modrinth.com/mod/footprints"),
-                new online.farmsteadminecraft.footprints.config.ConfigScreen.Link("curseforge", "CurseForge page", "https://www.curseforge.com/minecraft/mc-mods/footprints"),
+                new online.farmsteadminecraft.footprints.config.ConfigScreen.Link("modrinth", "Modrinth page", "https://modrinth.com/mod/farmstead-footprints"),
+                new online.farmsteadminecraft.footprints.config.ConfigScreen.Link("curseforge", "CurseForge page", "https://www.curseforge.com/minecraft/mc-mods/farmstead-footprints"),
                 new online.farmsteadminecraft.footprints.config.ConfigScreen.Link("issues", "Report a bug or an idea", repo + "/issues"),
                 new online.farmsteadminecraft.footprints.config.ConfigScreen.Link("wiki", "How to: own textures and pack rules", repo + "#your-own-prints")),
             FootprintsClient::tryIt);

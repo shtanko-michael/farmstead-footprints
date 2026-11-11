@@ -9,7 +9,7 @@ public final class Footprints {
     public static final String MOD_ID = "farmstead_footprints";
     public static final String NAME = "Footprints";
     /** Project slug on Modrinth: the start-up line links there and the update check asks it. */
-    public static final String MODRINTH_SLUG = "footprints";
+    public static final String MODRINTH_SLUG = "farmstead-footprints";
     public static final Logger LOGGER = LoggerFactory.getLogger("Footprints");
     public static final String VERSION = /*$ mod_version*/"0.1.0";
     public static final String MINECRAFT = /*$ minecraft*/"1.21.1";

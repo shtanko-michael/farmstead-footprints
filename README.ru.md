@@ -6,8 +6,8 @@
 
 **Реалистичные следы игроков и мобов.** Пройдите по снегу, песку или грязи — шаги останутся позади: вдавленные в землю, освещённые так же, как блоки вокруг, и постепенно исчезающие. Волки оставляют отпечатки лап, лошади — копыт, куры — трёхпалые царапины. Мод клиентский: поставили — и он работает на любом сервере, включая ванильный.
 
-[![Modrinth](https://img.shields.io/modrinth/dt/footprints?logo=modrinth&label=Modrinth)](https://modrinth.com/mod/footprints)
-[![CurseForge](https://img.shields.io/badge/CurseForge-Footprints-f16436?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/footprints)
+[![Modrinth](https://img.shields.io/modrinth/dt/farmstead-footprints?logo=modrinth&label=Modrinth)](https://modrinth.com/mod/farmstead-footprints)
+[![CurseForge](https://img.shields.io/badge/CurseForge-Footprints-f16436?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/farmstead-footprints)
 [![License: MIT](https://img.shields.io/badge/code-MIT-blue)](LICENSE)
 
 От [Farmstead](https://farmsteadminecraft.online). English version — [README.md](README.md).
@@ -42,7 +42,7 @@
 | 1.21 – 1.21.1 | да | да | — | 21 |
 | 1.20.1 | да | — | да | 17 |
 
-Скачать: [Modrinth](https://modrinth.com/mod/footprints), [CurseForge](https://www.curseforge.com/minecraft/mc-mods/footprints) или [релизы на GitHub](https://github.com/shtanko-michael/farmstead-footprints/releases).
+Скачать: [Modrinth](https://modrinth.com/mod/farmstead-footprints), [CurseForge](https://www.curseforge.com/minecraft/mc-mods/farmstead-footprints) или [релизы на GitHub](https://github.com/shtanko-michael/farmstead-footprints/releases).
 
 **Что нужно: ничего.** Ни одной библиотеки, даже Fabric API на Fabric: достаточно самого jar. [Mod Menu](https://modrinth.com/mod/modmenu) не обязателен, он добавляет кнопку настроек на Fabric.
 
@@ -86,7 +86,7 @@
 При запуске игры Footprints пишет в лог одну строку:
 
 ```
-[Farmstead] Footprints 0.1.0 started (neoforge, Minecraft 1.21.1) - https://modrinth.com/mod/footprints
+[Farmstead] Footprints 0.1.0 started (neoforge, Minecraft 1.21.1) - https://modrinth.com/mod/farmstead-footprints
 ```
 
 Затем один раз за сессию, в фоне, он спрашивает публичный API Modrinth, нет ли более новой версии для вашего загрузчика и версии Minecraft. Если есть — пишет об этом в лог со ссылкой на скачивание. В запросе нет никаких данных о вас, вашем мире или сервере; ничего не скачивается и не устанавливается. Выключить: `general.checkUpdates = false`, а для всех модов Farmstead сразу — флаг JVM `-Dfarmstead.updateCheck=false` или переменная окружения `FARMSTEAD_UPDATE_CHECK=false`.

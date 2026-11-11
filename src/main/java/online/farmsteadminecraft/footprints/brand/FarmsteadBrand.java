@@ -34,7 +34,7 @@ public final class FarmsteadBrand {
     private FarmsteadBrand() {
     }
 
-    /** {@code [Farmstead] Footprints 0.1.0 started (neoforge, Minecraft 1.21.1) - https://modrinth.com/mod/footprints} */
+    /** {@code [Farmstead] Footprints 0.1.0 started (neoforge, Minecraft 1.21.1) - https://modrinth.com/mod/farmstead-footprints} */
     public static void started(Logger log, String name, String version, String loader, String minecraft, String slug) {
         log.info("[Farmstead] {} {} started ({}, Minecraft {}) - {}{}", name, version, loader, minecraft, MODRINTH, slug);
     }

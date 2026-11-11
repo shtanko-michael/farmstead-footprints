@@ -4,7 +4,7 @@ mod.name = "Footprints"
 # jar base name: farmstead-footprints-<loader>-<version>+<mc>.jar
 mod.file = "farmstead-footprints"
 # Links shown in the mod list (Mod Menu, NeoForge/Forge) and used by the listing
-mod.homepage = "https://modrinth.com/mod/footprints"
+mod.homepage = "https://modrinth.com/mod/farmstead-footprints"
 mod.sources = "https://github.com/shtanko-michael/farmstead-footprints"
 mod.issues = "https://github.com/shtanko-michael/farmstead-footprints/issues"
 mod.group = "online.farmsteadminecraft"

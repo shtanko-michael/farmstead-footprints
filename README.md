@@ -6,8 +6,8 @@
 
 **Realistic footprints for players and mobs.** Walk through snow, sand or mud and your steps stay behind you, pressed into the ground, lit like the blocks around them, fading over time. Wolves leave paw prints, horses leave hooves, chickens leave three-toed scratches. Client-side: install it and it works on any server, vanilla included.
 
-[![Modrinth](https://img.shields.io/modrinth/dt/footprints?logo=modrinth&label=Modrinth)](https://modrinth.com/mod/footprints)
-[![CurseForge](https://img.shields.io/badge/CurseForge-Footprints-f16436?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/footprints)
+[![Modrinth](https://img.shields.io/modrinth/dt/farmstead-footprints?logo=modrinth&label=Modrinth)](https://modrinth.com/mod/farmstead-footprints)
+[![CurseForge](https://img.shields.io/badge/CurseForge-Footprints-f16436?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/farmstead-footprints)
 [![License: MIT](https://img.shields.io/badge/code-MIT-blue)](LICENSE)
 
 By [Farmstead](https://farmsteadminecraft.online). Русская версия — [README.ru.md](README.ru.md).
@@ -42,7 +42,7 @@ More pictures in [docs/media/gallery](docs/media/gallery).
 | 1.21 – 1.21.1 | yes | yes | — | 21 |
 | 1.20.1 | yes | — | yes | 17 |
 
-Get it from [Modrinth](https://modrinth.com/mod/footprints), [CurseForge](https://www.curseforge.com/minecraft/mc-mods/footprints) or [GitHub Releases](https://github.com/shtanko-michael/farmstead-footprints/releases).
+Get it from [Modrinth](https://modrinth.com/mod/farmstead-footprints), [CurseForge](https://www.curseforge.com/minecraft/mc-mods/farmstead-footprints) or [GitHub Releases](https://github.com/shtanko-michael/farmstead-footprints/releases).
 
 **Requirements: none.** No library, not even Fabric API on Fabric: the jar is all you need. [Mod Menu](https://modrinth.com/mod/modmenu) is optional and adds a settings button on Fabric.
 
@@ -86,7 +86,7 @@ The mod is client-side, so it has no server permissions. LuckPerms nodes come wi
 When the game starts, Footprints writes one line to the log:
 
 ```
-[Farmstead] Footprints 0.1.0 started (neoforge, Minecraft 1.21.1) - https://modrinth.com/mod/footprints
+[Farmstead] Footprints 0.1.0 started (neoforge, Minecraft 1.21.1) - https://modrinth.com/mod/farmstead-footprints
 ```
 
 Then, once per session and in the background, it asks the public Modrinth API whether a newer release exists for your loader and Minecraft version. If one does, the log says so with a download link. The request carries no information about you, your world or your server; nothing is downloaded or installed. Turn it off with `general.checkUpdates = false`, or for every Farmstead mod at once with the JVM flag `-Dfarmstead.updateCheck=false` or the environment variable `FARMSTEAD_UPDATE_CHECK=false`.

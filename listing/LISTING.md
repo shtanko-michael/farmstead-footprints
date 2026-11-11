@@ -7,7 +7,7 @@
 | Поле | Значение |
 | --- | --- |
 | Название | `Footprints` |
-| Slug | `footprints` (Modrinth: свободен на 11.11.2026). CurseForge: проверить при создании; если занят — `farmstead-footprints` и поправить ссылки (поиск по `mc-mods/footprints`) |
+| Slug | Modrinth `farmstead-footprints` (id `Fn5VQG7b`), CurseForge `farmstead-footprints` (id `1799135`). CI reads the ids from repo variables `MODRINTH_ID` / `CURSEFORGE_ID` |
 | Краткое описание (≤ 150 знаков, для обеих площадок) | `Realistic footprints for players and 47 mobs: pressed into snow, sand and mud, lit by your shaders, fading with time. Client-side.` |
 | Автор / организация | Farmstead |
 | Лицензия | MIT (код). Ассеты — CC BY-NC 4.0, оговорено в LICENSE. На Modrinth: `MIT`, ссылка на LICENSE |
@@ -84,7 +84,7 @@ GIF функций для описаний — [`docs/media/gifs/`](../docs/medi
 Ролик 32 с, 1920×1080, 60 к/с, музыка ElevenLabs: `C:/Users/admin/minecraft-api/video/out/footprints/footprints-trailer.mp4` (65 МБ, в git не кладём; монтаж — композиция `FootprintsTrailer` в `minecraft-api/video/src/mods/Footprints.tsx`). Залить на YouTube — шаг владельца. Ссылку вставить: на CurseForge — во вкладку Videos проекта; на Modrinth отдельного поля нет, поэтому строкой `▶ Watch the trailer` сразу под баннером в описании.
 
 - **YouTube title:** `Footprints — realistic footprints for Minecraft (Fabric, NeoForge, Forge)`
-- **Description:** `Footprints by Farmstead presses real tracks into the world: players and 47 mobs leave their own prints in snow, sand, mud and soil, lit by your shaders and fading with time. Client-side, works on any server. Minecraft 1.20.1, 1.21.1, 26.3 — Fabric, Quilt, NeoForge, Forge. Download: https://modrinth.com/mod/footprints · https://www.curseforge.com/minecraft/mc-mods/footprints · Source: https://github.com/shtanko-michael/farmstead-footprints`
+- **Description:** `Footprints by Farmstead presses real tracks into the world: players and 47 mobs leave their own prints in snow, sand, mud and soil, lit by your shaders and fading with time. Client-side, works on any server. Minecraft 1.20.1, 1.21.1, 26.3 — Fabric, Quilt, NeoForge, Forge. Download: https://modrinth.com/mod/farmstead-footprints · https://www.curseforge.com/minecraft/mc-mods/farmstead-footprints · Source: https://github.com/shtanko-michael/farmstead-footprints`
 - **Tags:** minecraft, minecraft mod, footprints, fabric, neoforge, forge, shaders, iris, sodium, immersive, farmstead
 
 ## Публикация через CI
