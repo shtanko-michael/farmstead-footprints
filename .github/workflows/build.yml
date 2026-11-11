@@ -1,0 +1,53 @@
+name: Build
+
+# Every push and pull request: the 12 language files are complete and all six targets build.
+# The jars are kept as a workflow artifact for a week, handy for testing a branch.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      # Gradle itself runs on 25 (Stonecutter 0.10); 17 and 21 are the toolchains of the
+      # 1.20.1 and 1.21.1 targets. The last version listed becomes JAVA_HOME.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            17
+            21
+            25
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Language files
+        run: python3 tools/lang.py --check
+
+      # fromEnv: use the JDKs installed above instead of downloading them again.
+      # The heap: three NeoForm/Forge decompiles do not fit in the 2G of gradle.properties.
+      - name: Build all targets
+        run: |
+          chmod +x gradlew
+          ./gradlew build --stacktrace --no-daemon \
+            -Porg.gradle.java.installations.fromEnv=JAVA_HOME_17_X64,JAVA_HOME_21_X64,JAVA_HOME_25_X64 \
+            -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: footprints-jars
+          path: |
+            versions/*/build/libs/*.jar
+            !versions/*/build/libs/*-sources.jar
+          if-no-files-found: error
+          retention-days: 7

@@ -1,0 +1,174 @@
+name: Release
+
+# Push a tag vX.Y.Z (equal to mod.version in stonecutter.properties.toml) to release:
+#   1. build all six targets;
+#   2. a GitHub Release with the six jars, SHA256SUMS and RELEASE_NOTES/vX.Y.Z.md;
+#   3. each jar to Modrinth and CurseForge as its own version, with loaders, game versions and
+#      dependencies. A platform is skipped unless both its token secret and its project id
+#      variable are set (MODRINTH_TOKEN + vars.MODRINTH_ID, CURSEFORGE_TOKEN + vars.CURSEFORGE_ID),
+#      so a release without them stays GitHub-only.
+# The projects themselves are created by hand once (listing/LISTING.md); CI only adds versions.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      version: ${{ steps.ver.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version from tag
+        id: ver
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          FILE_VERSION=$(sed -n 's/^mod.version = "\(.*\)"/\1/p' stonecutter.properties.toml)
+          if [ "$VERSION" != "$FILE_VERSION" ]; then
+            echo "::error::tag v$VERSION does not match mod.version $FILE_VERSION in stonecutter.properties.toml"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            17
+            21
+            25
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Language files
+        run: python3 tools/lang.py --check
+
+      - name: Build all targets
+        run: |
+          chmod +x gradlew
+          ./gradlew build --stacktrace --no-daemon \
+            -Porg.gradle.java.installations.fromEnv=JAVA_HOME_17_X64,JAVA_HOME_21_X64,JAVA_HOME_25_X64 \
+            -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g"
+
+      - name: Collect jars
+        run: |
+          mkdir dist
+          cp versions/*/build/libs/farmstead-footprints-*.jar dist/
+          rm -f dist/*-sources.jar
+          ls -la dist
+          test "$(ls dist | wc -l)" -eq 6
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jars
+          path: dist/*.jar
+          if-no-files-found: error
+          retention-days: 3
+
+  github:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: jars
+          path: dist
+      - name: GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          cd dist && sha256sum *.jar > SHA256SUMS && cd ..
+          NOTES="RELEASE_NOTES/v${VERSION}.md"
+          [ -f "$NOTES" ] || { echo "Footprints ${VERSION}." > notes.md; NOTES=notes.md; }
+          PRE=""; case "$VERSION" in *-*) PRE="--prerelease";; esac
+          gh release create "v${VERSION}" --title "Footprints ${VERSION}" --notes-file "$NOTES" $PRE dist/*
+
+  catalogues:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1 # one upload at a time keeps the platforms' rate limits happy
+      matrix:
+        include:
+          - { mc: "1.20.1", loader: fabric, loaders: "fabric quilt", games: "1.20.1", java: 17, title: "Fabric 1.20.1" }
+          - { mc: "1.20.1", loader: forge, loaders: "forge", games: "1.20.1", java: 17, title: "Forge 1.20.1" }
+          - { mc: "1.21.1", loader: fabric, loaders: "fabric quilt", games: "1.21 1.21.1", java: 21, title: "Fabric 1.21.1" }
+          - { mc: "1.21.1", loader: neoforge, loaders: "neoforge", games: "1.21 1.21.1", java: 21, title: "NeoForge 1.21.1" }
+          - { mc: "26.3", loader: fabric, loaders: "fabric quilt", games: "26.3", java: 25, title: "Fabric 26.3" }
+          - { mc: "26.3", loader: neoforge, loaders: "neoforge", games: "26.3", java: 25, title: "NeoForge 26.3" }
+    # job-level env, because a step's `if:` cannot read secrets directly
+    env:
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+      MODRINTH_ID: ${{ vars.MODRINTH_ID }}
+      CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID }}
+      VERSION: ${{ needs.build.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: jars
+          path: dist
+
+      - name: Version details
+        id: d
+        run: |
+          echo "file=dist/farmstead-footprints-${{ matrix.loader }}-${VERSION}+${{ matrix.mc }}.jar" >> "$GITHUB_OUTPUT"
+          case "$VERSION" in *-alpha*) T=alpha;; *-*) T=beta;; *) T=release;; esac
+          echo "type=$T" >> "$GITHUB_OUTPUT"
+          NOTES="RELEASE_NOTES/v${VERSION}.md"
+          [ -f "$NOTES" ] || { echo "Footprints ${VERSION}." > "$RUNNER_TEMP/notes.md"; NOTES="$RUNNER_TEMP/notes.md"; }
+          echo "notes=$NOTES" >> "$GITHUB_OUTPUT"
+          if [ "${{ matrix.loader }}" = fabric ]; then
+            {
+              echo "deps<<EOF"
+              echo "fabric-api(required){modrinth:P7dR8mSH}{curseforge:306612}"
+              echo "modmenu(optional){modrinth:mOgUt4GM}{curseforge:308702}"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "deps=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Modrinth
+        if: env.MODRINTH_TOKEN != '' && env.MODRINTH_ID != ''
+        uses: Kira-NT/mc-publish@v3.3
+        with:
+          modrinth-id: ${{ vars.MODRINTH_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          files: ${{ steps.d.outputs.file }}
+          name: Footprints ${{ env.VERSION }} (${{ matrix.title }})
+          version: ${{ env.VERSION }}+${{ matrix.mc }}-${{ matrix.loader }}
+          version-type: ${{ steps.d.outputs.type }}
+          changelog-file: ${{ steps.d.outputs.notes }}
+          loaders: ${{ matrix.loaders }}
+          game-versions: ${{ matrix.games }}
+          java: ${{ matrix.java }}
+          dependencies: ${{ steps.d.outputs.deps }}
+
+      - name: CurseForge
+        if: env.CURSEFORGE_TOKEN != '' && env.CURSEFORGE_ID != ''
+        uses: Kira-NT/mc-publish@v3.3
+        with:
+          curseforge-id: ${{ vars.CURSEFORGE_ID }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          files: ${{ steps.d.outputs.file }}
+          name: Footprints ${{ env.VERSION }} (${{ matrix.title }})
+          version: ${{ env.VERSION }}+${{ matrix.mc }}-${{ matrix.loader }}
+          version-type: ${{ steps.d.outputs.type }}
+          changelog-file: ${{ steps.d.outputs.notes }}
+          loaders: ${{ matrix.loaders }}
+          game-versions: ${{ matrix.games }}
+          java: ${{ matrix.java }}
+          dependencies: ${{ steps.d.outputs.deps }}

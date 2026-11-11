@@ -1,0 +1,17 @@
+# Changelog
+
+All notable changes to Footprints. Versions follow [Semantic Versioning](https://semver.org/).
+
+## [0.1.0] — unreleased
+
+First release.
+
+- Footprints for players and 47 mobs, each with its own foot shape; children and baby zombies leave smaller prints.
+- Four-legged animals walk with a real gait: the hind foot lands in the front print of the same side.
+- Soft surfaces: snow, powder snow, sand, red sand, mud, muddy mangrove roots, gravel, dirt, coarse dirt, rooted dirt, podzol, mycelium, farmland, clay, soul sand, soul soil. Prints sit on top of thin snow layers.
+- Two-layer prints (hollow and lip) coloured from the ground they sit on; they fade after 1.5–5 minutes depending on the surface.
+- Works with Sodium and Iris shader packs.
+- Settings: presets (`default`, `vanilla_plus`, `cinematic`, `performance`), in-game settings screen (Mod Menu on Fabric, mod list on NeoForge/Forge), commented config `farmstead_footprints-client.toml`, commands `/footprints config|reload|stats`.
+- 12 languages.
+- Farmstead start-up line in the log and a once-per-session update check against Modrinth (off with `general.checkUpdates` or `-Dfarmstead.updateCheck=false`).
+- Minecraft 1.20.1 (Fabric, Forge), 1.21–1.21.1 (Fabric, NeoForge), 26.3 (Fabric, NeoForge).

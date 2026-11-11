@@ -1,0 +1,47 @@
+name: Bug report
+description: Something does not work or crashes
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting! Please fill in the versions, the steps and attach the log.
+  - type: input
+    id: mod
+    attributes:
+      label: Footprints version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: target
+    attributes:
+      label: Minecraft and loader
+      options:
+        - 26.3 NeoForge
+        - 26.3 Fabric / Quilt
+        - 1.21.1 NeoForge
+        - 1.21.1 Fabric / Quilt
+        - 1.20.1 Forge
+        - 1.20.1 Fabric / Quilt
+    validations:
+      required: true
+  - type: textarea
+    id: mods
+    attributes:
+      label: Other mods and shader pack
+      description: At least Sodium / Iris / Embeddium / Oculus and the shader pack, if any.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+  - type: textarea
+    id: log
+    attributes:
+      label: Log or crash report
+      description: Upload logs/latest.log (or the crash report) to https://mclo.gs and paste the link.
