@@ -80,8 +80,8 @@ def run(ctx):
     hook(ctx, "prints.clear")
     walkers(ctx, 8.6, Y)
     ctx.cmd(f"gamemode spectator {p}")
-    ctx.cmd(f"tp {p} 8 {Y + 2.6} 6.4 0 52")
-    ctx.wait(1.5)
+    ctx.cmd(f"tp {p} 7 {Y + 2.2} 7.2 0 55")
+    ctx.wait(2.5)
     record(ctx, "styles", 6)
     for s in ("DETAILED", "PIXEL", "DETAILED", "PIXEL"):
         hook(ctx, "style", s)
@@ -99,6 +99,7 @@ def run(ctx):
     ctx.cmd("kill @e[tag=b]")
 
     # ripples: wading through shallow water
+    hook(ctx, "prints.clear")
     ctx.cmd(f"tp {p} 9 {Y + 3.5} 21 0 50")
     ctx.cmd(f'summon villager 2 {Y - 1} 27 {{Tags:["v"],NoAI:1b}}')
     ctx.wait(1.0)
@@ -110,7 +111,7 @@ def run(ctx):
     # tryit: the settings, "Try it", prints on the grass where you look
     hook(ctx, "prints.clear")
     ctx.cmd(f"gamemode creative {p}")
-    ctx.cmd(f"tp {p} 24 {Y} 2 0 40")
+    ctx.cmd(f"tp {p} 8 {Y} 0.5 0 45")
     ctx.wait(1.0)
     hook(ctx, "config.open")
     ctx.wait(1.0)

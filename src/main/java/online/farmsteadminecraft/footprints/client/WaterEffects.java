@@ -113,7 +113,7 @@ public final class WaterEffects {
         double surface = waterSurface(level, e.getX(), e.getY() + e.getBbHeight() * 0.5, e.getZ());
         if (Double.isNaN(surface)) return;
         float size = Math.max(0.6f, e.getBbWidth() * 1.8f);
-        decal(level, e.getX(), surface, e.getZ(), random.nextFloat() * 360f, FootShape.RIPPLE, size * 0.6f, 0.4f, 50 + random.nextInt(15), now, 1.6f);
+        decal(level, e.getX(), surface, e.getZ(), random.nextFloat() * 360f, FootShape.RIPPLE, size * 0.5f, 0.28f, 40 + random.nextInt(12), now, 2.6f);
     }
 
     private static Vec3 motion(Entity e) {
