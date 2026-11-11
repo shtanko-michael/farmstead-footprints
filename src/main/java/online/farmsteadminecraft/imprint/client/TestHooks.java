@@ -55,6 +55,9 @@ public final class TestHooks {
                 } else if (file.equals("config.open")) {
                     Files.deleteIfExists(req);
                     ImprintClient.openConfigNextTick();
+                } else if (file.equals("prints.clear")) {
+                    Files.deleteIfExists(req);
+                    ImprintClient.POOL.clear();
                 } else if (file.equals("config.reload")) {
                     Files.deleteIfExists(req);
                     Imprint.LOGGER.info("test hook reload: problems={}", ImprintConfig.load());

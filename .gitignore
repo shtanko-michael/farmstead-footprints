@@ -37,3 +37,7 @@ tmp/
 run/
 versions/*/build/
 versions/*/.gradle/
+
+# Python
+__pycache__/
+*.pyc
