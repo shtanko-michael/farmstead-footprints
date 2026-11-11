@@ -75,7 +75,7 @@ public final class FootprintsClient {
         TestHooks.tick(mc);
         if (openConfig) {
             openConfig = false;
-            //? if >=26.1 {
+            //? if >=26.2 {
             /*mc.gui.setScreen(configScreen(null));
             *///?} else
             mc.setScreen(configScreen(null));
@@ -110,15 +110,19 @@ public final class FootprintsClient {
 
     /** Unit vector the camera looks along. */
     public static org.joml.Vector3f lookVector(Minecraft mc) {
-        //? if >=26.1 {
+        //? if >=26.2 {
         /*return new org.joml.Vector3f(mc.gameRenderer.mainCamera().forwardVector());
+        *///?} else if >=1.21.11 {
+        /*return new org.joml.Vector3f(mc.gameRenderer.getMainCamera().forwardVector());
         *///?} else
         return new org.joml.Vector3f(mc.gameRenderer.getMainCamera().getLookVector());
     }
 
     public static Vec3 cameraPos(Minecraft mc) {
-        //? if >=26.1 {
+        //? if >=26.2 {
         /*return mc.gameRenderer.mainCamera().position();
+        *///?} else if >=1.21.11 {
+        /*return mc.gameRenderer.getMainCamera().position();
         *///?} else
         return mc.gameRenderer.getMainCamera().getPosition();
     }

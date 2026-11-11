@@ -45,6 +45,48 @@ mod.mc_compat = "[1.21, 1.21.1]"
 deps.neo_loader = "21.1.265"
 
 
+["1.21.11"]
+mod.mc_releases = ["1.21.11"]
+
+
+[fabric."1.21.11"]
+mod.mc_compat = "~1.21.11"
+deps.modmenu = "17.0.1"
+
+
+[neoforge."1.21.11"]
+mod.mc_compat = "[1.21.11]"
+deps.neo_loader = "21.11.48"
+
+
+["26.1"]
+mod.mc_releases = ["26.1", "26.1.1", "26.1.2"]
+
+
+[fabric."26.1"]
+mod.mc_compat = "~26.1"
+deps.modmenu = "18.0.2"
+
+
+[neoforge."26.1"]
+mod.mc_compat = "[26.1, 26.2)"
+deps.neo_loader = "26.1.2.126"
+
+
+["26.2"]
+mod.mc_releases = ["26.2"]
+
+
+[fabric."26.2"]
+mod.mc_compat = "~26.2"
+deps.modmenu = "20.0.3"
+
+
+[neoforge."26.2"]
+mod.mc_compat = "[26.2, 26.3)"
+deps.neo_loader = "26.2.0.93"
+
+
 ["26.3"]
 mod.mc_releases = ["26.3"]
 

@@ -33,7 +33,12 @@ public final class ClientCommands {
             OWN.execute(root, new Object());
         } catch (CommandSyntaxException e) {
             Minecraft mc = Minecraft.getInstance();
-            if (mc.player != null) mc.player.sendSystemMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED));
+            Component msg = Component.literal(e.getMessage()).withStyle(ChatFormatting.RED);
+            if (mc.player == null) return true;
+            //? if >=1.21.11 && <26.1 {
+            /*mc.player.displayClientMessage(msg, false);
+            *///?} else
+            mc.player.sendSystemMessage(msg);
         }
         return true;
     }

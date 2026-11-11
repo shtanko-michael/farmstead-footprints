@@ -102,7 +102,7 @@ tasks {
         filesMatching("META-INF/neoforge.mods.toml") { expand(props) }
 
         val mixinJava = "JAVA_${requiredJava.majorVersion}"
-        filesMatching("*.mixins.json") { expand("java" to mixinJava) }
+        filesMatching("*.mixins.json") { expand("java" to mixinJava, "extraClient" to "") }
 
         exclude("fabric.mod.json", "*.ct", "*.classtweaker", "META-INF/mods.toml", "pack.mcmeta")
     }

@@ -31,6 +31,12 @@ final class NeoForgeClientHooks {
         /*NeoForge.EVENT_BUS.addListener((SubmitCustomGeometryEvent event) ->
             FootprintRenderer.submit(event.getSubmitNodeCollector(), event.getPoseStack(),
                 event.getLevelRenderState().cameraRenderState.pos));
+        *///?} else if >=1.21.11 {
+        /*// the model-view stack carries the camera rotation during the main pass: identity pose here
+        NeoForge.EVENT_BUS.addListener((RenderLevelStageEvent.AfterEntities event) ->
+            FootprintRenderer.renderImmediate(new org.joml.Matrix4f(), event.getLevelRenderState().cameraRenderState.pos, FootprintRenderer.PASS_GROUND));
+        NeoForge.EVENT_BUS.addListener((RenderLevelStageEvent.AfterTranslucentBlocks event) ->
+            FootprintRenderer.renderImmediate(new org.joml.Matrix4f(), event.getLevelRenderState().cameraRenderState.pos, FootprintRenderer.PASS_WATER));
         *///?} else {
         NeoForge.EVENT_BUS.addListener((RenderLevelStageEvent event) -> {
             // After particles the global model-view matrix carries the camera rotation, so the

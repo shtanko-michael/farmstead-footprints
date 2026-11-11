@@ -6,7 +6,7 @@
     "ClientLanguageMixin",
     "ClientPacketListenerMixin",
     "LevelRendererMixin",
-    "MinecraftMixin"
+    "MinecraftMixin"${extraClient}
   ],
   "injectors": {
     "defaultRequire": 1

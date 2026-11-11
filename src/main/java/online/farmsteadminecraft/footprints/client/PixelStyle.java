@@ -20,6 +20,12 @@ import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
+*///?} else if >=1.21.11 {
+/*import java.util.ArrayList;
+import net.minecraft.client.model.geom.builders.UVPair;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 *///?} else {
 import net.minecraft.client.renderer.block.model.BakedQuad;
 //?}
@@ -71,6 +77,26 @@ public final class PixelStyle {
             vs[i] = UVPair.unpackV(quad.packedUV(i));
         }
         tintIndex = quad.materialInfo().tintIndex();
+        *///?} else if >=1.21.11 {
+        /*BlockStateModel model = mc.getBlockRenderer().getBlockModel(state);
+        List<BlockModelPart> parts = new ArrayList<>();
+        model.collectParts(RANDOM, parts);
+        BakedQuad quad = null;
+        for (BlockModelPart part : parts) {
+            List<BakedQuad> quads = part.getQuads(Direction.UP);
+            if (!quads.isEmpty()) {
+                quad = quads.get(quads.size() - 1);
+                break;
+            }
+        }
+        if (quad == null) return false;
+        for (int i = 0; i < 4; i++) {
+            xs[i] = quad.position(i).x();
+            zs[i] = quad.position(i).z();
+            us[i] = UVPair.unpackU(quad.packedUV(i));
+            vs[i] = UVPair.unpackV(quad.packedUV(i));
+        }
+        tintIndex = quad.tintIndex();
         *///?} else {
         List<BakedQuad> quads = mc.getBlockRenderer().getBlockModel(state).getQuads(state, Direction.UP, RANDOM);
         if (quads.isEmpty()) return false;

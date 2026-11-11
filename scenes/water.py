@@ -22,7 +22,10 @@ def run(ctx):
              f"fill 12 {Y} 16 18 {Y} 16 redstone_block")
     ctx.wait(2)
     ctx.cmd(f"tp {p} 15 {Y + 3} -3")
-    boat = "oak_boat" if "26." in str(ctx.out_dir) else "boat"
+    # boats split by wood in 1.21.2
+    mc = ctx.out_dir.name.split("-")[0]
+    parts = [int(x) for x in mc.split(".")]
+    boat = "oak_boat" if parts[0] >= 26 or parts[:2] == [1, 21] and len(parts) > 2 and parts[2] >= 2 else "boat"
     ctx.cmd(f'summon {boat} 1 {Y + 0.6} 3 {{Tags:["b"]}}')
     ctx.cmd(f'summon villager 1 {Y} 8 {{Tags:["v"],NoAI:1b}}')
     ctx.cmd(f'summon minecart 1 {Y + 1} 16 {{Tags:["m"]}}')

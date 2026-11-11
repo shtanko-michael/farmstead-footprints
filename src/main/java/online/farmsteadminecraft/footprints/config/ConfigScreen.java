@@ -176,7 +176,7 @@ public class ConfigScreen extends Screen {
     }
 
     private void openLink(String url) {
-        //? if >=26.1 {
+        //? if >=26.2 {
         /*ConfirmLinkScreen.confirmLinkNow(this, java.net.URI.create(url));
         *///?} else if >=1.21 {
         ConfirmLinkScreen.confirmLinkNow(this, url);
@@ -196,7 +196,7 @@ public class ConfigScreen extends Screen {
         if (!(file.find(path) instanceof StringListValue l) || l.picker() == null || minecraft == null) return;
         PickerScreen screen = new PickerScreen(this, l, name(l), file.modId());
         screen.preset(query);
-        //? if >=26.1 {
+        //? if >=26.2 {
         /*minecraft.gui.setScreen(screen);
         *///?} else
         minecraft.setScreen(screen);
@@ -204,7 +204,7 @@ public class ConfigScreen extends Screen {
 
     void reopen() {
         if (minecraft == null) return;
-        //? if >=26.1 {
+        //? if >=26.2 {
         /*minecraft.gui.setScreen(this);
         *///?} else
         minecraft.setScreen(this);
@@ -212,7 +212,7 @@ public class ConfigScreen extends Screen {
 
     private void close() {
         if (minecraft == null) return;
-        //? if >=26.1 {
+        //? if >=26.2 {
         /*minecraft.gui.setScreen(parent);
         *///?} else
         minecraft.setScreen(parent);
@@ -254,7 +254,7 @@ public class ConfigScreen extends Screen {
             Button pick = Button.builder(Component.literal("..."), b -> {
                 if (minecraft == null) return;
                 PickerScreen screen = new PickerScreen(this, l, name(v), file.modId());
-                //? if >=26.1 {
+                //? if >=26.2 {
                 /*minecraft.gui.setScreen(screen);
                 *///?} else
                 minecraft.setScreen(screen);

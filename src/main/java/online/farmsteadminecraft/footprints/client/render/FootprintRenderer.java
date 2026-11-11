@@ -21,7 +21,11 @@ import org.joml.Matrix4f;
 /*import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.util.LightCoordsUtil;
+*///?} else if >=1.21.11 {
+/*import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 *///?} else {
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -45,7 +49,7 @@ public final class FootprintRenderer {
     }
 
     public static RenderType renderType(ResourceLocation texture) {
-        //? if >=26.1 {
+        //? if >=1.21.11 {
         /*return RenderTypes.entityTranslucent(texture);
         *///?} else
         return RenderType.entityTranslucent(texture);
@@ -220,10 +224,12 @@ public final class FootprintRenderer {
 
     private static int light(ClientLevel level, Footprint p) {
         BlockPos pos = BlockPos.containing(p.x, p.y + 0.1, p.z);
-        //? if >=26.1 {
-        /*return LightCoordsUtil.getLightCoords(level, pos);
+        //? if >=26.2 {
+        /*return net.minecraft.util.LightCoordsUtil.getLightCoords(level, pos);
+        *///?} else if >=26.1 {
+        /*return net.minecraft.client.renderer.LevelRenderer.getLightCoords(level, pos);
         *///?} else
-        return LevelRenderer.getLightColor(level, pos);
+        return net.minecraft.client.renderer.LevelRenderer.getLightColor(level, pos);
     }
 
     private static void vertex(VertexConsumer vc, Matrix4f m, float x, float y, float z, float u, float v,

@@ -70,7 +70,7 @@ public final class TestHooks {
                     if (screen(mc) instanceof online.farmsteadminecraft.footprints.config.ConfigScreen cs) cs.openPicker(arg[0], arg.length > 1 ? arg[1] : "");
                 } else if (file.equals("try.it")) {
                     Files.deleteIfExists(req);
-                    //? if >=26.1 {
+                    //? if >=26.2 {
                     /*mc.gui.setScreen(null);
                     *///?} else
                     mc.setScreen(null);
@@ -127,7 +127,7 @@ public final class TestHooks {
 
     /** Benchmark load: fills the whole pool with long-lived prints on the ground within 40 blocks of the player. */
     private static net.minecraft.client.gui.screens.Screen screen(Minecraft mc) {
-        //? if >=26.1 {
+        //? if >=26.2 {
         /*return mc.gui.screen();
         *///?} else
         return mc.screen;
@@ -162,8 +162,10 @@ public final class TestHooks {
 
     private static void shoot(Minecraft mc, String name) {
         File gameDir = mc.gameDirectory;
-        //? if >=26.1 {
+        //? if >=26.2 {
         /*Screenshot.grab(gameDir, name + ".png", mc.gameRenderer.mainRenderTarget(), 1, msg -> Footprints.LOGGER.info("test hook: {}", msg.getString()));
+        *///?} else if >=1.21.11 {
+        /*Screenshot.grab(gameDir, name + ".png", mc.getMainRenderTarget(), 1, msg -> Footprints.LOGGER.info("test hook: {}", msg.getString()));
         *///?} else
         Screenshot.grab(gameDir, name + ".png", mc.getMainRenderTarget(), msg -> Footprints.LOGGER.info("test hook: {}", msg.getString()));
     }

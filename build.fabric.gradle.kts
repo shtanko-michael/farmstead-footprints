@@ -123,7 +123,10 @@ tasks {
         filesMatching("fabric.mod.json") { expand(props) }
 
         val mixinJava = "JAVA_${requiredJava.majorVersion}"
-        filesMatching("*.mixins.json") { expand("java" to mixinJava) }
+        // mixins that only exist for some versions
+        val extraClient = if (sc.current.parsed >= "1.21.11" && sc.current.parsed < "26.1") ", \"ChunkSectionsToRenderMixin\"" else ""
+        inputs.property("extraClient", extraClient)
+        filesMatching("*.mixins.json") { expand("java" to mixinJava, "extraClient" to extraClient) }
 
         exclude("META-INF/neoforge.mods.toml", "META-INF/mods.toml", "pack.mcmeta")
     }

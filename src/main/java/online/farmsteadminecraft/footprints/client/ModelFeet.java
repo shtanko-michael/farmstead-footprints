@@ -85,7 +85,7 @@ final class ModelFeet {
         return out;
     }
 
-    //? if >=26.1 {
+    //? if >=1.21.11 {
     /*private static Object model(LivingEntity e) {
         EntityRenderer<?, ?> renderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(e);
         return renderer instanceof LivingEntityRenderer<?, ?, ?> living ? living.getModel() : null;

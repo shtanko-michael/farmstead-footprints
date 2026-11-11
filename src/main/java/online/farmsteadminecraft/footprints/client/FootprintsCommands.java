@@ -43,6 +43,10 @@ public final class FootprintsCommands {
 
     private static void say(Component message) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player != null) mc.player.sendSystemMessage(message);
+        if (mc.player == null) return;
+        //? if >=1.21.11 && <26.1 {
+        /*mc.player.displayClientMessage(message, false);
+        *///?} else
+        mc.player.sendSystemMessage(message);
     }
 }

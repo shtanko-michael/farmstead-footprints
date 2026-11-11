@@ -10,6 +10,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /*import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
+*///?} else if >=1.21.11 {
+/*import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.state.LevelRenderState;
+import online.farmsteadminecraft.footprints.client.FootprintsClient;
+import org.joml.Matrix4f;
 *///?} else if >=1.21 {
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -34,6 +41,12 @@ public abstract class LevelRendererMixin {
     /*@Inject(method = "submitFeatures", at = @At("TAIL"))
     private void footprints$submit(LevelRenderState state, SubmitNodeCollector collector, boolean renderOutline, CallbackInfo ci) {
         FootprintRenderer.submit(collector, new PoseStack(), state.cameraRenderState.pos);
+    }
+    *///?} else if >=1.21.11 {
+    /*// after the entities and their batches, where NeoForge fires AfterEntities; the model-view stack has the camera
+    @Inject(method = "renderBlockDestroyAnimation", at = @At("HEAD"))
+    private void footprints$render(PoseStack pose, MultiBufferSource.BufferSource buffers, LevelRenderState state, CallbackInfo ci) {
+        FootprintRenderer.renderImmediate(new Matrix4f(), state.cameraRenderState.pos, FootprintRenderer.PASS_GROUND);
     }
     *///?} else if >=1.21 {
     // the global model-view matrix carries the camera rotation here, so the pose is identity

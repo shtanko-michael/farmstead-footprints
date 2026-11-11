@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 
-//? if >=26.1 {
+//? if >=1.21.11 {
 /*import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 *///?} else {
@@ -49,7 +49,7 @@ public final class WaterEffects {
         double maxDistSq = (double) FootprintsConfig.RENDER_DISTANCE.value() * FootprintsConfig.RENDER_DISTANCE.value();
         for (Entity e : level.entitiesForRendering()) {
             if (e.position().distanceToSqr(camera) > maxDistSq) continue;
-            //? if >=26.1 {
+            //? if >=1.21.11 {
             /*boolean boat = e instanceof AbstractBoat;
             *///?} else
             boolean boat = e instanceof Boat;
@@ -173,6 +173,24 @@ public final class WaterEffects {
 
     private void decal(ClientLevel level, double x, double y, double z, float yaw, FootShape shape, float size, float alpha,
                        int life, long now, float grow) {
+        //? if >=26.1 {
+        /*// 26.x draws custom geometry before the water, so a decal there would cut a hole in it: foam particles instead
+        double rx = -Math.cos(Math.toRadians(yaw)), rz = -Math.sin(Math.toRadians(yaw));
+        if (shape == FootShape.WAKE) {
+            for (int side = -1; side <= 1; side += 2) {
+                double px = x + rx * side * size * 0.45, pz = z + rz * side * size * 0.45;
+                level.addParticle(ParticleTypes.FISHING, px, y, pz, rx * side * 0.03, 0, rz * side * 0.03);
+            }
+            level.addParticle(ParticleTypes.BUBBLE_POP, x, y + 0.05, z, 0, 0.01, 0);
+        } else {
+            for (int k = 0; k < 4; k++) {
+                double a = k * Math.PI / 2 + random.nextDouble();
+                level.addParticle(ParticleTypes.FISHING, x + Math.cos(a) * size * 0.4, y, z + Math.sin(a) * size * 0.4,
+                    Math.cos(a) * 0.02, 0, Math.sin(a) * 0.02);
+            }
+        }
+        if (true) return;
+        *///?}
         Footprint p = pool.add();
         p.x = x;
         p.y = y - 0.008;
