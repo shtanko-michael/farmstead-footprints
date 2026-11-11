@@ -98,19 +98,21 @@ public final class FootProfiles {
             return player.getItemBySlot(EquipmentSlot.FEET).isEmpty() ? playerBare : playerBoots;
         }
         if (!FootprintsConfig.MOBS.on()) return null;
-        FootProfile profile = CACHE.computeIfAbsent(entity.getType(), FootProfiles::resolve);
+        FootProfile profile = CACHE.computeIfAbsent(entity.getType(), t -> resolve(t, entity));
         if (profile == NONE) return null;
         if (entity.isBaby() && (profile == FootProfile.BOOTS || profile == FootProfile.BAREFOOT)) return FootProfile.CHILD;
         return profile;
     }
 
-    private static FootProfile resolve(EntityType<?> type) {
+    private static FootProfile resolve(EntityType<?> type, LivingEntity entity) {
         String id = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
         if (excludeIds.contains(id)) return NONE;
         for (TagKey<EntityType<?>> tag : excludeTags) {
             if (type.builtInRegistryHolder().is(tag)) return NONE;
         }
         FootProfile base = BY_ID.get(id);
+        // a mob we have no profile for: its model's feet, else a guess from the hitbox
+        if (base == null) base = ModelFeet.of(entity);
         if (base == null) base = generic(type);
         return override(base, type);
     }

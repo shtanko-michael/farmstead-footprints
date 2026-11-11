@@ -52,6 +52,15 @@ public record FootProfile(FootShape left, FootShape right, float stride, float s
         return new FootProfile(shape, shape == left ? right : shape, stride, stance, legs, register, toeIn, scale, hop);
     }
 
+    /** One line for logs: shape, stride, stance and each leg's (lateral, forward) offset. */
+    public String describe() {
+        StringBuilder sb = new StringBuilder(left.name).append(" stride=").append(String.format(java.util.Locale.ROOT, "%.2f", stride))
+            .append(" scale=").append(String.format(java.util.Locale.ROOT, "%.2f", scale));
+        if (legs == null) sb.append(" biped spacing=").append(String.format(java.util.Locale.ROOT, "%.2f", spacing));
+        else for (int i = 0; i < legs.length; i += 2) sb.append(String.format(java.util.Locale.ROOT, " (%.2f,%.2f)", legs[i], legs[i + 1]));
+        return sb.toString();
+    }
+
     public FootProfile hopping() {
         return new FootProfile(left, right, stride, spacing, legs, register, toeIn, scale, true);
     }

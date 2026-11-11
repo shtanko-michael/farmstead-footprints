@@ -78,6 +78,19 @@ public final class TestHooks {
                         long now = mc.level.getGameTime();
                         FootprintsClient.POOL.forEachAlive(p -> p.bornTick = now - (long) (share * p.lifeTicks));
                     }
+                } else if (file.equals("model.feet")) {
+                    // what the model reader makes of every mob in sight, next to the built-in profile
+                    Files.deleteIfExists(req);
+                    if (mc.level != null) {
+                        java.util.Set<Object> seen = new java.util.HashSet<>();
+                        for (net.minecraft.world.entity.Entity en : mc.level.entitiesForRendering()) {
+                            if (en instanceof net.minecraft.world.entity.LivingEntity le && seen.add(le.getType())) {
+                                FootProfile m = ModelFeet.of(le);
+                                Footprints.LOGGER.info("model.feet {}: model={} builtIn={}", net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(le.getType()),
+                                    m == null ? "none" : m.describe(), FootProfiles.of(le) == null ? "none" : FootProfiles.of(le).describe());
+                            }
+                        }
+                    }
                 } else if (file.equals("config.reload")) {
                     Files.deleteIfExists(req);
                     Footprints.LOGGER.info("test hook reload: problems={}", FootprintsConfig.load());
