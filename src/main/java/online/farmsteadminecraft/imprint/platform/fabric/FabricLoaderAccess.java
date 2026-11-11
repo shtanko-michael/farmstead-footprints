@@ -23,6 +23,11 @@ final class FabricLoaderAccess implements ModLoaderAccess {
     }
 
     @Override
+    public java.nio.file.Path configDir() {
+        return loader.getConfigDir();
+    }
+
+    @Override
     public String loaderName() {
         return "fabric";
     }

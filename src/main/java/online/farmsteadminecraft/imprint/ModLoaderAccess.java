@@ -19,6 +19,9 @@ public interface ModLoaderAccess {
 
     String loaderName();
 
+    /** The game's config folder ({@code .minecraft/config}). */
+    java.nio.file.Path configDir();
+
     final class Holder {
         private ModLoaderAccess access;
 

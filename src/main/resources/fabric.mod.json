@@ -13,7 +13,8 @@
   "environment": "*",
   "entrypoints": {
     "main": ["online.farmsteadminecraft.imprint.platform.fabric.ImprintFabric"],
-    "client": ["online.farmsteadminecraft.imprint.platform.fabric.ImprintFabricClient"]
+    "client": ["online.farmsteadminecraft.imprint.platform.fabric.ImprintFabricClient"],
+    "modmenu": ["online.farmsteadminecraft.imprint.platform.fabric.ImprintModMenu"]
   },
   "mixins": ["imprint.mixins.json"],
   "accessWidener": "imprint.ct",
@@ -22,7 +23,8 @@
     "minecraft": "${minecraft}",
     "fabric-lifecycle-events-v1": "*",
     "fabric-rendering-v1": "*",
-    "fabric-resource-loader-v0": "*"
+    "fabric-resource-loader-v0": "*",
+    "fabric-command-api-v2": "*"
   },
   "suggests": {
     "modmenu": "*"

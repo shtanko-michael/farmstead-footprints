@@ -12,7 +12,7 @@ public class ImprintNeoForge {
         ModLoaderAccess.HOLDER.install(new NeoForgeLoaderAccess());
         Imprint.init();
         if (ModLoaderAccess.get().isClient()) {
-            NeoForgeClientHooks.register();
+            NeoForgeClientHooks.register(modContainer);
         }
     }
 }

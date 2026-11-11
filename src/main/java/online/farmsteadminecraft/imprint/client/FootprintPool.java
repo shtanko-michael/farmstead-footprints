@@ -16,7 +16,9 @@ public final class FootprintPool {
     }
 
     public void resize(int capacity) {
-        prints = new Footprint[Math.max(16, capacity)];
+        capacity = Math.max(16, capacity);
+        if (prints != null && prints.length == capacity) return;
+        prints = new Footprint[capacity];
         for (int i = 0; i < prints.length; i++) prints[i] = new Footprint();
         next = 0;
         alive = 0;

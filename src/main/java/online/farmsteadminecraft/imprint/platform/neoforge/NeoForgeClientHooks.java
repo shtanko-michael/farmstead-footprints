@@ -1,6 +1,11 @@
 package online.farmsteadminecraft.imprint.platform.neoforge;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.commands.CommandSourceStack;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import online.farmsteadminecraft.imprint.client.ImprintCommands;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import online.farmsteadminecraft.imprint.client.ImprintClient;
@@ -15,8 +20,13 @@ final class NeoForgeClientHooks {
     private NeoForgeClientHooks() {
     }
 
-    static void register() {
+    static void register(ModContainer container) {
+        ImprintClient.init();
+        container.registerExtensionPoint(IConfigScreenFactory.class,
+            (IConfigScreenFactory) (mod, parent) -> ImprintClient.configScreen(parent));
         NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> ImprintClient.tick(Minecraft.getInstance()));
+        NeoForge.EVENT_BUS.addListener((RegisterClientCommandsEvent event) ->
+            event.getDispatcher().register(ImprintCommands.<CommandSourceStack>build()));
         //? if >=26.1 {
         /*NeoForge.EVENT_BUS.addListener((SubmitCustomGeometryEvent event) ->
             FootprintRenderer.submit(event.getSubmitNodeCollector(), event.getPoseStack(),

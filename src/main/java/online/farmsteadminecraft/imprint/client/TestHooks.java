@@ -45,10 +45,18 @@ public final class TestHooks {
         Path dir = mc.gameDirectory.toPath().resolve("testhooks");
         if (!Files.isDirectory(dir)) return;
         try (Stream<Path> files = Files.list(dir)) {
-            for (Path req : files.filter(p -> p.toString().endsWith(".shot")).toList()) {
-                String name = req.getFileName().toString().replace(".shot", "");
-                Files.deleteIfExists(req);
-                shoot(mc, name);
+            for (Path req : files.toList()) {
+                String file = req.getFileName().toString();
+                if (file.endsWith(".shot")) {
+                    Files.deleteIfExists(req);
+                    shoot(mc, file.substring(0, file.length() - 5));
+                } else if (file.equals("config.open")) {
+                    Files.deleteIfExists(req);
+                    ImprintClient.openConfigNextTick();
+                } else if (file.equals("config.reload")) {
+                    Files.deleteIfExists(req);
+                    Imprint.LOGGER.info("test hook reload: problems={}", ImprintConfig.load());
+                }
             }
         } catch (Exception e) {
             Imprint.LOGGER.warn("test hook failed", e);

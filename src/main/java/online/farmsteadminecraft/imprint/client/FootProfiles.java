@@ -55,11 +55,13 @@ public final class FootProfiles {
     /** @return the profile, or {@code null} if this entity leaves no prints */
     public static FootProfile of(LivingEntity entity) {
         if (entity instanceof Player player) {
-            if (!ImprintConfig.players) return null;
+            if (!ImprintConfig.PLAYERS.on()) return null;
             return player.getItemBySlot(EquipmentSlot.FEET).isEmpty() ? FootProfile.BAREFOOT : FootProfile.BOOTS;
         }
-        if (!ImprintConfig.mobs) return null;
-        FootProfile profile = BY_ID.get(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString());
+        if (!ImprintConfig.MOBS.on()) return null;
+        String id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
+        if (ImprintConfig.ENTITY_BLACKLIST.contains(id)) return null;
+        FootProfile profile = BY_ID.get(id);
         if (profile != null && entity.isBaby() && !profile.quadruped()) return FootProfile.CHILD;
         return profile;
     }

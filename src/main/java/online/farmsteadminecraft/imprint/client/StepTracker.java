@@ -36,7 +36,7 @@ public final class StepTracker {
     }
 
     public void tick(ClientLevel level, Vec3 camera, long now) {
-        double maxDistSq = ImprintConfig.renderDistance * ImprintConfig.renderDistance;
+        double maxDistSq = (double) ImprintConfig.RENDER_DISTANCE.value() * ImprintConfig.RENDER_DISTANCE.value();
         for (Entity e : level.entitiesForRendering()) {
             if (!(e instanceof LivingEntity living)) continue;
             if (e.position().distanceToSqr(camera) > maxDistSq) continue;
@@ -134,7 +134,7 @@ public final class StepTracker {
         p.shadowRgb = shadowColour(ground, surface);
         p.rimRgb = rimColour(ground);
         p.bornTick = now;
-        p.lifeTicks = (int) Math.max(40, surface.lifeSecs() * 20 * ImprintConfig.lifetimeMultiplier
+        p.lifeTicks = (int) Math.max(40, surface.lifeSecs() * 20 * ImprintConfig.LIFETIME.value()
             * (0.9f + random.nextFloat() * 0.2f));
     }
 

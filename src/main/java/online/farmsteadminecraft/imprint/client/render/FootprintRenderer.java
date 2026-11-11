@@ -62,7 +62,7 @@ public final class FootprintRenderer {
     public static void renderImmediate(Matrix4f view, Vec3 camera) {
         Minecraft mc = Minecraft.getInstance();
         ClientLevel level = mc.level;
-        if (level == null || !ImprintConfig.enabled || ImprintClient.POOL.alive() == 0) return;
+        if (level == null || !ImprintConfig.ENABLED.on() || ImprintClient.POOL.alive() == 0) return;
         Matrix4f matrix = new Matrix4f(view);
         MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
         RenderType shadow = renderType(SHADOW);
@@ -76,7 +76,7 @@ public final class FootprintRenderer {
     /*/^* 26+ path: hand our geometry to the frame's submit collector. ^/
     public static void submit(SubmitNodeCollector collector, PoseStack pose, Vec3 camera) {
         ClientLevel level = Minecraft.getInstance().level;
-        if (level == null || !ImprintConfig.enabled || ImprintClient.POOL.alive() == 0) return;
+        if (level == null || !ImprintConfig.ENABLED.on() || ImprintClient.POOL.alive() == 0) return;
         Matrix4f matrix = new Matrix4f(pose.last().pose());
         collector.submitCustomGeometry(pose, renderType(SHADOW), (p, vc) -> emit(vc, matrix, camera, level, false));
         collector.submitCustomGeometry(pose, renderType(RIM), (p, vc) -> emit(vc, matrix, camera, level, true));
@@ -85,13 +85,13 @@ public final class FootprintRenderer {
 
     private static void emit(VertexConsumer vc, Matrix4f matrix, Vec3 camera, ClientLevel level, boolean rim) {
         long now = level.getGameTime();
-        double maxSq = ImprintConfig.renderDistance * ImprintConfig.renderDistance;
+        double maxSq = (double) ImprintConfig.RENDER_DISTANCE.value() * ImprintConfig.RENDER_DISTANCE.value();
         int[] order = {0};
         if (!rim) frames++;
         ImprintClient.POOL.forEachAlive(p -> {
             double dx = p.x - camera.x, dz = p.z - camera.z;
             if (dx * dx + dz * dz > maxSq) return;
-            float alpha = p.depth * p.fade(now) * ImprintConfig.opacity;
+            float alpha = p.depth * p.fade(now) * ImprintConfig.OPACITY.floatValue();
             if (alpha <= 0.01f) return;
             // A tiny per-print lift keeps overlapping prints from z-fighting each other
             float y = (float) (p.y - camera.y) + LIFT + (order[0]++ % 16) * 0.0004f + (rim ? 0.0002f : 0f);

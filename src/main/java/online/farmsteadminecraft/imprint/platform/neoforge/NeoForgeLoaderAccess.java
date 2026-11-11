@@ -29,6 +29,11 @@ final class NeoForgeLoaderAccess implements ModLoaderAccess {
     }
 
     @Override
+    public java.nio.file.Path configDir() {
+        return net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get();
+    }
+
+    @Override
     public String loaderName() {
         return "neoforge";
     }

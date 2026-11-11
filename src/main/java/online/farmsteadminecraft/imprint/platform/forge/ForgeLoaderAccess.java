@@ -21,6 +21,11 @@ final class ForgeLoaderAccess implements ModLoaderAccess {
     }
 
     @Override
+    public java.nio.file.Path configDir() {
+        return net.minecraftforge.fml.loading.FMLPaths.CONFIGDIR.get();
+    }
+
+    @Override
     public String loaderName() {
         return "forge";
     }
