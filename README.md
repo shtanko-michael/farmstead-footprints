@@ -18,29 +18,50 @@ By [Farmstead](https://farmsteadminecraft.online). Русская версия �
 | --- | --- |
 | ![A trail toward the mountains](docs/media/gifs/snow_hero.gif) | ![A wolf pack in fresh snow](docs/media/gifs/wolves.gif) |
 | Your trail grows behind you | Every mob has its own tracks |
-| ![Camel and player on red sand](docs/media/gifs/savanna.gif) | ![Chicken prints up close](docs/media/gifs/chicken.gif) |
-| Sand, red sand, mud, gravel, soil | Down to the smallest feet |
+| ![Prints crumbling away](docs/media/gifs/crumble.gif) | ![Detailed and pixel style](docs/media/gifs/styles.gif) |
+| Old prints crumble from the edges in | Two looks: detailed and pixel |
+| ![A boat's foam wake](docs/media/gifs/wake.gif) | ![Rings where a villager wades](docs/media/gifs/ripples.gif) |
+| Boats leave a wake | Rings where you wade |
+| ![Try it from the settings](docs/media/gifs/tryit.gif) | ![Searching blocks in the settings](docs/media/gifs/picker.gif) |
+| "Try it" stamps prints where you look | Searchable block and mob lists |
 
 More pictures in [docs/media/gallery](docs/media/gallery).
 
 ## Features
 
-- **Prints that look pressed in, not painted on.** Each print has a hollow and a raised lip, coloured from the ground it sits on: blue shadows in snow, darker sand in sand, a wet sheen in dark mud.
-- **Players and 47 mobs**, each with its own foot: boots or bare feet, paws, cat paws, hooves, cloven hooves, bird feet, bear paws, camel feet, the giant feet of golems, ravagers and wardens. Children and baby zombies leave smaller prints.
-- **A real gait.** Two-legged walkers alternate left and right; four-legged animals put the hind foot into the print of the front foot on the same side, the way real tracks look.
-- **Surfaces:** snow and powder snow, sand and red sand, mud and muddy mangrove roots, gravel, dirt, coarse dirt, rooted dirt, podzol, mycelium, farmland, clay, soul sand and soul soil. Thin snow layers count: the print sits on top of the snow, not under it.
-- **Prints fade.** Snow keeps them about five minutes, mud four, sand three, gravel a minute and a half; one setting stretches or shortens them all.
+- **Two looks.** *Detailed* (default): a shadowed hollow and a lit lip, coloured from the ground: blue shadows in snow, darker sand, a wet sheen in dark mud. *Pixel*: the block's own texture pixels pressed in, the north-west wall in shadow like a vanilla texture, matching rotated grass tops and biome tints.
+- **Players and 47 mobs**, each with its own foot: boots or bare feet, paws, cat paws, hooves, cloven hooves, bird feet, bear paws, camel feet, the giant feet of golems, ravagers and wardens. Babies and scaled mobs (the scale attribute, Pehkui, Random Mob Sizes) leave prints to their size.
+- **Modded mobs** get feet read from their model: the cubes that touch the ground are the feet, two make a biped, more make four, six or eight legs at their real positions. Mobs drawn without vanilla model parts (GeckoLib) fall back to a guess from the hitbox.
+- **A real gait.** Two-legged walkers alternate left and right; four-legged animals put the hind foot into the print of the front foot on the same side; rabbits and frogs land in groups of four.
+- **Any soft ground.** Every block softer than `surfaces.hardnessGate` takes prints, modded ones too; lists by id or #tag add or exclude blocks. Snow, sand, mud, grass, gravel, soil, clay and soul blocks have their own colour and lifetime. Thin snow layers count.
+- **Prints age.** Over the second half of their life they crumble from the edges in (`effects.decay = FADE` just fades them). Rain and snowfall wear exposed prints faster. A print goes when its block is broken or replaced.
+- **Water.** Boats leave a foam wake and throw spray, rings spread where you wade, bubbles trail swimmers, wet feet leave damp prints on stone and planks and throw droplets. Fast minecarts spark on the rails.
+- **Your own prints** from PNG files or resource packs, see below.
+- **Fast.** One draw per frame from geometry cached when a print is placed, culled to the camera's view.
 - **Shaders welcome.** Works with Sodium and Iris (tested with Complementary Unbound).
-- **Settings for everyone:** presets in one line (`default`, `vanilla_plus`, `cinematic`, `performance`), an in-game settings screen (Mod Menu on Fabric, the mod list on NeoForge and Forge), a commented config file, and `/footprints reload`.
+- **Settings for everyone:** tabs, searchable block and mob pickers, an About tab with the update status, "Try it" to see the current settings on the ground, presets in one line, a commented config file, `/footprints reload`.
 - **12 languages:** English, Russian, Chinese (Simplified), Portuguese (Brazil), Spanish, German, French, Polish, Ukrainian, Japanese, Korean, Turkish.
+
+## Your own prints
+
+- **Pictures.** Put a PNG into `config/farmstead_footprints/textures/` (one foot, toes up, dark on white or a shape on transparent). The file name is the shape name. Give it to a mob or a #tag in `footprints.profiles`: `"minecraft:player = shape:wolf_paw"`, `"#minecraft:skeletons = shape:bone size:0.8"`. `/footprints reload` picks up new files.
+- **Variants.** `shape:paw|star|bird` picks one per print.
+- **Profiles.** `<id or #tag> = shape:<name> size:<x> legs:<2|4|6|8> stride:<blocks> stance:<blocks> length:<blocks>`, any part optional. An exact id beats a tag; otherwise the first matching line wins.
+- **Resource packs and mods** can ship:
+  - shapes: `assets/<ns>/textures/farmstead_footprints/shapes/<name>.png`;
+  - replacements for `assets/farmstead_footprints/textures/footprints_shadow.png` and `footprints_rim.png` (256x256, 4x4 cells);
+  - rules: `assets/<ns>/farmstead_footprints/profiles/<any>.json` with `{"profiles": [...], "surfaces": {"include": [...], "exclude": [...]}}` in the config's syntax. The player's own config lines come first. F3+T reloads everything.
 
 ## Downloads and versions
 
 | Minecraft | Fabric / Quilt | NeoForge | Forge | Java |
 | --- | --- | --- | --- | --- |
-| 26.3 | yes | yes | — | 25 |
-| 1.21 – 1.21.1 | yes | yes | — | 21 |
+| 26.1 – 26.3 | yes | yes | — | 25 |
+| 1.21.7 – 1.21.11 | yes | yes | — | 21 |
+| 1.21 – 1.21.5 | yes | yes | — | 21 |
 | 1.20.1 | yes | — | yes | 17 |
+
+On 26.x boat wakes and ripples are drawn as foam particles (the game draws custom geometry before the water there). 1.21.6 is not covered.
 
 Get it from [Modrinth](https://modrinth.com/mod/farmstead-footprints), [CurseForge](https://www.curseforge.com/minecraft/mc-mods/farmstead-footprints) or [GitHub Releases](https://github.com/shtanko-michael/farmstead-footprints/releases).
 
@@ -63,7 +84,22 @@ Open them from Mod Menu (Fabric) or the mod list (NeoForge, Forge), type `/footp
 | `footprints.renderDistance` | `48` | 8 – 128 | Blocks from the camera where prints are made and drawn |
 | `footprints.lifetimeMultiplier` | `1.0` | 0.1 – 10.0 | How long prints stay |
 | `footprints.opacity` | `0.95` | 0.1 – 1.0 | How strongly prints show |
-| `footprints.entityBlacklist` | `[]` | entity ids | Entities that never leave prints, e.g. `["minecraft:villager"]` |
+| `footprints.entityBlacklist` | flying and footless mobs | ids, #tags | Entities that never leave prints |
+| `footprints.sizeMultiplier` | `1.0` | 0.25 – 4.0 | Makes every print bigger or smaller |
+| `footprints.lift` | `0.0` | -0.05 – 0.5 | Raises prints above the ground (for shader packs) |
+| `footprints.style` | `DETAILED` | `DETAILED`, `PIXEL` | Smooth prints, or the block's own pixels pressed in |
+| `footprints.sneaking` | `SHALLOW` | `SHALLOW`, `NONE` | Sneaking leaves shallow prints or none |
+| `footprints.invisible` | `false` | | Invisible players and mobs leave prints too |
+| `footprints.profiles` | `[]` | lines | Prints per mob or #tag, see [Your own prints](#your-own-prints) |
+| `effects.wetPrints` / `wetSeconds` / `wetOpacity` | `true` / `10` / `1.0` | | Damp prints on hard ground after water or rain |
+| `effects.splash` | `ALL` | `OFF`, `PLAYERS`, `ALL` | Droplets from wet feet |
+| `effects.ripples` / `boatWake` / `swimBubbles` / `railSparks` | `true` | | Water and rail effects |
+| `effects.removeWhenBroken` | `true` | | A print goes with its block |
+| `effects.decay` | `CRUMBLE` | `CRUMBLE`, `FADE` | How old prints go |
+| `effects.rainWear` | `3.0` | 1 – 20 | How much faster rain wears exposed prints |
+| `effects.dust` | `ALL` | `OFF`, `PLAYERS`, `ALL` | A puff from under the feet on loose ground |
+| `surfaces.hardnessGate` | `0.7` | 0 – 5 | Any block softer than this takes prints |
+| `surfaces.include` / `exclude` | wool / leaves, ice, … | ids, #tags | Blocks that always / never take prints |
 
 Presets: **vanilla_plus** — no mob prints, half the lifetime, lighter; **cinematic** — 8192 prints, 96 blocks, three times longer; **performance** — 512 prints, 24 blocks, half the lifetime.
 
@@ -93,9 +129,9 @@ Then, once per session and in the background, it asks the public Modrinth API wh
 
 ## Compatibility
 
-- **Sodium, Iris**: supported. Prints are drawn after the world, so shader packs light them.
-- **Other footprint mods** (FootprintParticle and similar): both will draw their prints; keep one.
-- **Modded blocks and mobs**: vanilla blocks and mobs only in 0.1. Tags for modded surfaces and creatures are planned.
+- **Sodium, Iris**: supported. Prints are drawn after the world, so shader packs light them; `footprints.lift` raises them if a shader pack's deep ground hides them.
+- **Other footprint mods** (FootprintParticle, Soft Imprints): both will draw their prints; keep one.
+- **Modded blocks and mobs**: soft modded blocks take prints by hardness, modded mobs get feet from their model; both can be tuned by id or #tag.
 
 ## FAQ
 
@@ -103,11 +139,11 @@ Then, once per session and in the background, it asks the public Modrinth API wh
 
 **Is it heavy?** Prints are drawn in one batch per frame and capped by `maxPrints`. On a weak machine pick the `performance` preset.
 
-**Why no prints on grass?** Grass is not a soft surface in 0.1. Trails worn into grass by walking are planned.
+**Prints on grass?** Yes: grass, moss and other soft blocks take prints. Exclude any block in the Ground tab.
 
 ## Planned
 
-Trails worn into grass that stay (server module with LuckPerms permissions), wet prints after rain and water, modded surfaces and mobs through block and entity tags.
+Trails worn into grass that stay (server module with LuckPerms permissions), Minecraft 1.16.5–1.19.
 
 ## Building from source
 

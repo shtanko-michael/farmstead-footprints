@@ -2,41 +2,52 @@
 
 # Your steps stay behind you
 
-**Footprints** presses real tracks into the world. Walk through snow, sand or mud and every step is left behind you: a hollow with a raised lip, coloured by the ground it sits in, lit by the same sun and shaders as everything around it, slowly fading away.
+**Footprints** presses real tracks into the world. Walk through snow, sand or mud and every step is left behind you: a hollow with a raised lip, coloured by the ground it sits in, lit by the same sun and shaders as everything around it, slowly crumbling away.
 
-And it is not only you. **47 mobs** leave their own tracks: wolves trot past in a carpet of paw prints, horses leave hooves, camels two-toed pads, polar bears huge clawed paws, chickens tiny three-toed scratches.
+And it is not only you. **47 mobs** leave their own tracks, and **modded mobs** get feet read from their own models: wolves trot past in a carpet of paw prints, horses leave hooves, camels two-toed pads, polar bears huge clawed paws, chickens tiny three-toed scratches. Boats leave a foam wake, waders leave rings on the water.
 
-**Client-side.** Install it and it works on any server, vanilla included. No server mod, no resource pack.
+**Client-side, zero dependencies.** Install it and it works on any server, vanilla included. No server mod, no resource pack, not even Fabric API.
 
 ---
 
 ## ✦ See it
 
 ![Your trail grows behind you](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/snow_hero.gif)
+![Old prints crumble from the edges in](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/crumble.gif)
+![The same prints, detailed and pixel style](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/styles.gif)
+![A boat leaves a foam wake](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/wake.gif)
 ![A wolf pack leaves a carpet of paw prints](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/wolves.gif)
-![A camel and a player cross the red sand](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/savanna.gif)
-![Three-toed chicken prints up close](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/chicken.gif)
 ![From above: a bear, a wolf and a camel, each with its own gait](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/gait.gif)
+![Rings spread where you wade](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/ripples.gif)
+!["Try it" in the settings stamps prints where you look](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/tryit.gif)
 
 ## ✦ What makes it different
 
-- **Pressed in, not painted on.** Each print is two layers, a shadowed hollow and a lit lip, so the block texture shows through. Snow gets cold blue shadows, sand darkens, dark mud takes a wet sheen.
+- **Two looks.** *Detailed*: a shadowed hollow and a lit lip, the block texture showing through. *Pixel*: the block's own texture pixels pressed in, shaded like a vanilla texture, matching rotated grass tops and biome tints.
 - **A real gait.** People step left, right, left. Four-legged animals put the hind foot into the front print of the same side, exactly like real animal tracks.
-- **Every foot is its own.** Boots or bare feet, paws, cat paws, hooves, cloven hooves, bird feet, bear paws, camel feet, the giant feet of iron golems, ravagers and wardens. Children and baby zombies leave small prints.
-- **Snow that behaves.** Prints sit on top of thin snow layers instead of disappearing under them.
-- **Prints fade.** Snow keeps them about five minutes, mud four, sand three, gravel a minute and a half.
+- **Every foot is its own.** Boots or bare feet, paws, cat paws, hooves, cloven hooves, bird feet, bear paws, camel feet, the giant feet of iron golems, ravagers and wardens. Babies and scaled mobs (Pehkui, Random Mob Sizes, the scale attribute) leave prints to their size.
+- **Modded mobs, out of the box.** Feet are read from the mob's model: two feet make a biped, more make four, six or eight legs at their real positions.
+- **Prints age.** They crumble from the edges in over the second half of their life; rain and snowfall wear exposed prints faster. A print goes when its block is broken.
+- **Water and wet feet.** Foam wakes behind boats, rings where you wade, bubbles behind swimmers, damp prints on stone and planks after a swim or rain, droplets from wet feet. Sparks under fast minecarts.
+- **Fast.** All prints are drawn in one batch from cached geometry, culled to what the camera sees.
 - **Shaders welcome.** Works with **Sodium** and **Iris**; shader packs light the prints like the ground.
+
+## ✦ Your own prints
+
+- Drop a PNG into `config/farmstead_footprints/textures/` and give it to any mob or #tag: `"minecraft:player = shape:wolf_paw"`. The mod trims it and draws the hollow and the lip itself.
+- Random variants per print: `shape:paw|star|bird`.
+- **Resource packs and mods** can add shapes, replace the base textures and ship rules (`assets/<ns>/farmstead_footprints/profiles/*.json`). F3+T picks up changes.
 
 ## ✦ Surfaces
 
-Snow · powder snow · sand · red sand · mud · muddy mangrove roots · gravel · dirt · coarse dirt · rooted dirt · podzol · mycelium · farmland · clay · soul sand · soul soil
+Any block softer than a threshold you set takes prints, so modded soil and sand work without setup. Lists by id or #tag to include or exclude blocks. Snow, sand, mud, grass, gravel, soil, clay and soul blocks each have their own colour and lifetime.
 
 ## ✦ Settings for everyone
 
-- **One-line presets:** `default`, `vanilla_plus` (subtle, players only), `cinematic` (8192 prints, long-lasting, far), `performance`.
-- **In-game settings screen:** Mod Menu on Fabric, the mod list on NeoForge and Forge, or `/footprints config`.
-- **A config file that explains itself:** every key has a comment and a range; a wrong value never crashes the game, it is reported and replaced.
-- Toggle players and mobs, the number of prints, distance, lifetime, opacity, and a blacklist of entities.
+- **Tabs** for prints, effects and ground, **searchable pickers** for blocks and mobs, an **About** tab with the update status.
+- **"Try it"**: stamps your, a horse's, a wolf's and a chicken's prints where you look, with the current settings.
+- **One-line presets:** `default`, `vanilla_plus`, `cinematic`, `performance`.
+- A commented config file; a wrong value never crashes the game, it is reported and replaced.
 - Commands: `/footprints config`, `/footprints reload`, `/footprints stats`.
 
 ## ✦ 12 languages
@@ -47,25 +58,22 @@ English, Русский, 简体中文, Português (Brasil), Español, Deutsch, F
 
 | Minecraft | Loaders |
 | --- | --- |
-| 26.3 | Fabric, Quilt, NeoForge |
-| 1.21 – 1.21.1 | Fabric, Quilt, NeoForge |
+| 26.1 – 26.3 | Fabric, Quilt, NeoForge |
+| 1.21.7 – 1.21.11 | Fabric, Quilt, NeoForge |
+| 1.21 – 1.21.5 | Fabric, Quilt, NeoForge |
 | 1.20.1 | Fabric, Quilt, Forge |
 
-**No dependencies at all** — not even Fabric API. Drop in the jar and play. **[Mod Menu](https://modrinth.com/mod/modmenu)** is optional on Fabric.
-
-## ✦ Coming next
-
-Trails worn into grass that stay (a server module with LuckPerms permissions), wet prints after rain, modded surfaces and mobs through tags.
+**No dependencies at all.** **[Mod Menu](https://modrinth.com/mod/modmenu)** is optional on Fabric. On 26.x boat wakes and ripples are drawn as foam particles.
 
 ## ✦ FAQ
 
 **Do other players see my prints?** Everyone who has the mod sees all prints, of players and mobs, computed on their own client.
 
-**Is it heavy?** Prints are drawn in one batch per frame and capped by a limit you set. Weak PC? Pick the `performance` preset.
+**Is it heavy?** One draw per frame, a cap on prints you set, and a `performance` preset for weak PCs.
 
 **Can I use it in a modpack?** Yes, freely.
 
-**Does it phone home?** Once per start it asks the public Modrinth API whether a newer version exists and writes the answer to the log. Nothing about you is sent. Turn it off with `checkUpdates = false` or `-Dfarmstead.updateCheck=false`.
+**Does it phone home?** Once per start it asks the public Modrinth API whether a newer version exists. Nothing about you is sent. Turn it off with `checkUpdates = false` or `-Dfarmstead.updateCheck=false`.
 
 ---
 
