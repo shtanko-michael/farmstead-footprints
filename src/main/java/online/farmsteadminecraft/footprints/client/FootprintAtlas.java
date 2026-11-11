@@ -53,6 +53,26 @@ public final class FootprintAtlas {
         return grid;
     }
 
+    private static float[] maskAll = new float[0], orderAll = new float[0];
+    private static int maskSize;
+
+    /** How deep the fresh print is at (u, v) of its cell, 0..1 (the shadow layer's alpha). */
+    public static float mask(int cell, float u, float v) {
+        return sample(maskAll, cell, u, v);
+    }
+
+    /** When the pixel at (u, v) of the cell crumbles away, 0 (first) .. 1 (last). */
+    public static float order(int cell, float u, float v) {
+        return sample(orderAll, cell, u, v);
+    }
+
+    private static float sample(float[] data, int cell, float u, float v) {
+        if (maskSize == 0) return 0f;
+        int x = (cell % grid) * CELL + Math.min(CELL - 1, (int) (u * CELL));
+        int y = (cell / grid) * CELL + Math.min(CELL - 1, (int) (v * CELL));
+        return data[y * maskSize + x];
+    }
+
     /** Decay stages stacked downwards in the texture; stage 0 (the top) is the fresh print. */
     public static int stages() {
         return stages;
@@ -141,6 +161,14 @@ public final class FootprintAtlas {
                 }
             }
         }
+        // CPU copies for the pixel style, which rasterises prints itself
+        float[] mask = new float[size * size];
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) mask[y * size + x] = ((get(shadow, x, y) >>> 24) & 0xFF) / 255f;
+        }
+        maskAll = mask;
+        orderAll = shadowOrder;
+        maskSize = size;
         shadow.close();
         rim.close();
         textureId = register("prints", both);

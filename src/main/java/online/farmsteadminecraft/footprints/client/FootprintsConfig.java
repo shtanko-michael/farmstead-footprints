@@ -40,6 +40,9 @@ public final class FootprintsConfig {
             "minecraft:wither", "minecraft:ender_dragon", "minecraft:slime", "minecraft:magma_cube",
             "minecraft:silverfish", "minecraft:endermite", "minecraft:snow_golem", "minecraft:shulker"))
         .comment("Entities that never leave prints, by id or #tag (flying and footless ones by default).");
+    public static final EnumValue<Style> STYLE = FILE.choice("footprints", "style", Style.DETAILED)
+        .comment("DETAILED: smooth prints with a hollow and a raised lip. PIXEL: prints pressed into the block's own texture "
+            + "pixels, a dent drawn the way vanilla textures are drawn.");
     public static final EnumValue<Sneaking> SNEAKING = FILE.choice("footprints", "sneaking", Sneaking.SHALLOW)
         .comment("Sneaking feet leave shallow prints, or none at all (stealth).");
     public static final BoolValue INVISIBLE = FILE.bool("footprints", "invisible", false)
@@ -74,6 +77,8 @@ public final class FootprintsConfig {
             "minecraft:magma_block", "minecraft:cactus", "minecraft:netherrack", "minecraft:big_dripleaf",
             "minecraft:turtle_egg", "minecraft:sniffer_egg", "minecraft:frogspawn"))
         .comment("Blocks that never take prints, by id or #tag; wins over the list above and the hardness rule.");
+
+    public enum Style { DETAILED, PIXEL }
 
     public enum Sneaking { SHALLOW, NONE }
 

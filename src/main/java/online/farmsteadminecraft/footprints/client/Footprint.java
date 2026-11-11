@@ -36,6 +36,20 @@ public final class Footprint {
     public float u0, v0, u1, v1;
     /** Texture offset from one decay stage to the next. */
     public float stageStep;
+    /** Half the side of the print's square, in blocks. */
+    public float half;
+
+    /** Pixel style ({@link PixelStyle}): the ground's top face could be read, so this print can be drawn from it. */
+    public boolean pixel;
+    /** Block texture coordinates as a + b*x + c*z of the block-local position (0..1) on the top face. */
+    public final float[] uMap = new float[3], vMap = new float[3];
+    public int tint = 0xFFFFFF;
+    /** Texel runs of the print for {@link #stripStage}: start | length << 8 | row << 16 | shade << 24. */
+    public int[] strips = new int[24];
+    public int stripCount;
+    public int stripStage = -1;
+    /** World texel (1/16 block) of the runs' origin. */
+    public int texX, texZ;
     public int light;
     public long lightTick = Long.MIN_VALUE;
 
@@ -46,6 +60,8 @@ public final class Footprint {
         float rx = (float) -Math.cos(rad), rz = (float) -Math.sin(rad);
         // texture cells are square, the print fills CELL_FILL of the longer side
         float h = Math.max(shape.width, shape.length) * scale * 0.5f / CELL_FILL;
+        half = h;
+        stripStage = -1;
         float ax = (fx - rx) * h, az = (fz - rz) * h;   // toe-left
         float bx = (-fx - rx) * h, bz = (-fz - rz) * h; // heel-left
         corners[0] = ax;
@@ -68,7 +84,7 @@ public final class Footprint {
     }
 
     public boolean lightStale(long nowTick) {
-        return nowTick - lightTick > LIGHT_TTL;
+        return lightTick == Long.MIN_VALUE || nowTick - lightTick > LIGHT_TTL;
     }
 
     /**

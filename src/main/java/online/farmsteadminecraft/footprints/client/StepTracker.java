@@ -266,6 +266,12 @@ public final class StepTracker {
         p.lifeTicks = (int) Math.max(40, surface.lifeSecs() * 20 * FootprintsConfig.LIFETIME.value()
             * (0.9f + random.nextFloat() * 0.2f));
         p.prepare();
+        try {
+            p.pixel = PixelStyle.capture(p, level, pos, state);
+        } catch (RuntimeException ex) {
+            // an odd modded model: this print keeps the detailed look
+            p.pixel = false;
+        }
         dust(level, e, state, surface, p.x, p.y, p.z);
     }
 

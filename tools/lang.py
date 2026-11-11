@@ -178,6 +178,28 @@ T = {
         "ja_jp": "足跡を残さないエンティティ（ID または #タグ、カンマ区切り）。飛ぶモブと足のないモブは最初から入っています。",
         "ko_kr": "발자국을 남기지 않는 엔티티(ID 또는 #태그, 쉼표로 구분). 나는 몹과 발 없는 몹은 기본으로 들어 있습니다.",
         "tr_tr": "Asla iz bırakmayan varlıklar: kimlik veya #etiket, virgülle ayrılmış. Uçan ve ayaksız moblar varsayılan olarak listede."},
+    "config.farmstead_footprints.footprints.style": {
+        "en_us": "Look", "ru_ru": "Вид следов", "zh_cn": "脚印外观", "pt_br": "Aparência", "es_es": "Aspecto", "de_de": "Aussehen",
+        "fr_fr": "Apparence", "pl_pl": "Wygląd", "uk_ua": "Вигляд слідів", "ja_jp": "見た目", "ko_kr": "모양", "tr_tr": "Görünüm"},
+    "config.farmstead_footprints.footprints.style.tooltip": {
+        "en_us": "Detailed: smooth prints with a hollow and a raised lip. Pixel: the block's own texture pixels pressed in, drawn the way vanilla textures are.",
+        "ru_ru": "Детальные: гладкие следы со впадиной и краем. Пиксельные: вдавлены сами пиксели текстуры блока, нарисовано как в ванильных текстурах.",
+        "zh_cn": "细致：平滑的脚印，有凹陷和凸起的边缘。像素：方块自身纹理的像素被压下去，画法和原版纹理一样。",
+        "pt_br": "Detalhado: pegadas suaves com cavidade e borda elevada. Pixel: os próprios pixels da textura do bloco afundam, no estilo das texturas vanilla.",
+        "es_es": "Detallado: huellas suaves con hueco y borde levantado. Píxel: se hunden los propios píxeles de la textura del bloque, al estilo de las texturas vanilla.",
+        "de_de": "Detailliert: glatte Spuren mit Mulde und aufgeworfenem Rand. Pixel: die Pixel der Blocktextur selbst sind eingedrückt, gezeichnet wie Vanilla-Texturen.",
+        "fr_fr": "Détaillé : empreintes lisses avec un creux et un bourrelet. Pixel : les pixels de la texture du bloc eux-mêmes sont enfoncés, dessinés comme les textures vanilla.",
+        "pl_pl": "Szczegółowe: gładkie ślady z wgłębieniem i wypiętrzonym brzegiem. Pikselowe: wciśnięte są same piksele tekstury bloku, rysowane jak tekstury vanilla.",
+        "uk_ua": "Детальні: гладкі сліди із западиною та краєм. Піксельні: вдавлені самі пікселі текстури блока, намальовано як у ванільних текстурах.",
+        "ja_jp": "詳細：くぼみと盛り上がった縁のある滑らかな足跡。ピクセル：ブロック自身のテクスチャのピクセルがへこみ、バニラのテクスチャと同じ描き方になります。",
+        "ko_kr": "상세: 움푹 팬 자국과 솟은 가장자리가 있는 매끄러운 발자국. 픽셀: 블록 텍스처의 픽셀 자체가 눌리며, 바닐라 텍스처처럼 그려집니다.",
+        "tr_tr": "Ayrıntılı: çukuru ve kabarık kenarı olan pürüzsüz izler. Piksel: bloğun kendi doku pikselleri bastırılır, vanilla dokular gibi çizilir."},
+    "config.farmstead_footprints.footprints.style.detailed": {
+        "en_us": "Detailed", "ru_ru": "Детальные", "zh_cn": "细致", "pt_br": "Detalhado", "es_es": "Detallado", "de_de": "Detailliert",
+        "fr_fr": "Détaillé", "pl_pl": "Szczegółowe", "uk_ua": "Детальні", "ja_jp": "詳細", "ko_kr": "상세", "tr_tr": "Ayrıntılı"},
+    "config.farmstead_footprints.footprints.style.pixel": {
+        "en_us": "Pixel", "ru_ru": "Пиксельные", "zh_cn": "像素", "pt_br": "Pixel", "es_es": "Píxel", "de_de": "Pixel",
+        "fr_fr": "Pixel", "pl_pl": "Pikselowe", "uk_ua": "Піксельні", "ja_jp": "ピクセル", "ko_kr": "픽셀", "tr_tr": "Piksel"},
     "config.farmstead_footprints.footprints.sneaking": {
         "en_us": "Sneaking", "ru_ru": "Крадучись", "zh_cn": "潜行时", "pt_br": "Agachado", "es_es": "Agachado", "de_de": "Schleichen",
         "fr_fr": "Accroupi", "pl_pl": "Skradanie", "uk_ua": "Крадькома", "ja_jp": "スニーク中", "ko_kr": "웅크리기", "tr_tr": "Sinsice"},

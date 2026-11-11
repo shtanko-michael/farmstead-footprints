@@ -13,6 +13,8 @@ import online.farmsteadminecraft.footprints.client.Footprint;
 import online.farmsteadminecraft.footprints.client.FootprintAtlas;
 import online.farmsteadminecraft.footprints.client.FootprintsClient;
 import online.farmsteadminecraft.footprints.client.FootprintsConfig;
+import online.farmsteadminecraft.footprints.client.PixelStyle;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import org.joml.Matrix4f;
 
 //? if >=26.1 {
@@ -64,9 +66,16 @@ public final class FootprintRenderer {
         Matrix4f matrix = new Matrix4f(view);
         MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
         FootprintAtlas.ensure();
+        collect(FootprintsClient.POOL.array(), camera, level);
+        boolean pixelStyle = pixelStyle();
+        if (pixelStyle) {
+            RenderType blocks = renderType(TextureAtlas.LOCATION_BLOCKS);
+            emitPixel(buffers.getBuffer(blocks), matrix, camera);
+            buffers.endBatch(blocks);
+        }
         // one texture, one batch, one draw for both layers
         RenderType type = renderType(FootprintAtlas.texture());
-        emit(buffers.getBuffer(type), matrix, camera, level);
+        emit(buffers.getBuffer(type), matrix, camera, pixelStyle);
         buffers.endBatch(type);
         online.farmsteadminecraft.footprints.client.Bench.render(t0, visibleCount);
     }
@@ -78,9 +87,14 @@ public final class FootprintRenderer {
         if (level == null || !FootprintsConfig.ENABLED.on() || FootprintsClient.POOL.alive() == 0) return;
         Matrix4f matrix = new Matrix4f(pose.last().pose());
         FootprintAtlas.ensure();
+        long t0 = online.farmsteadminecraft.footprints.client.Bench.now();
+        collect(FootprintsClient.POOL.array(), camera, level);
+        boolean pixelStyle = pixelStyle();
+        if (pixelStyle) {
+            collector.submitCustomGeometry(pose, renderType(TextureAtlas.LOCATION_BLOCKS), (p, vc) -> emitPixel(vc, matrix, camera));
+        }
         collector.submitCustomGeometry(pose, renderType(FootprintAtlas.texture()), (p, vc) -> {
-            long t0 = online.farmsteadminecraft.footprints.client.Bench.now();
-            emit(vc, matrix, camera, level);
+            emit(vc, matrix, camera, pixelStyle);
             online.farmsteadminecraft.footprints.client.Bench.render(t0, visibleCount);
         });
     }
@@ -99,12 +113,21 @@ public final class FootprintRenderer {
      * stale light values; the rim pass reuses that list. Each print then costs four vertex writes per
      * layer: corners, texture cell and light were worked out when it was placed.
      */
-    private static void emit(VertexConsumer vc, Matrix4f matrix, Vec3 camera, ClientLevel level) {
+    private static boolean pixelStyle() {
+        return FootprintsConfig.STYLE.get() == FootprintsConfig.Style.PIXEL;
+    }
+
+    private static void emitPixel(VertexConsumer vc, Matrix4f matrix, Vec3 camera) {
+        PixelStyle.emit(vc, matrix, camera, FootprintsClient.POOL.array(), visible, alphas, stages, visibleCount,
+            FootprintAtlas.stages(), FootprintsConfig.OPACITY.floatValue());
+    }
+
+    /** {@code skipPixel}: prints the pixel style already drew are left out. */
+    private static void emit(VertexConsumer vc, Matrix4f matrix, Vec3 camera, boolean skipPixel) {
         Footprint[] prints = FootprintsClient.POOL.array();
-        frames++;
-        collect(prints, camera, level);
         for (int n = 0; n < visibleCount; n++) {
             Footprint p = prints[visible[n]];
+            if (skipPixel && p.pixel) continue;
             float cx = (float) (p.x - camera.x), cz = (float) (p.z - camera.z);
             // a tiny per-print lift keeps overlapping prints from z-fighting each other
             float y = (float) (p.y - camera.y) + LIFT + (n & 15) * 0.0004f;
@@ -135,6 +158,7 @@ public final class FootprintRenderer {
     }
 
     private static void collect(Footprint[] prints, Vec3 camera, ClientLevel level) {
+        frames++;
         if (visible.length < prints.length) {
             visible = new int[prints.length];
             alphas = new float[prints.length];
