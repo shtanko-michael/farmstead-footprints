@@ -1,4 +1,5 @@
 license = "MIT"
+issueTrackerURL = "${issues}"
 
 modLoader = "javafml"
 loaderVersion = "[47,)"
@@ -8,8 +9,9 @@ modId = "${id}"
 displayName = "${name}"
 version = "${version}"
 authors = "Farmstead"
-description = '''The world remembers your steps: footprints in snow, sand and mud, mob tracks, wet prints and trails worn into the grass. Client-side.'''
-logoFile = "assets/imprint/icon.png"
+displayURL = "${homepage}"
+description = '''Realistic footprints for players and mobs: pressed into snow, sand, mud, gravel and soil, lit like the ground around them, fading with time. Client-side.'''
+logoFile = "assets/farmstead_footprints/icon.png"
 displayTest = "IGNORE_ALL_VERSION"
 
 [[dependencies.${id}]]

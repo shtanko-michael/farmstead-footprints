@@ -3,21 +3,23 @@
   "id": "${id}",
   "version": "${version}",
   "name": "${name}",
-  "description": "The world remembers your steps: footprints in snow, sand and mud, mob tracks, wet prints and trails worn into the grass. Client-side.",
+  "description": "Realistic footprints for players and mobs: pressed into snow, sand, mud, gravel and soil, lit like the ground around them, fading with time. Client-side.",
   "authors": ["Farmstead"],
   "contact": {
-    "homepage": "https://farmsteadminecraft.online/"
+    "homepage": "${homepage}",
+    "sources": "${sources}",
+    "issues": "${issues}"
   },
   "license": "MIT",
-  "icon": "assets/imprint/icon.png",
+  "icon": "assets/farmstead_footprints/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": ["online.farmsteadminecraft.imprint.platform.fabric.ImprintFabric"],
-    "client": ["online.farmsteadminecraft.imprint.platform.fabric.ImprintFabricClient"],
-    "modmenu": ["online.farmsteadminecraft.imprint.platform.fabric.ImprintModMenu"]
+    "main": ["online.farmsteadminecraft.footprints.platform.fabric.FootprintsFabric"],
+    "client": ["online.farmsteadminecraft.footprints.platform.fabric.FootprintsFabricClient"],
+    "modmenu": ["online.farmsteadminecraft.footprints.platform.fabric.FootprintsModMenu"]
   },
-  "mixins": ["imprint.mixins.json"],
-  "accessWidener": "imprint.ct",
+  "mixins": ["farmstead_footprints.mixins.json"],
+  "accessWidener": "farmstead_footprints.ct",
   "depends": {
     "fabricloader": ">=${loader}",
     "minecraft": "${minecraft}",

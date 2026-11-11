@@ -14,15 +14,15 @@ def hook(ctx, name):
 
 
 def run(ctx):
-    cfg = ctx.client_dir / "config" / "farmstead-imprint-client.toml"
+    cfg = ctx.client_dir / "config" / "farmstead_footprints-client.toml"
     print("  config file exists:", cfg.exists())
     text = cfg.read_text(encoding="utf-8")
-    (ctx.out_dir / "farmstead-imprint-client.toml").write_text(text, encoding="utf-8")
+    (ctx.out_dir / "farmstead_footprints-client.toml").write_text(text, encoding="utf-8")
     # a broken value and a preset switch, then reload through the hook
     text = text.replace('preset = "default"', 'preset = "performance"').replace("#opacity = 0.95", "opacity = 7")
     cfg.write_text(text, encoding="utf-8")
     hook(ctx, "config.reload")
-    (ctx.out_dir / "imprint-client.after.toml").write_text(cfg.read_text(encoding="utf-8"), encoding="utf-8")
+    (ctx.out_dir / "footprints-client.after.toml").write_text(cfg.read_text(encoding="utf-8"), encoding="utf-8")
     hook(ctx, "config.open")
     ctx.wait(1)
     ctx.shot("config-screen")

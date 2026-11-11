@@ -5,7 +5,7 @@ plugins {
 
 // DO NOT set group = ...!
 version = "${sc.properties["mod.version"]}+${sc.current.version}"
-base.archivesName = "${sc.properties["mod.id"]}-fabric"
+base.archivesName = "${sc.properties["mod.file"]}-fabric"
 
 val requiredJava: JavaVersion = when {
     sc.current.parsed >= "26.1" -> JavaVersion.VERSION_25
@@ -55,7 +55,7 @@ dependencies {
 loom {
     fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json") // Useful for interface injection
     accessWidenerPath = sc.process(
-        rootProject.file("src/main/resources/imprint.ct"),
+        rootProject.file("src/main/resources/farmstead_footprints.ct"),
         "build/processed.ct"
     )
 
@@ -112,6 +112,9 @@ tasks {
         val props = buildMap {
             register("id", sc.properties["mod.id"])
             register("name", sc.properties["mod.name"])
+            register("homepage", sc.properties["mod.homepage"])
+            register("sources", sc.properties["mod.sources"])
+            register("issues", sc.properties["mod.issues"])
             register("version", sc.properties["mod.version"])
             register("minecraft", sc.properties["mod.mc_compat"])
             register("loader", Regex("\\d+\\.\\d+").find(sc.properties["deps.fabric_loader"])!!.value)

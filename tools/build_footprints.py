@@ -21,7 +21,7 @@ from pathlib import Path
 from PIL import Image, ImageChops, ImageFilter, ImageOps
 
 ROOT = Path(__file__).resolve().parent.parent
-TEX = ROOT / "src/main/resources/assets/imprint/textures"
+TEX = ROOT / "src/main/resources/assets/farmstead_footprints/textures"
 CELL = 64
 FILL = 0.80          # share of the cell the longer side of a print takes (room left for the rim)
 NOISE = 18           # ink below this is paper, not print

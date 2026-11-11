@@ -1,10 +1,10 @@
-"""Imprint translations: one table, twelve lang files, and the completeness check.
+"""Footprints translations: one table, twelve lang files, and the completeness check.
 
-    python -I tools/lang.py          write src/main/resources/assets/imprint/lang/*.json
+    python -I tools/lang.py          write src/main/resources/assets/farmstead_footprints/lang/*.json
     python -I tools/lang.py --check  fail on a missing language, key or placeholder mismatch
 
 en_us and ru_ru are the references; every other language must carry every key with the same
-%s / %d placeholders. Terms: "print/footprint" (not "track"), "preset", "Imprint" stays as is.
+%s / %d placeholders. Terms: "print/footprint" (not "track"), "preset", "Footprints" stays as is.
 """
 import json
 import re
@@ -12,18 +12,18 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "src/main/resources/assets/imprint/lang"
+OUT = ROOT / "src/main/resources/assets/farmstead_footprints/lang"
 LANGS = ["en_us", "ru_ru", "zh_cn", "pt_br", "es_es", "de_de", "fr_fr", "pl_pl", "uk_ua", "ja_jp", "ko_kr", "tr_tr"]
 
 T = {
-    "config.imprint.title": {
-        "en_us": "Imprint settings", "ru_ru": "Настройки Imprint", "zh_cn": "Imprint 设置", "pt_br": "Configurações do Imprint",
-        "es_es": "Ajustes de Imprint", "de_de": "Imprint-Einstellungen", "fr_fr": "Paramètres d'Imprint", "pl_pl": "Ustawienia Imprint",
-        "uk_ua": "Налаштування Imprint", "ja_jp": "Imprint の設定", "ko_kr": "Imprint 설정", "tr_tr": "Imprint ayarları"},
-    "config.imprint.preset": {
+    "config.farmstead_footprints.title": {
+        "en_us": "Footprints settings", "ru_ru": "Настройки Footprints", "zh_cn": "Footprints 设置", "pt_br": "Configurações do Footprints",
+        "es_es": "Ajustes de Footprints", "de_de": "Footprints-Einstellungen", "fr_fr": "Paramètres d'Footprints", "pl_pl": "Ustawienia Footprints",
+        "uk_ua": "Налаштування Footprints", "ja_jp": "Footprints の設定", "ko_kr": "Footprints 설정", "tr_tr": "Footprints ayarları"},
+    "config.farmstead_footprints.preset": {
         "en_us": "Preset", "ru_ru": "Пресет", "zh_cn": "预设", "pt_br": "Predefinição", "es_es": "Preajuste", "de_de": "Voreinstellung",
         "fr_fr": "Préréglage", "pl_pl": "Ustawienie wstępne", "uk_ua": "Пресет", "ja_jp": "プリセット", "ko_kr": "프리셋", "tr_tr": "Ön ayar"},
-    "config.imprint.preset.tooltip": {
+    "config.farmstead_footprints.preset.tooltip": {
         "en_us": "Sets every value below at once. Values you change afterwards are kept.",
         "ru_ru": "Задаёт все значения ниже разом. То, что вы поменяете потом, сохранится.",
         "zh_cn": "一次性设置下方所有数值。之后手动修改的数值会被保留。",
@@ -36,24 +36,24 @@ T = {
         "ja_jp": "下の値をまとめて設定します。後から変更した値はそのまま残ります。",
         "ko_kr": "아래 값을 한 번에 설정합니다. 이후에 바꾼 값은 유지됩니다.",
         "tr_tr": "Aşağıdaki tüm değerleri tek seferde ayarlar. Sonradan değiştirdiğiniz değerler korunur."},
-    "config.imprint.preset.default": {
+    "config.farmstead_footprints.preset.default": {
         "en_us": "Default", "ru_ru": "По умолчанию", "zh_cn": "默认", "pt_br": "Padrão", "es_es": "Predeterminado", "de_de": "Standard",
         "fr_fr": "Par défaut", "pl_pl": "Domyślne", "uk_ua": "За замовчуванням", "ja_jp": "標準", "ko_kr": "기본", "tr_tr": "Varsayılan"},
-    "config.imprint.preset.vanilla_plus": {
+    "config.farmstead_footprints.preset.vanilla_plus": {
         "en_us": "Vanilla+", "ru_ru": "Ваниль+", "zh_cn": "原版+", "pt_br": "Vanilla+", "es_es": "Vanilla+", "de_de": "Vanilla+",
         "fr_fr": "Vanilla+", "pl_pl": "Vanilla+", "uk_ua": "Ваніль+", "ja_jp": "バニラ+", "ko_kr": "바닐라+", "tr_tr": "Vanilla+"},
-    "config.imprint.preset.cinematic": {
+    "config.farmstead_footprints.preset.cinematic": {
         "en_us": "Cinematic", "ru_ru": "Кинематограф", "zh_cn": "电影感", "pt_br": "Cinematográfico", "es_es": "Cinemático",
         "de_de": "Filmisch", "fr_fr": "Cinématique", "pl_pl": "Filmowe", "uk_ua": "Кінематограф", "ja_jp": "シネマティック",
         "ko_kr": "시네마틱", "tr_tr": "Sinematik"},
-    "config.imprint.preset.performance": {
+    "config.farmstead_footprints.preset.performance": {
         "en_us": "Performance", "ru_ru": "Производительность", "zh_cn": "性能优先", "pt_br": "Desempenho", "es_es": "Rendimiento",
         "de_de": "Leistung", "fr_fr": "Performances", "pl_pl": "Wydajność", "uk_ua": "Продуктивність", "ja_jp": "パフォーマンス",
         "ko_kr": "성능", "tr_tr": "Performans"},
-    "config.imprint.general.enabled": {
+    "config.farmstead_footprints.general.enabled": {
         "en_us": "Enabled", "ru_ru": "Включено", "zh_cn": "启用", "pt_br": "Ativado", "es_es": "Activado", "de_de": "Aktiviert",
         "fr_fr": "Activé", "pl_pl": "Włączone", "uk_ua": "Увімкнено", "ja_jp": "有効", "ko_kr": "사용", "tr_tr": "Etkin"},
-    "config.imprint.general.enabled.tooltip": {
+    "config.farmstead_footprints.general.enabled.tooltip": {
         "en_us": "Master switch. Off: no prints are made or drawn.",
         "ru_ru": "Главный выключатель. Выключено — следы не появляются и не рисуются.",
         "zh_cn": "总开关。关闭后不会产生也不会绘制脚印。",
@@ -66,30 +66,48 @@ T = {
         "ja_jp": "全体のスイッチ。オフにすると足跡は作られず、描画もされません。",
         "ko_kr": "전체 스위치입니다. 끄면 발자국이 생기지도, 그려지지도 않습니다.",
         "tr_tr": "Ana anahtar. Kapalıyken iz oluşmaz ve çizilmez."},
-    "config.imprint.footprints.players": {
+    "config.farmstead_footprints.general.checkUpdates": {
+        "en_us": "Check for updates", "ru_ru": "Проверять обновления", "zh_cn": "检查更新",
+        "pt_br": "Verificar atualizações", "es_es": "Buscar actualizaciones", "de_de": "Nach Updates suchen",
+        "fr_fr": "Rechercher les mises à jour", "pl_pl": "Sprawdzaj aktualizacje", "uk_ua": "Перевіряти оновлення",
+        "ja_jp": "更新を確認", "ko_kr": "업데이트 확인", "tr_tr": "Güncellemeleri denetle"},
+    "config.farmstead_footprints.general.checkUpdates.tooltip": {
+        "en_us": "Once at start-up, ask Modrinth whether a newer Footprints is out and say so in the log. Sends nothing about you.",
+        "ru_ru": "Один раз при запуске спросить Modrinth, не вышла ли новая версия Footprints, и написать об этом в лог. О вас ничего не отправляется.",
+        "zh_cn": "启动时向 Modrinth 查询一次是否有新版 Footprints，并写入日志。不会发送任何关于你的信息。",
+        "pt_br": "Ao iniciar, pergunta uma vez ao Modrinth se há uma versão nova do Footprints e avisa no log. Nada sobre você é enviado.",
+        "es_es": "Al arrancar, pregunta una vez a Modrinth si hay una versión nueva de Footprints y lo indica en el registro. No envía nada sobre ti.",
+        "de_de": "Fragt beim Start einmal bei Modrinth nach einer neueren Footprints-Version und meldet sie im Log. Über dich wird nichts gesendet.",
+        "fr_fr": "Au démarrage, demande une fois à Modrinth si une nouvelle version de Footprints est sortie et l'indique dans le journal. Rien sur vous n'est envoyé.",
+        "pl_pl": "Przy starcie raz pyta Modrinth, czy jest nowsza wersja Footprints, i zapisuje to w logu. Nic o tobie nie jest wysyłane.",
+        "uk_ua": "Один раз під час запуску запитати Modrinth, чи вийшла нова версія Footprints, і написати про це в лог. Про вас нічого не надсилається.",
+        "ja_jp": "起動時に一度だけ Modrinth に Footprints の新しいバージョンがあるか確認し、ログに書き出します。あなたに関する情報は送信しません。",
+        "ko_kr": "시작할 때 한 번 Modrinth에 Footprints 새 버전이 있는지 확인하고 로그에 남깁니다. 사용자에 대한 정보는 보내지 않습니다.",
+        "tr_tr": "Açılışta bir kez Modrinth'e yeni bir Footprints sürümü olup olmadığını sorar ve günlüğe yazar. Hakkınızda hiçbir şey gönderilmez."},
+    "config.farmstead_footprints.footprints.players": {
         "en_us": "Player prints", "ru_ru": "Следы игроков", "zh_cn": "玩家脚印", "pt_br": "Pegadas de jogadores", "es_es": "Huellas de jugadores",
         "de_de": "Spuren von Spielern", "fr_fr": "Empreintes des joueurs", "pl_pl": "Ślady graczy", "uk_ua": "Сліди гравців",
         "ja_jp": "プレイヤーの足跡", "ko_kr": "플레이어 발자국", "tr_tr": "Oyuncu izleri"},
-    "config.imprint.footprints.players.tooltip": {
+    "config.farmstead_footprints.footprints.players.tooltip": {
         "en_us": "Prints of players, yourself included.", "ru_ru": "Следы игроков, в том числе ваши.", "zh_cn": "玩家的脚印，包括你自己。",
         "pt_br": "Pegadas de jogadores, incluindo as suas.", "es_es": "Huellas de jugadores, incluidas las tuyas.",
         "de_de": "Spuren von Spielern, deine eigenen eingeschlossen.", "fr_fr": "Empreintes des joueurs, y compris les vôtres.",
         "pl_pl": "Ślady graczy, także twoje.", "uk_ua": "Сліди гравців, зокрема ваші.", "ja_jp": "プレイヤーの足跡（自分を含む）。",
         "ko_kr": "플레이어의 발자국(자신 포함).", "tr_tr": "Oyuncuların izleri, sizinkiler dahil."},
-    "config.imprint.footprints.mobs": {
+    "config.farmstead_footprints.footprints.mobs": {
         "en_us": "Mob prints", "ru_ru": "Следы мобов", "zh_cn": "生物脚印", "pt_br": "Pegadas de criaturas", "es_es": "Huellas de criaturas",
         "de_de": "Spuren von Kreaturen", "fr_fr": "Empreintes des créatures", "pl_pl": "Ślady stworzeń", "uk_ua": "Сліди мобів",
         "ja_jp": "モブの足跡", "ko_kr": "몹 발자국", "tr_tr": "Yaratık izleri"},
-    "config.imprint.footprints.mobs.tooltip": {
+    "config.farmstead_footprints.footprints.mobs.tooltip": {
         "en_us": "Prints of animals and monsters.", "ru_ru": "Следы животных и монстров.", "zh_cn": "动物和怪物的脚印。",
         "pt_br": "Pegadas de animais e monstros.", "es_es": "Huellas de animales y monstruos.", "de_de": "Spuren von Tieren und Monstern.",
         "fr_fr": "Empreintes des animaux et des monstres.", "pl_pl": "Ślady zwierząt i potworów.", "uk_ua": "Сліди тварин і монстрів.",
         "ja_jp": "動物とモンスターの足跡。", "ko_kr": "동물과 몬스터의 발자국.", "tr_tr": "Hayvan ve canavar izleri."},
-    "config.imprint.footprints.maxPrints": {
+    "config.farmstead_footprints.footprints.maxPrints": {
         "en_us": "Max prints", "ru_ru": "Предел следов", "zh_cn": "脚印上限", "pt_br": "Máximo de pegadas", "es_es": "Máximo de huellas",
         "de_de": "Maximale Spuren", "fr_fr": "Empreintes max.", "pl_pl": "Maks. śladów", "uk_ua": "Межа слідів", "ja_jp": "足跡の最大数",
         "ko_kr": "최대 발자국 수", "tr_tr": "En fazla iz"},
-    "config.imprint.footprints.maxPrints.tooltip": {
+    "config.farmstead_footprints.footprints.maxPrints.tooltip": {
         "en_us": "How many prints can exist at once. The oldest disappear first when the limit is reached.",
         "ru_ru": "Сколько следов может быть одновременно. Когда предел достигнут, первыми исчезают самые старые.",
         "zh_cn": "同时存在的脚印数量。达到上限时最旧的脚印先消失。",
@@ -102,10 +120,10 @@ T = {
         "ja_jp": "同時に存在できる足跡の数。上限に達すると古いものから消えます。",
         "ko_kr": "동시에 존재할 수 있는 발자국 수입니다. 한도에 이르면 가장 오래된 것부터 사라집니다.",
         "tr_tr": "Aynı anda kaç iz olabileceği. Sınıra ulaşıldığında önce en eskiler kaybolur."},
-    "config.imprint.footprints.renderDistance": {
+    "config.farmstead_footprints.footprints.renderDistance": {
         "en_us": "Distance", "ru_ru": "Дальность", "zh_cn": "距离", "pt_br": "Distância", "es_es": "Distancia", "de_de": "Entfernung",
         "fr_fr": "Distance", "pl_pl": "Odległość", "uk_ua": "Дальність", "ja_jp": "距離", "ko_kr": "거리", "tr_tr": "Mesafe"},
-    "config.imprint.footprints.renderDistance.tooltip": {
+    "config.farmstead_footprints.footprints.renderDistance.tooltip": {
         "en_us": "Blocks from the camera within which prints are made and drawn.",
         "ru_ru": "На каком расстоянии от камеры (в блоках) следы появляются и рисуются.",
         "zh_cn": "距离镜头多少格以内会产生并绘制脚印。",
@@ -118,11 +136,11 @@ T = {
         "ja_jp": "カメラから何ブロック以内で足跡を作り、描画するか。",
         "ko_kr": "카메라로부터 몇 블록 안에서 발자국을 만들고 그릴지 정합니다.",
         "tr_tr": "Kameradan kaç blok içinde izlerin oluşup çizileceği."},
-    "config.imprint.footprints.lifetimeMultiplier": {
+    "config.farmstead_footprints.footprints.lifetimeMultiplier": {
         "en_us": "Print lifetime", "ru_ru": "Время жизни следов", "zh_cn": "脚印持续时间", "pt_br": "Duração das pegadas",
         "es_es": "Duración de las huellas", "de_de": "Lebensdauer der Spuren", "fr_fr": "Durée des empreintes", "pl_pl": "Czas życia śladów",
         "uk_ua": "Час життя слідів", "ja_jp": "足跡の持続時間", "ko_kr": "발자국 지속 시간", "tr_tr": "İz ömrü"},
-    "config.imprint.footprints.lifetimeMultiplier.tooltip": {
+    "config.farmstead_footprints.footprints.lifetimeMultiplier.tooltip": {
         "en_us": "Multiplies how long prints stay before they fade (snow 5 min, sand 3 min at 1.0).",
         "ru_ru": "Множитель того, сколько следы держатся до исчезновения (при 1.0: снег 5 мин, песок 3 мин).",
         "zh_cn": "脚印消失前停留时间的倍数（1.0 时：雪地 5 分钟，沙地 3 分钟）。",
@@ -135,19 +153,19 @@ T = {
         "ja_jp": "足跡が消えるまでの時間の倍率（1.0 で雪 5 分、砂 3 分）。",
         "ko_kr": "발자국이 사라지기 전까지 남는 시간의 배수입니다(1.0일 때 눈 5분, 모래 3분).",
         "tr_tr": "İzlerin solmadan önce ne kadar kalacağının çarpanı (1.0'da kar 5 dk, kum 3 dk)."},
-    "config.imprint.footprints.opacity": {
+    "config.farmstead_footprints.footprints.opacity": {
         "en_us": "Visibility", "ru_ru": "Заметность", "zh_cn": "清晰度", "pt_br": "Visibilidade", "es_es": "Visibilidad", "de_de": "Sichtbarkeit",
         "fr_fr": "Visibilité", "pl_pl": "Widoczność", "uk_ua": "Помітність", "ja_jp": "見やすさ", "ko_kr": "선명도", "tr_tr": "Görünürlük"},
-    "config.imprint.footprints.opacity.tooltip": {
+    "config.farmstead_footprints.footprints.opacity.tooltip": {
         "en_us": "How strongly prints show.", "ru_ru": "Насколько сильно видны следы.", "zh_cn": "脚印显示的明显程度。",
         "pt_br": "Quão marcadas as pegadas aparecem.", "es_es": "Cuán marcadas se ven las huellas.", "de_de": "Wie deutlich Spuren zu sehen sind.",
         "fr_fr": "Intensité d'affichage des empreintes.", "pl_pl": "Jak wyraźnie widać ślady.", "uk_ua": "Наскільки сильно видно сліди.",
         "ja_jp": "足跡がどれだけはっきり見えるか。", "ko_kr": "발자국이 얼마나 뚜렷하게 보이는지.", "tr_tr": "İzlerin ne kadar belirgin görüneceği."},
-    "config.imprint.footprints.entityBlacklist": {
+    "config.farmstead_footprints.footprints.entityBlacklist": {
         "en_us": "No prints for", "ru_ru": "Без следов", "zh_cn": "不留脚印的实体", "pt_br": "Sem pegadas para", "es_es": "Sin huellas para",
         "de_de": "Keine Spuren für", "fr_fr": "Pas d'empreintes pour", "pl_pl": "Bez śladów dla", "uk_ua": "Без слідів", "ja_jp": "足跡を残さない",
         "ko_kr": "발자국 제외", "tr_tr": "İz bırakmayanlar"},
-    "config.imprint.footprints.entityBlacklist.tooltip": {
+    "config.farmstead_footprints.footprints.entityBlacklist.tooltip": {
         "en_us": "Entity ids that never leave prints, separated by commas, e.g. minecraft:villager.",
         "ru_ru": "ID существ, которые никогда не оставляют следов, через запятую, например minecraft:villager.",
         "zh_cn": "永远不留脚印的实体 ID，用逗号分隔，例如 minecraft:villager。",
@@ -160,37 +178,37 @@ T = {
         "ja_jp": "足跡を残さないエンティティ ID（カンマ区切り）。例: minecraft:villager",
         "ko_kr": "절대 발자국을 남기지 않는 엔티티 ID(쉼표로 구분). 예: minecraft:villager",
         "tr_tr": "Asla iz bırakmayan varlık kimlikleri, virgülle ayrılmış; ör. minecraft:villager."},
-    "imprint.command.reloaded": {
-        "en_us": "Imprint settings reloaded.", "ru_ru": "Настройки Imprint перезагружены.", "zh_cn": "Imprint 设置已重新加载。",
-        "pt_br": "Configurações do Imprint recarregadas.", "es_es": "Ajustes de Imprint recargados.", "de_de": "Imprint-Einstellungen neu geladen.",
-        "fr_fr": "Paramètres d'Imprint rechargés.", "pl_pl": "Ustawienia Imprint wczytane ponownie.", "uk_ua": "Налаштування Imprint перезавантажено.",
-        "ja_jp": "Imprint の設定を再読み込みしました。", "ko_kr": "Imprint 설정을 다시 불러왔습니다.", "tr_tr": "Imprint ayarları yeniden yüklendi."},
-    "imprint.command.problems": {
-        "en_us": "Imprint settings: %s problem(s), see below. Fix the file and run /imprint reload again.",
-        "ru_ru": "Настройки Imprint: проблем — %s, подробности ниже. Исправьте файл и снова выполните /imprint reload.",
-        "zh_cn": "Imprint 设置：%s 个问题，详见下方。修正文件后再次执行 /imprint reload。",
-        "pt_br": "Configurações do Imprint: %s problema(s), veja abaixo. Corrija o arquivo e rode /imprint reload de novo.",
-        "es_es": "Ajustes de Imprint: %s problema(s), mira abajo. Corrige el archivo y ejecuta /imprint reload otra vez.",
-        "de_de": "Imprint-Einstellungen: %s Problem(e), siehe unten. Datei korrigieren und /imprint reload erneut ausführen.",
-        "fr_fr": "Paramètres d'Imprint : %s problème(s), voir ci-dessous. Corrigez le fichier puis relancez /imprint reload.",
-        "pl_pl": "Ustawienia Imprint: problemów: %s, szczegóły poniżej. Popraw plik i ponownie wpisz /imprint reload.",
-        "uk_ua": "Налаштування Imprint: проблем — %s, подробиці нижче. Виправте файл і знову виконайте /imprint reload.",
-        "ja_jp": "Imprint の設定: 問題が %s 件あります（下記参照）。ファイルを直して再度 /imprint reload を実行してください。",
-        "ko_kr": "Imprint 설정: 문제 %s건, 아래를 확인하세요. 파일을 고친 뒤 /imprint reload를 다시 실행하세요.",
-        "tr_tr": "Imprint ayarları: %s sorun, aşağıya bakın. Dosyayı düzeltip /imprint reload komutunu yeniden çalıştırın."},
-    "imprint.command.stats": {
-        "en_us": "Imprint: %s prints of %s, drawn last frame: %s.",
-        "ru_ru": "Imprint: следов %s из %s, нарисовано в последнем кадре: %s.",
-        "zh_cn": "Imprint：脚印 %s / %s，上一帧绘制：%s。",
-        "pt_br": "Imprint: %s pegadas de %s, desenhadas no último quadro: %s.",
-        "es_es": "Imprint: %s huellas de %s, dibujadas en el último fotograma: %s.",
-        "de_de": "Imprint: %s von %s Spuren, im letzten Bild gezeichnet: %s.",
-        "fr_fr": "Imprint : %s empreintes sur %s, affichées à la dernière image : %s.",
-        "pl_pl": "Imprint: śladów %s z %s, narysowano w ostatniej klatce: %s.",
-        "uk_ua": "Imprint: слідів %s з %s, намальовано в останньому кадрі: %s.",
-        "ja_jp": "Imprint: 足跡 %s / %s、直前のフレームで描画: %s。",
-        "ko_kr": "Imprint: 발자국 %s / %s, 지난 프레임에 그림: %s.",
-        "tr_tr": "Imprint: %s / %s iz, son karede çizilen: %s."},
+    "farmstead_footprints.command.reloaded": {
+        "en_us": "Footprints settings reloaded.", "ru_ru": "Настройки Footprints перезагружены.", "zh_cn": "Footprints 设置已重新加载。",
+        "pt_br": "Configurações do Footprints recarregadas.", "es_es": "Ajustes de Footprints recargados.", "de_de": "Footprints-Einstellungen neu geladen.",
+        "fr_fr": "Paramètres d'Footprints rechargés.", "pl_pl": "Ustawienia Footprints wczytane ponownie.", "uk_ua": "Налаштування Footprints перезавантажено.",
+        "ja_jp": "Footprints の設定を再読み込みしました。", "ko_kr": "Footprints 설정을 다시 불러왔습니다.", "tr_tr": "Footprints ayarları yeniden yüklendi."},
+    "farmstead_footprints.command.problems": {
+        "en_us": "Footprints settings: %s problem(s), see below. Fix the file and run /footprints reload again.",
+        "ru_ru": "Настройки Footprints: проблем — %s, подробности ниже. Исправьте файл и снова выполните /footprints reload.",
+        "zh_cn": "Footprints 设置：%s 个问题，详见下方。修正文件后再次执行 /footprints reload。",
+        "pt_br": "Configurações do Footprints: %s problema(s), veja abaixo. Corrija o arquivo e rode /footprints reload de novo.",
+        "es_es": "Ajustes de Footprints: %s problema(s), mira abajo. Corrige el archivo y ejecuta /footprints reload otra vez.",
+        "de_de": "Footprints-Einstellungen: %s Problem(e), siehe unten. Datei korrigieren und /footprints reload erneut ausführen.",
+        "fr_fr": "Paramètres d'Footprints : %s problème(s), voir ci-dessous. Corrigez le fichier puis relancez /footprints reload.",
+        "pl_pl": "Ustawienia Footprints: problemów: %s, szczegóły poniżej. Popraw plik i ponownie wpisz /footprints reload.",
+        "uk_ua": "Налаштування Footprints: проблем — %s, подробиці нижче. Виправте файл і знову виконайте /footprints reload.",
+        "ja_jp": "Footprints の設定: 問題が %s 件あります（下記参照）。ファイルを直して再度 /footprints reload を実行してください。",
+        "ko_kr": "Footprints 설정: 문제 %s건, 아래를 확인하세요. 파일을 고친 뒤 /footprints reload를 다시 실행하세요.",
+        "tr_tr": "Footprints ayarları: %s sorun, aşağıya bakın. Dosyayı düzeltip /footprints reload komutunu yeniden çalıştırın."},
+    "farmstead_footprints.command.stats": {
+        "en_us": "Footprints: %s prints of %s, drawn last frame: %s.",
+        "ru_ru": "Footprints: следов %s из %s, нарисовано в последнем кадре: %s.",
+        "zh_cn": "Footprints：脚印 %s / %s，上一帧绘制：%s。",
+        "pt_br": "Footprints: %s pegadas de %s, desenhadas no último quadro: %s.",
+        "es_es": "Footprints: %s huellas de %s, dibujadas en el último fotograma: %s.",
+        "de_de": "Footprints: %s von %s Spuren, im letzten Bild gezeichnet: %s.",
+        "fr_fr": "Footprints : %s empreintes sur %s, affichées à la dernière image : %s.",
+        "pl_pl": "Footprints: śladów %s z %s, narysowano w ostatniej klatce: %s.",
+        "uk_ua": "Footprints: слідів %s з %s, намальовано в останньому кадрі: %s.",
+        "ja_jp": "Footprints: 足跡 %s / %s、直前のフレームで描画: %s。",
+        "ko_kr": "Footprints: 발자국 %s / %s, 지난 프레임에 그림: %s.",
+        "tr_tr": "Footprints: %s / %s iz, son karede çizilen: %s."},
 }
 
 PH = re.compile(r"%(?:\d+\$)?[sd]")

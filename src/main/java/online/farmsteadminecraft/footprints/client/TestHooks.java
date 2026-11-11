@@ -1,0 +1,86 @@
+package online.farmsteadminecraft.footprints.client;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Screenshot;
+import online.farmsteadminecraft.footprints.Footprints;
+
+/**
+ * Hooks for automated in-game tests, off unless the JVM runs with {@code -Dfarmstead.testhooks=true}
+ * (the build adds it for {@code -PtestHooks}). The test runner drops {@code <name>.shot} files into
+ * {@code <gameDir>/testhooks/}; each one becomes a screenshot named {@code <name>.png}. This avoids
+ * sending keystrokes to a window that may not have focus.
+ */
+public final class TestHooks {
+    private static final boolean ENABLED = Boolean.getBoolean("farmstead.testhooks");
+    /** Forge 1.20.1 quickPlay joins as a vanilla client and never finishes the FML handshake,
+     *  so there the runner passes the address here and the hook connects from the title screen. */
+    private static final String JOIN = System.getProperty("farmstead.testhooks.join");
+    private static boolean joined;
+
+    private TestHooks() {
+    }
+
+    public static void tick(Minecraft mc) {
+        // on with -Dfarmstead.testhooks=true, or when a <gameDir>/testhooks folder exists (capture rigs
+        // whose launch arguments we do not control)
+        if (!ENABLED && !Files.isDirectory(mc.gameDirectory.toPath().resolve("testhooks"))) return;
+        //? if forge {
+        /*if (JOIN != null && !joined && mc.level == null
+            && mc.screen instanceof net.minecraft.client.gui.screens.TitleScreen title) {
+            joined = true;
+            join(mc, title);
+        }
+        *///?}
+        if (mc.level != null && mc.level.getGameTime() % 100 == 0) {
+            Footprints.LOGGER.info("test hook stats: prints alive={} drawn last frame={} render calls={}",
+                FootprintsClient.POOL.alive(), online.farmsteadminecraft.footprints.client.render.FootprintRenderer.lastDrawn,
+                online.farmsteadminecraft.footprints.client.render.FootprintRenderer.frames);
+            java.util.Map<String, Integer> byLane = new java.util.TreeMap<>();
+            FootprintsClient.POOL.forEachAlive(p -> byLane.merge(p.shape + "@x" + (int) Math.floor(p.x / 10) * 10 + ",z" + (int) Math.floor(p.z), 1, Integer::sum));
+            Footprints.LOGGER.info("test hook prints: {}", byLane);
+        }
+        Path dir = mc.gameDirectory.toPath().resolve("testhooks");
+        if (!Files.isDirectory(dir)) return;
+        try (Stream<Path> files = Files.list(dir)) {
+            for (Path req : files.toList()) {
+                String file = req.getFileName().toString();
+                if (file.endsWith(".shot")) {
+                    Files.deleteIfExists(req);
+                    shoot(mc, file.substring(0, file.length() - 5));
+                } else if (file.equals("config.open")) {
+                    Files.deleteIfExists(req);
+                    FootprintsClient.openConfigNextTick();
+                } else if (file.equals("prints.clear")) {
+                    Files.deleteIfExists(req);
+                    FootprintsClient.POOL.clear();
+                } else if (file.equals("config.reload")) {
+                    Files.deleteIfExists(req);
+                    Footprints.LOGGER.info("test hook reload: problems={}", FootprintsConfig.load());
+                }
+            }
+        } catch (Exception e) {
+            Footprints.LOGGER.warn("test hook failed", e);
+        }
+    }
+
+    //? if forge {
+    /*private static void join(Minecraft mc, net.minecraft.client.gui.screens.Screen parent) {
+        net.minecraft.client.gui.screens.ConnectScreen.startConnecting(parent, mc,
+            net.minecraft.client.multiplayer.resolver.ServerAddress.parseString(JOIN),
+            new net.minecraft.client.multiplayer.ServerData("test", JOIN, false), false);
+    }
+    *///?}
+
+    private static void shoot(Minecraft mc, String name) {
+        File gameDir = mc.gameDirectory;
+        //? if >=26.1 {
+        /*Screenshot.grab(gameDir, name + ".png", mc.gameRenderer.mainRenderTarget(), 1, msg -> Footprints.LOGGER.info("test hook: {}", msg.getString()));
+        *///?} else
+        Screenshot.grab(gameDir, name + ".png", mc.getMainRenderTarget(), msg -> Footprints.LOGGER.info("test hook: {}", msg.getString()));
+    }
+}

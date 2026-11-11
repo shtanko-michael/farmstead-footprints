@@ -5,7 +5,7 @@ plugins {
 }
 
 version = "${sc.properties["mod.version"]}+${sc.current.version}"
-base.archivesName = "${sc.properties["mod.id"]}-forge"
+base.archivesName = "${sc.properties["mod.file"]}-forge"
 
 val requiredJava = when {
     sc.current.parsed >= "1.20.5" -> JavaVersion.VERSION_21
@@ -105,6 +105,9 @@ tasks {
         val props = buildMap {
             register("id", modId)
             register("name", sc.properties["mod.name"])
+            register("homepage", sc.properties["mod.homepage"])
+            register("sources", sc.properties["mod.sources"])
+            register("issues", sc.properties["mod.issues"])
             register("version", sc.properties["mod.version"])
             register("minecraft", sc.properties["mod.mc_compat"])
         }

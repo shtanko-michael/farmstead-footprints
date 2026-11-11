@@ -1,11 +1,11 @@
-"""Imprint demo shoot on the capture rig (minecraft-api/game: capture-server + cinematic-mod client).
+"""Footprints demo shoot on the capture rig (minecraft-api/game: capture-server + cinematic-mod client).
 
     python -I media/film.py scout          stills of every location -> media/out/scout-sheet.jpg
     python -I media/film.py test           one short take: the hero walks through snow, camera behind
     python -I media/film.py <shot>         record one shot of the reel (see SHOTS)
 
 Setup (done once, see media/FILMING.md): capture-server runs world `imprint-world` (seed 2718281828,
-Terralith, RCON 25892), the capture client has Imprint 1.21.1 in mods/ and preset "cinematic".
+Terralith, RCON 25892), the capture client has Footprints 1.21.1 in mods/ and preset "cinematic".
 """
 import json
 import math
@@ -85,7 +85,7 @@ def scout():
         fx, fz = -math.sin(rad), math.cos(rad)
         pos = [x - fx * 10, gy + 6, z - fz * 10]
         look = [x + fx * 12, gy, z + fz * 12]
-        got = shoot.stills("imprint_scout_" + name, [(pos, look)], time_of_day=tod, fov=70, settle=60)
+        got = shoot.stills("footprints_scout_" + name, [(pos, look)], time_of_day=tod, fov=70, settle=60)
         if got:
             files.append(got[-1])
             labels.append(f"{name} ({x},{int(gy)},{z})")
@@ -101,7 +101,7 @@ def ring(x, z, tod=6000, height=2.0, label="ring"):
     for i in range(8):
         a = math.radians(i * 45)
         shots.append(([x, gy + height, z], [x - math.sin(a) * 20, gy + 1, z + math.cos(a) * 20]))
-    got = shoot.stills(f"imprint_{label}", shots, time_of_day=tod, fov=70, settle=60)
+    got = shoot.stills(f"footprints_{label}", shots, time_of_day=tod, fov=70, settle=60)
     names = ["S", "SW", "W", "NW", "N", "NE", "E", "SE"]
     out = shoot.sheet(got, os.path.join(OUT, f"{label}-sheet.jpg"), cols=4, w=480,
                       labels=[f"{label} {n} ({x},{gy:.0f},{z})" for n in names[:len(got)]])
@@ -134,7 +134,7 @@ def test():
         {"frame": 0, "pos": [1766, gy + 2.6, -1788], "look": [1772, gy + 0.4, -1797], "fov": 62, "ease": "inOut"},
         {"frame": frames, "pos": [1786, gy + 3.2, -1768], "look": [1786, gy + 0.2, -1785], "fov": 62, "ease": "inOut"},
     ]
-    name = shoot.write("imprint_test", cam, frames=frames, setup=["time set 12500"], actors=[actor], settle=60)
+    name = shoot.write("footprints_test", cam, frames=frames, setup=["time set 12500"], actors=[actor], settle=60)
     res = shoot.rec(name)
     fs = shoot.frames_of(name)
     print(res, len(fs))
@@ -147,7 +147,7 @@ HOOKS = r"C:\Users\admin\minecraft-api\game\capture-client\testhooks"
 
 
 def clear_prints():
-    """Wipes prints left by earlier takes (Imprint test hook)."""
+    """Wipes prints left by earlier takes (Footprints test hook)."""
     os.makedirs(HOOKS, exist_ok=True)
     open(os.path.join(HOOKS, "prints.clear"), "w").close()
     time.sleep(1.0)
@@ -243,7 +243,7 @@ def shot_snow_hero(vet=True):
     a, b = (1781.5, -1771.0), (1781.2, -1801.0)
     actor = {"name": "Imprint", "keys": walk_keys(a, b, frames)}
     cam = follow_cam(a, b, frames, SNOW_Y, dist=(3.2, 5.5), height=2.5)
-    return vet_or_record("imprint_snow_hero", cam, frames, [], actors=[actor], vet=vet)
+    return vet_or_record("footprints_snow_hero", cam, frames, [], actors=[actor], vet=vet)
 
 
 def shot_wolves(vet=True):
@@ -262,7 +262,7 @@ def shot_wolves(vet=True):
         setup.append(summon("wolf", tag, la, SNOW_Y, toward=lb))
         cues += mob_cues(f"@e[tag={tag},limit=1]", [la, lb], frames, SNOW_Y)
     cam = follow_cam(a, b, frames, SNOW_Y, dist=(5.2, 6.8), height=3.0, side=0.0, ahead=5.0)
-    return vet_or_record("imprint_wolves", cam, frames, setup, cues=cues, vet=vet)
+    return vet_or_record("footprints_wolves", cam, frames, setup, cues=cues, vet=vet)
 
 
 SAVANNA_Y = 88.0  # the red-sand flat at (224, 192); its terracotta top was turned into red sand for prints
@@ -278,7 +278,7 @@ def shot_savanna(vet=True):
     cues = mob_cues("@e[tag=camel,limit=1]", [ca, cb], frames, SAVANNA_Y)
     mid_a, mid_b = (212.8, 201.5), (213.1, 183.5)
     cam = follow_cam(mid_a, mid_b, frames, SAVANNA_Y, dist=(5.6, 7.2), height=3.2, side=0.6, fov=62)
-    return vet_or_record("imprint_savanna", cam, frames, setup, actors=[hero], cues=cues, vet=vet, tod=11000)
+    return vet_or_record("footprints_savanna", cam, frames, setup, actors=[hero], cues=cues, vet=vet, tod=11000)
 
 
 def shot_chicken(vet=True):
@@ -289,7 +289,7 @@ def shot_chicken(vet=True):
     cues = mob_cues("@e[tag=chick,limit=1]", [a, b], frames, SAVANNA_Y)
     cam = follow_cam(a, b, frames, SAVANNA_Y, dist=(2.6, 3.6), height=1.9, side=0.3, ahead=1.5, look_h=0.0,
                      fov=54)
-    return vet_or_record("imprint_chicken", cam, frames, setup, cues=cues, vet=vet, tod=11000)
+    return vet_or_record("footprints_chicken", cam, frames, setup, cues=cues, vet=vet, tod=11000)
 
 
 def shot_polar_bear(vet=True):
@@ -299,7 +299,7 @@ def shot_polar_bear(vet=True):
     setup = [summon("polar_bear", "bear", a, SNOW_Y, toward=b)]
     cues = mob_cues("@e[tag=bear,limit=1]", [a, b], frames, SNOW_Y)
     cam = follow_cam(a, b, frames, SNOW_Y, dist=(6.0, 7.5), height=3.2, side=2.4, ahead=5.0)
-    return vet_or_record("imprint_polar_bear", cam, frames, setup, cues=cues, vet=vet)
+    return vet_or_record("footprints_polar_bear", cam, frames, setup, cues=cues, vet=vet)
 
 
 def shot_gait(vet=True):
@@ -313,7 +313,7 @@ def shot_gait(vet=True):
         cues += mob_cues(f"@e[tag=gait{i},limit=1]", [a, b], frames, SNOW_Y)
     key = {"pos": [1786.5, 106.0, -1783.0], "look": [1786.5, SNOW_Y, -1788.0], "fov": 60, "ease": "linear"}
     cam = [dict(key, frame=0), dict(key, frame=frames)]
-    return vet_or_record("imprint_gait", cam, frames, setup, cues=cues, vet=vet)
+    return vet_or_record("footprints_gait", cam, frames, setup, cues=cues, vet=vet)
 
 
 SHOTS = {"gait": shot_gait, "snow_hero": shot_snow_hero, "wolves": shot_wolves, "savanna": shot_savanna, "chicken": shot_chicken,

@@ -45,4 +45,4 @@ stonecutter {
     }
 }
 
-rootProject.name = "imprint"
+rootProject.name = "farmstead-footprints"

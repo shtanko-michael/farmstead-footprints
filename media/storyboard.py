@@ -11,11 +11,11 @@ import shoot  # noqa: E402
 
 # reel order: scene, the two moments that sell it, caption
 BOARD = [
-    ("imprint_snow_hero", (0.5, 0.95), "1 Hook - we follow the hero toward the mountain"),
-    ("imprint_wolves", (0.5, 0.85), "2 Wolf pack - behind the pack, paw prints underfoot"),
-    ("imprint_savanna", (0.4, 0.8), "3 Savanna - camel and hero walk to the acacias"),
-    ("imprint_chicken", (0.7, 0.95), "4 Macro - tailing a chicken at ground level"),
-    ("imprint_polar_bear", (0.6, 0.95), "5 Finale - polar bear toward the sunlit cliff"),
+    ("footprints_snow_hero", (0.5, 0.95), "1 Hook - we follow the hero toward the mountain"),
+    ("footprints_wolves", (0.5, 0.85), "2 Wolf pack - behind the pack, paw prints underfoot"),
+    ("footprints_savanna", (0.4, 0.8), "3 Savanna - camel and hero walk to the acacias"),
+    ("footprints_chicken", (0.7, 0.95), "4 Macro - tailing a chicken at ground level"),
+    ("footprints_polar_bear", (0.6, 0.95), "5 Finale - polar bear toward the sunlit cliff"),
 ]
 
 files, labels = [], []

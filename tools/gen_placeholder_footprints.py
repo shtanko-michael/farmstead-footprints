@@ -9,7 +9,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
 
 CELL = 32
-OUT = Path(__file__).resolve().parent.parent / "src/main/resources/assets/imprint/textures/footprints.png"
+OUT = Path(__file__).resolve().parent.parent / "src/main/resources/assets/farmstead_footprints/textures/footprints.png"
 
 
 def boot(d, mirror):

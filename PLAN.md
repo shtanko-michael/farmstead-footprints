@@ -1,4 +1,4 @@
-# Imprint — план разработки
+# Footprints (formerly Imprint) — план разработки
 
 > Рабочее название. Мод №1 и пилот всего конвейера: на нём обкатываются шаблон, тест-матрица, ассеты, картинки, видео и листинг.
 
@@ -71,7 +71,7 @@
 
 ## 5. Конфиг
 
-### `farmstead-imprint-client.toml`
+### `farmstead_footprints-client.toml`
 
 | Ключ | По умолчанию | Описание |
 | --- | --- | --- |
@@ -88,7 +88,7 @@
 | `weather.snowFillsPrints` | true | Снегопад заметает следы |
 | `debug.showStats` | false | Число декалей и время кадра в F3 |
 
-### `farmstead-imprint-server.toml` (модуль тропинок)
+### `farmstead_footprints-server.toml` (модуль тропинок)
 
 | Ключ | По умолчанию | Описание |
 | --- | --- | --- |
@@ -107,14 +107,14 @@
 
 | Узел | По умолчанию | Что даёт |
 | --- | --- | --- |
-| `imprint.trails.contribute` | true | Шаги игрока протаптывают настоящую тропу |
-| `imprint.command.reload` | op | `/imprint reload` |
-| `imprint.command.clear` | op | `/imprint trails clear <radius>` — стереть счётчики |
-| `imprint.command.stats` | op | `/imprint trails stats` |
+| `farmstead_footprints.trails.contribute` | true | Шаги игрока протаптывают настоящую тропу |
+| `farmstead_footprints.command.reload` | op | `/footprints reload` |
+| `farmstead_footprints.command.clear` | op | `/footprints trails clear <radius>` — стереть счётчики |
+| `farmstead_footprints.command.stats` | op | `/footprints trails stats` |
 
 | Meta | По умолчанию | Что задаёт |
 | --- | --- | --- |
-| `imprint.trails.weight` | 1.0 | Вес шага игрока (VIP и лошади протаптывают быстрее) |
+| `farmstead_footprints.trails.weight` | 1.0 | Вес шага игрока (VIP и лошади протаптывают быстрее) |
 
 ## 7. Локализация
 
@@ -164,7 +164,7 @@
   2. RCON телепортирует игрока по прямой по песку, снегу и траве (серия `/tp` с шагом 0,3 блока).
   3. Делается скриншот.
   4. Проверка: в логе нет ошибок, F3-статистика показывает больше 0 декалей.
-- Серверный модуль, GameTest: после 60 шагов `grass_block` → `coarse_dirt`; с `imprint.trails.contribute = false` блок не меняется; `imprint.trails.weight = 2` даёт стадию вдвое быстрее.
+- Серверный модуль, GameTest: после 60 шагов `grass_block` → `coarse_dirt`; с `farmstead_footprints.trails.contribute = false` блок не меняется; `farmstead_footprints.trails.weight = 2` даёт стадию вдвое быстрее.
 - **Производительность:** бенчмарк-мир — загон со 100 жителями и 30 волками. Время кадра с модом и без, на Sodium, на 1.21.1. Цель — ≤ 0,3 мс на кадр на `default`, ≤ 0,1 мс на `performance`.
 
 **Вручную (скриншоты в чат):**
