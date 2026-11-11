@@ -511,6 +511,12 @@ T = {
 PH = re.compile(r"%(?:\d+\$)?[sd]")
 
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lang_more import TABLE as _MORE  # noqa: E402
+
+T.update(_MORE)
+
+
 def write():
     OUT.mkdir(parents=True, exist_ok=True)
     for lang in LANGS:

@@ -238,19 +238,24 @@ public final class StepTracker {
         net.minecraft.world.phys.shapes.VoxelShape outline = state.getShape(level, pos);
         double top = outline.isEmpty() ? pos.getY() : pos.getY() + outline.max(net.minecraft.core.Direction.Axis.Y);
         Footprint p = pool.add();
+        p.grow = 0f;
+        p.onWater = false;
         // no two prints alike: a few degrees, a few percent, a few millimetres
         p.x = x + (random.nextFloat() - 0.5f) * 0.06f;
         p.y = Math.max(top, Math.min(y, top + 0.2));
         p.z = z + (random.nextFloat() - 0.5f) * 0.06f;
         p.yaw = yaw + (random.nextFloat() - 0.5f) * 14f;
         p.shape = e.isShiftKeyDown() && !profile.quadruped() ? FootShape.SNEAK : shape;
-        p.scale = profile.scale() * sizeMul * (profile == FootProfile.CHILD ? 1f : scaleOf(e)) * (0.92f + random.nextFloat() * 0.16f);
+        p.scale = profile.scale() * sizeMul * (profile == FootProfile.CHILD ? 1f : scaleOf(e)) * (0.92f + random.nextFloat() * 0.16f)
+            * FootprintsConfig.SIZE.floatValue();
+        p.supportPos = pos.asLong();
+        p.supportBlock = state.getBlock();
         p.depth = surface.depth() * (e.isShiftKeyDown() ? 0.55f : 1f) * (0.85f + random.nextFloat() * 0.2f)
             * (e.isSprinting() ? 1.1f : 1f);
         int ground = state.getMapColor(level, pos).col;
         if (wetOnHard) {
             // water darkens stone and wood; no lip, and it fades as the foot dries
-            p.depth *= Math.min(1f, wetNow * 1.4f);
+            p.depth *= Math.min(1f, wetNow * 1.4f) * FootprintsConfig.WET_OPACITY.floatValue();
             p.shadowRgb = scale(ground, 0.45f, 0);
             p.rimRgb = ground;
             p.rim = 0f;
@@ -273,6 +278,7 @@ public final class StepTracker {
             p.pixel = false;
         }
         dust(level, e, state, surface, p.x, p.y, p.z);
+        if (wetNow > 0.3f) WaterEffects.splash(level, e, p.x, p.y, p.z, wetNow);
     }
 
     /** A puff from under the foot on loose ground (snow, sand, gravel, soil), more when running. */

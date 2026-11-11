@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
 *///?} else if >=1.21 {
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import online.farmsteadminecraft.footprints.client.FootprintsClient;
 import org.joml.Matrix4f;
 //?} else {
@@ -19,6 +20,7 @@ import org.joml.Matrix4f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
+import online.farmsteadminecraft.footprints.client.FootprintsClient;
 import org.joml.Matrix4f;
 *///?}
 
@@ -39,7 +41,16 @@ public abstract class LevelRendererMixin {
         target = "Lnet/minecraft/client/renderer/LevelRenderer;checkPoseStack(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
         ordinal = 0, shift = At.Shift.AFTER))
     private void footprints$render(CallbackInfo ci) {
-        FootprintRenderer.renderImmediate(new Matrix4f(), FootprintsClient.cameraPos(Minecraft.getInstance()));
+        FootprintRenderer.renderImmediate(new Matrix4f(), FootprintsClient.cameraPos(Minecraft.getInstance()), FootprintRenderer.PASS_GROUND);
+    }
+
+    // marks on water go after the water itself
+    @Inject(method = "renderSectionLayer", at = @At("TAIL"))
+    private void footprints$afterLayer(RenderType layer, double x, double y, double z, Matrix4f frustum, Matrix4f projection,
+                                       CallbackInfo ci) {
+        if (layer == RenderType.translucent()) {
+            FootprintRenderer.renderImmediate(new Matrix4f(), FootprintsClient.cameraPos(Minecraft.getInstance()), FootprintRenderer.PASS_WATER);
+        }
     }
     //?} else {
     /*// 1.20.1: the level pose stack carries the camera rotation
@@ -49,7 +60,16 @@ public abstract class LevelRendererMixin {
     private void footprints$render(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline,
                                    Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projection,
                                    CallbackInfo ci) {
-        FootprintRenderer.renderImmediate(poseStack.last().pose(), camera.getPosition());
+        FootprintRenderer.renderImmediate(poseStack.last().pose(), camera.getPosition(), FootprintRenderer.PASS_GROUND);
+    }
+
+    @Inject(method = "renderChunkLayer", at = @At("TAIL"))
+    private void footprints$afterLayer(net.minecraft.client.renderer.RenderType layer, PoseStack poseStack, double x, double y, double z,
+                                       Matrix4f projection, CallbackInfo ci) {
+        if (layer == net.minecraft.client.renderer.RenderType.translucent()) {
+            FootprintRenderer.renderImmediate(poseStack.last().pose(), FootprintsClient.cameraPos(net.minecraft.client.Minecraft.getInstance()),
+                FootprintRenderer.PASS_WATER);
+        }
     }
     *///?}
 }

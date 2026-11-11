@@ -40,6 +40,10 @@ public final class FootprintsConfig {
             "minecraft:wither", "minecraft:ender_dragon", "minecraft:slime", "minecraft:magma_cube",
             "minecraft:silverfish", "minecraft:endermite", "minecraft:snow_golem", "minecraft:shulker"))
         .comment("Entities that never leave prints, by id or #tag (flying and footless ones by default).");
+    public static final DoubleValue SIZE = FILE.number("footprints", "sizeMultiplier", 1.0, 0.25, 4.0)
+        .comment("Makes every print bigger or smaller.");
+    public static final DoubleValue LIFT = FILE.number("footprints", "lift", 0.0, -0.05, 0.5)
+        .comment("Raises prints above the ground, in blocks. Raise it a little if a shader pack's deep ground hides them.");
     public static final EnumValue<Style> STYLE = FILE.choice("footprints", "style", Style.DETAILED)
         .comment("DETAILED: smooth prints with a hollow and a raised lip. PIXEL: prints pressed into the block's own texture "
             + "pixels, a dent drawn the way vanilla textures are drawn.");
@@ -61,6 +65,20 @@ public final class FootprintsConfig {
         .comment("Prints under open sky age this many times faster while it rains or snows. 1: weather does nothing.");
     public static final EnumValue<Dust> DUST = FILE.choice("effects", "dust", Dust.ALL)
         .comment("A puff of snow, sand or dust from under the feet on loose ground.");
+    public static final DoubleValue WET_OPACITY = FILE.number("effects", "wetOpacity", 1.0, 0.0, 2.0)
+        .comment("How strongly damp prints on hard ground show, as a multiplier. 0 hides them.");
+    public static final EnumValue<Dust> SPLASH = FILE.choice("effects", "splash", Dust.ALL)
+        .comment("Droplets fly from wet feet for a few seconds after leaving water.");
+    public static final BoolValue RIPPLES = FILE.bool("effects", "ripples", true)
+        .comment("Rings spread on the water where players and mobs wade.");
+    public static final BoolValue BOAT_WAKE = FILE.bool("effects", "boatWake", true)
+        .comment("Boats leave a foam wake on the water and throw spray when fast.");
+    public static final BoolValue SWIM_BUBBLES = FILE.bool("effects", "swimBubbles", true)
+        .comment("Bubbles trail behind swimmers.");
+    public static final BoolValue RAIL_SPARKS = FILE.bool("effects", "railSparks", true)
+        .comment("Fast minecarts throw sparks from the rails, more on powered rails.");
+    public static final BoolValue REMOVE_ON_CHANGE = FILE.bool("effects", "removeWhenBroken", true)
+        .comment("A print goes when the block under it is broken or replaced.");
     public static final EnumValue<Decay> DECAY = FILE.choice("effects", "decay", Decay.CRUMBLE)
         .comment("How old prints go: CRUMBLE wears them from the edges in over the second half of their life, FADE just fades them out.");
 

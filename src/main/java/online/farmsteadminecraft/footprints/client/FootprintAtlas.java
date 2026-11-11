@@ -122,6 +122,7 @@ public final class FootprintAtlas {
                 copyCell(baseRim, c, BUILT_IN_GRID, rim, c, g);
             }
         }
+        drawWater(shadow, rim, g);
         grid = g;
         FootShape.clearCustom();
         customNames.clear();
@@ -176,6 +177,38 @@ public final class FootprintAtlas {
         FootprintsClient.POOL.forEachAlive(Footprint::prepare);
         FootProfiles.reset();
         if (!customNames.isEmpty()) Footprints.LOGGER.info("textures: {} own picture(s): {}", customNames.size(), customNames);
+    }
+
+    /**
+     * The water marks, drawn here rather than shipped: a boat's foam chevron (tip at the top, arms spreading back,
+     * churned water down the middle) and a wading ring. Only the shadow layer: foam has no lip.
+     */
+    private static void drawWater(NativeImage shadow, NativeImage rim, int g) {
+        Random rnd = new Random(1313);
+        int wx = (FootShape.WAKE.cell % g) * CELL, wy = (FootShape.WAKE.cell / g) * CELL;
+        int rx = (FootShape.RIPPLE.cell % g) * CELL, ry = (FootShape.RIPPLE.cell / g) * CELL;
+        for (int y = 0; y < CELL; y++) {
+            for (int x = 0; x < CELL; x++) {
+                float u = (x + 0.5f) / CELL - 0.5f, v = (y + 0.5f) / CELL;
+                float grain = 0.75f + 0.5f * rnd.nextFloat();
+                // one slice of a wake: a crest at each end, long along the boat's path so slices join up; the
+                // renderer spreads older slices wider, so the crests draw the V. Churned water in the middle.
+                float dv = v - 0.5f;
+                float crest = (float) Math.exp(-((Math.abs(u) - 0.40f) * (Math.abs(u) - 0.40f)) / (2 * 0.035f * 0.035f)
+                    - dv * dv / (2 * 0.22f * 0.22f));
+                float churn = (float) Math.exp(-(u * u) / (2 * 0.12f * 0.12f) - dv * dv / (2 * 0.25f * 0.25f))
+                    * (rnd.nextFloat() < 0.5f ? 1f : 0.15f);
+                int a = Math.max(0, Math.min(255, (int) ((crest * 0.85f + churn * 0.45f) * grain * 255)));
+                set(shadow, wx + x, wy + y, (a << 24) | 0xFFFFFF);
+                set(rim, wx + x, wy + y, 0);
+                float r = (float) Math.sqrt(u * u + (v - 0.5f) * (v - 0.5f));
+                float ring = (float) Math.exp(-((r - 0.36f) * (r - 0.36f)) / (2 * 0.028f * 0.028f))
+                    + 0.45f * (float) Math.exp(-((r - 0.22f) * (r - 0.22f)) / (2 * 0.02f * 0.02f));
+                a = Math.max(0, Math.min(255, (int) (ring * grain * 0.85f * 255)));
+                set(shadow, rx + x, ry + y, (a << 24) | 0xFFFFFF);
+                set(rim, rx + x, ry + y, 0);
+            }
+        }
     }
 
     /** Keeps a pixel while its erosion order is above the stage threshold, with a soft edge. */

@@ -36,6 +36,13 @@ public final class Footprint {
     public float u0, v0, u1, v1;
     /** Texture offset from one decay stage to the next. */
     public float stageStep;
+    /** The block the print is pressed into ({@code BlockPos.asLong}) and which block it was. */
+    public long supportPos;
+    public net.minecraft.world.level.block.Block supportBlock;
+    /** Water marks spread out: the size grows by this share of itself over the mark's life. */
+    public float grow;
+    /** Lies on water: drawn after the water ({@link online.farmsteadminecraft.footprints.client.render.FootprintRenderer#PASS_WATER}). */
+    public boolean onWater;
     /** Half the side of the print's square, in blocks. */
     public float half;
 

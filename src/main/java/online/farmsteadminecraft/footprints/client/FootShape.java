@@ -34,6 +34,10 @@ public final class FootShape {
     public static final FootShape BEAR = builtIn("bear", 11, 0.50f, 0.48f);
     /** A shuffling, shallow print: anything that sneaks. */
     public static final FootShape SNEAK = builtIn("sneak", 12, 0.26f, 0.50f);
+    /** Foam chevron behind a boat (drawn at runtime, {@link FootprintAtlas}). */
+    public static final FootShape WAKE = builtIn("wake", 13, 1.0f, 1.0f);
+    /** A ring on the water where something wades. */
+    public static final FootShape RIPPLE = builtIn("ripple", 14, 1.0f, 1.0f);
     /** Cells taken by the built-in shapes; custom pictures start here. */
     public static final int FIRST_CUSTOM_CELL = 16;
 

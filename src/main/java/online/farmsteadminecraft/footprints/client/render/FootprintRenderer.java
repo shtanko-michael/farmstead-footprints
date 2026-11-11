@@ -58,7 +58,15 @@ public final class FootprintRenderer {
      * model-view matrix the loaders expose from 1.20.5 on (their pose stack is identity there).
      */
     public static void renderImmediate(Matrix4f view, Vec3 camera) {
-        online.farmsteadminecraft.footprints.client.Bench.frame();
+        renderImmediate(view, camera, PASS_ALL);
+    }
+
+    /**
+     * {@code pass}: {@link #PASS_GROUND} right after the entities, {@link #PASS_WATER} after the translucent terrain
+     * (marks on water must be drawn over the water, which is drawn late), or {@link #PASS_ALL} at one point.
+     */
+    public static void renderImmediate(Matrix4f view, Vec3 camera, int pass) {
+        if (pass != PASS_WATER) online.farmsteadminecraft.footprints.client.Bench.frame();
         Minecraft mc = Minecraft.getInstance();
         ClientLevel level = mc.level;
         if (level == null || !FootprintsConfig.ENABLED.on() || FootprintsClient.POOL.alive() == 0) return;
@@ -66,7 +74,8 @@ public final class FootprintRenderer {
         Matrix4f matrix = new Matrix4f(view);
         MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
         FootprintAtlas.ensure();
-        collect(FootprintsClient.POOL.array(), camera, level);
+        collect(FootprintsClient.POOL.array(), camera, level, pass);
+        if (visibleCount == 0) return;
         boolean pixelStyle = pixelStyle();
         if (pixelStyle) {
             RenderType blocks = renderType(TextureAtlas.LOCATION_BLOCKS);
@@ -77,7 +86,7 @@ public final class FootprintRenderer {
         RenderType type = renderType(FootprintAtlas.texture());
         emit(buffers.getBuffer(type), matrix, camera, pixelStyle);
         buffers.endBatch(type);
-        online.farmsteadminecraft.footprints.client.Bench.render(t0, visibleCount);
+        if (pass != PASS_WATER) online.farmsteadminecraft.footprints.client.Bench.render(t0, visibleCount);
     }
     //?} else {
     /*/^* 26+ path: hand our geometry to the frame's submit collector. ^/
@@ -88,7 +97,7 @@ public final class FootprintRenderer {
         Matrix4f matrix = new Matrix4f(pose.last().pose());
         FootprintAtlas.ensure();
         long t0 = online.farmsteadminecraft.footprints.client.Bench.now();
-        collect(FootprintsClient.POOL.array(), camera, level);
+        collect(FootprintsClient.POOL.array(), camera, level, PASS_ALL);
         boolean pixelStyle = pixelStyle();
         if (pixelStyle) {
             collector.submitCustomGeometry(pose, renderType(TextureAtlas.LOCATION_BLOCKS), (p, vc) -> emitPixel(vc, matrix, camera));
@@ -104,6 +113,8 @@ public final class FootprintRenderer {
     private static int[] visible = new int[256];
     private static float[] alphas = new float[256];
     private static int[] stages = new int[256];
+    private static float[] sizes = new float[256];
+    private static final float[] GROWN = new float[8];
     private static int visibleCount;
     /** cos of the widest angle from the view direction a print may sit at and still be drawn (80°). */
     private static final float CONE_COS = 0.17f;
@@ -125,13 +136,15 @@ public final class FootprintRenderer {
     /** {@code skipPixel}: prints the pixel style already drew are left out. */
     private static void emit(VertexConsumer vc, Matrix4f matrix, Vec3 camera, boolean skipPixel) {
         Footprint[] prints = FootprintsClient.POOL.array();
+        float lift = LIFT + FootprintsConfig.LIFT.floatValue();
         for (int n = 0; n < visibleCount; n++) {
             Footprint p = prints[visible[n]];
             if (skipPixel && p.pixel) continue;
             float cx = (float) (p.x - camera.x), cz = (float) (p.z - camera.z);
             // a tiny per-print lift keeps overlapping prints from z-fighting each other
-            float y = (float) (p.y - camera.y) + LIFT + (n & 15) * 0.0004f;
+            float y = (float) (p.y - camera.y) + lift + (n & 15) * 0.0004f;
             float[] c = p.corners;
+            if (p.grow > 0f) c = grown(p, sizes[n]);
             int light = p.light;
             float dv = stages[n] * p.stageStep, v0 = p.v0 + dv, v1 = p.v1 + dv;
             // the hollow's shadow (left half of the atlas)
@@ -157,12 +170,20 @@ public final class FootprintRenderer {
         lastDrawn = visibleCount;
     }
 
-    private static void collect(Footprint[] prints, Vec3 camera, ClientLevel level) {
-        frames++;
+    private static float[] grown(Footprint p, float k) {
+        for (int i = 0; i < 8; i++) GROWN[i] = p.corners[i] * k;
+        return GROWN;
+    }
+
+    public static final int PASS_ALL = 0, PASS_GROUND = 1, PASS_WATER = 2;
+
+    private static void collect(Footprint[] prints, Vec3 camera, ClientLevel level, int pass) {
+        if (pass != PASS_WATER) frames++;
         if (visible.length < prints.length) {
             visible = new int[prints.length];
             alphas = new float[prints.length];
             stages = new int[prints.length];
+            sizes = new float[prints.length];
         }
         boolean crumble = FootprintsConfig.DECAY.get() == FootprintsConfig.Decay.CRUMBLE;
         int stageCount = FootprintAtlas.stages();
@@ -174,6 +195,7 @@ public final class FootprintRenderer {
         for (int i = 0; i < prints.length; i++) {
             Footprint p = prints[i];
             if (!p.alive) continue;
+            if (pass == PASS_GROUND && p.onWater || pass == PASS_WATER && !p.onWater) continue;
             double dx = p.x - camera.x, dy = p.y - camera.y, dz = p.z - camera.z;
             double distSq = dx * dx + dz * dz;
             if (distSq > maxSq) continue;
@@ -190,6 +212,7 @@ public final class FootprintRenderer {
             visible[count] = i;
             alphas[count] = alpha;
             stages[count] = crumble ? p.stage(now, stageCount) : 0;
+            sizes[count] = p.grow > 0f ? 1f + p.grow * Math.min(1f, (now - p.bornTick) / (float) p.lifeTicks) : 1f;
             count++;
         }
         visibleCount = count;

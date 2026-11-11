@@ -8,6 +8,7 @@ import net.minecraft.world.phys.Vec3;
 public final class FootprintsClient {
     public static final FootprintPool POOL = new FootprintPool(2048);
     private static final StepTracker TRACKER = new StepTracker(POOL);
+    private static final WaterEffects WATER = new WaterEffects(POOL);
     private static ClientLevel lastLevel;
     private static boolean openConfig;
 
@@ -50,6 +51,7 @@ public final class FootprintsClient {
         if (level != lastLevel) {
             POOL.clear();
             TRACKER.clear();
+            WATER.clear();
             // block and entity tags belong to the world (datapacks): resolve surfaces and mobs again
             SurfaceRules.reset();
             FootProfiles.reset();
@@ -59,6 +61,7 @@ public final class FootprintsClient {
         if (level == null || !FootprintsConfig.ENABLED.on() || mc.isPaused()) return;
         long now = level.getGameTime();
         TRACKER.tick(level, cameraPos(mc), now);
+        WATER.tick(level, cameraPos(mc), now);
         // rain and snowfall wear exposed prints away faster
         int wear = level.isRaining() ? (int) Math.round(FootprintsConfig.RAIN_WEAR.value() - 1.0) : 0;
         POOL.tick(now, wear);

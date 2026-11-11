@@ -199,6 +199,7 @@ public final class PixelStyle {
     /** Writes the visible prints' texel runs. */
     public static void emit(VertexConsumer vc, Matrix4f m, Vec3 camera, Footprint[] prints, int[] visible, float[] alphas,
                             int[] stagesOf, int count, int stages, float opacity) {
+        float lift = 0.0015f + FootprintsConfig.LIFT.floatValue();
         for (int n = 0; n < count; n++) {
             Footprint p = prints[visible[n]];
             if (!p.pixel) continue;
@@ -207,7 +208,7 @@ public final class PixelStyle {
             int a = Math.min(255, (int) (fade * 255));
             float strength = Math.min(1f, p.depth * 1.15f) * opacity;
             int tr = (p.tint >> 16) & 0xFF, tg = (p.tint >> 8) & 0xFF, tb = p.tint & 0xFF;
-            float y = (float) (p.y - camera.y) + 0.0015f + (n & 7) * 0.0002f;
+            float y = (float) (p.y - camera.y) + lift + (n & 7) * 0.0002f;
             int light = p.light;
             for (int s = 0; s < p.stripCount; s++) {
                 int strip = p.strips[s];
