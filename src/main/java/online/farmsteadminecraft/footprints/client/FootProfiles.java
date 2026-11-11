@@ -130,10 +130,15 @@ public final class FootProfiles {
     private static FootProfile override(FootProfile base, EntityType<?> type) {
         String id = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
         Rule rule = null;
+        // an exact id beats a tag; otherwise the first matching line wins
         for (Rule r : rules) {
-            if (r.id != null ? r.id.equals(id) : type.builtInRegistryHolder().is(r.tag)) {
+            if (r.id != null) {
+                if (r.id.equals(id)) {
+                    rule = r;
+                    break;
+                }
+            } else if (rule == null && type.builtInRegistryHolder().is(r.tag)) {
                 rule = r;
-                if (r.id != null) break; // an exact id beats a tag
             }
         }
         if (rule == null) return base;
@@ -174,7 +179,10 @@ public final class FootProfiles {
             }
         }
         List<Rule> parsed = new ArrayList<>();
-        for (String line : FootprintsConfig.PROFILES.get()) {
+        // the player's lines first, then resource packs': the first matching line wins
+        List<String> lines = new ArrayList<>(FootprintsConfig.PROFILES.get());
+        lines.addAll(PackData.profiles());
+        for (String line : lines) {
             Rule r = Rule.parse(line);
             if (r != null) parsed.add(r);
         }

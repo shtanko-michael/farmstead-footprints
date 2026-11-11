@@ -237,6 +237,7 @@ public final class StepTracker {
         }
         net.minecraft.world.phys.shapes.VoxelShape outline = state.getShape(level, pos);
         double top = outline.isEmpty() ? pos.getY() : pos.getY() + outline.max(net.minecraft.core.Direction.Axis.Y);
+        shape = shape.pick(random);
         Footprint p = pool.add();
         p.grow = 0f;
         p.onWater = false;

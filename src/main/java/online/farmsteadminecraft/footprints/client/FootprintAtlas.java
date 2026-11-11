@@ -107,8 +107,35 @@ public final class FootprintAtlas {
         }
     }
 
+    /** A picture to turn into a shape: the player's file or a resource pack's. */
+    private record Picture(String name, String origin, PictureSource source) {}
+
+    private interface PictureSource {
+        InputStream open() throws IOException;
+    }
+
     private static void build() throws IOException {
-        List<Path> pictures = listPictures();
+        List<Picture> pictures = new ArrayList<>();
+        java.util.Set<String> names = new java.util.HashSet<>();
+        for (Path file : listPictures()) {
+            String name = file.getFileName().toString();
+            name = name.substring(0, name.length() - 4).toLowerCase(Locale.ROOT);
+            if (names.add(name)) pictures.add(new Picture(name, file.getFileName().toString(), () -> Files.newInputStream(file)));
+        }
+        // resource packs' shapes; the player's own file of the same name wins
+        try {
+            java.util.Map<ResourceLocation, net.minecraft.server.packs.resources.Resource> packs = PackData.packShapes();
+            List<ResourceLocation> ids = new ArrayList<>(packs.keySet());
+            ids.sort(java.util.Comparator.comparing(ResourceLocation::toString));
+            for (ResourceLocation id : ids) {
+                String path = id.getPath();
+                String name = path.substring(path.lastIndexOf('/') + 1, path.length() - 4).toLowerCase(Locale.ROOT);
+                net.minecraft.server.packs.resources.Resource res = packs.get(id);
+                if (names.add(name)) pictures.add(new Picture(name, id.toString(), res::open));
+            }
+        } catch (Exception e) {
+            Footprints.LOGGER.warn("textures: resource pack shapes could not be listed ({})", e.toString());
+        }
         int cells = FootShape.FIRST_CUSTOM_CELL + pictures.size();
         int g = BUILT_IN_GRID;
         while (g * g < cells && g < 16) g *= 2;
@@ -127,14 +154,13 @@ public final class FootprintAtlas {
         FootShape.clearCustom();
         customNames.clear();
         int cell = FootShape.FIRST_CUSTOM_CELL;
-        for (Path file : pictures) {
+        for (Picture pic : pictures) {
             if (cell >= g * g) {
-                Footprints.LOGGER.warn("textures: more than {} pictures, {} and later are skipped", g * g - FootShape.FIRST_CUSTOM_CELL, file.getFileName());
+                Footprints.LOGGER.warn("textures: more than {} pictures, {} and later are skipped", g * g - FootShape.FIRST_CUSTOM_CELL, pic.origin());
                 break;
             }
-            String name = file.getFileName().toString();
-            name = name.substring(0, name.length() - 4).toLowerCase(Locale.ROOT);
-            try (InputStream in = Files.newInputStream(file); NativeImage src = NativeImage.read(in)) {
+            String name = pic.name();
+            try (InputStream in = pic.source().open(); NativeImage src = NativeImage.read(in)) {
                 float aspect = drawCustom(src, shadow, rim, cell, g, name.hashCode());
                 // the longer side is half a block, like a bare foot; "size:" in a profile scales it
                 float length = aspect <= 1f ? 0.5f : 0.5f / aspect, width = aspect <= 1f ? 0.5f * aspect : 0.5f;
@@ -142,7 +168,7 @@ public final class FootprintAtlas {
                 customNames.add(name);
                 cell++;
             } catch (Exception e) {
-                Footprints.LOGGER.warn("textures: {} is not a readable PNG ({})", file.getFileName(), e.toString());
+                Footprints.LOGGER.warn("textures: {} is not a readable PNG ({})", pic.origin(), e.toString());
             }
         }
         generation++;
@@ -314,6 +340,17 @@ public final class FootprintAtlas {
     }
 
     private static NativeImage readResource(String file) throws IOException {
+        // a resource pack may replace the base textures
+        InputStream fromPack = PackData.packTexture(file);
+        if (fromPack != null) {
+            try (InputStream in = fromPack) {
+                NativeImage img = NativeImage.read(in);
+                if (img.getWidth() == BUILT_IN_GRID * CELL && img.getHeight() == BUILT_IN_GRID * CELL) return img;
+                Footprints.LOGGER.warn("textures: the pack's {} is {}x{}, needs {}x{}; using the built-in one", file,
+                    img.getWidth(), img.getHeight(), BUILT_IN_GRID * CELL, BUILT_IN_GRID * CELL);
+                img.close();
+            }
+        }
         String path = "/assets/" + Footprints.MOD_ID + "/textures/" + file;
         try (InputStream in = FootprintAtlas.class.getResourceAsStream(path)) {
             if (in == null) throw new IOException("missing " + path + " in the mod jar");

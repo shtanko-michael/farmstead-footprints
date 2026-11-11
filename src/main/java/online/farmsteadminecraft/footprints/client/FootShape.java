@@ -42,11 +42,27 @@ public final class FootShape {
     public static final int FIRST_CUSTOM_CELL = 16;
 
     public final String name;
+    /** Random variants ("shape:a|b|c" in a profile): each print picks one; null for a plain shape. */
+    public final FootShape[] alts;
     public final int cell;
     public final float width;
     public final float length;
 
+    private FootShape(String name, FootShape[] alts) {
+        this.name = name;
+        this.alts = alts;
+        this.cell = alts[0].cell;
+        this.width = alts[0].width;
+        this.length = alts[0].length;
+    }
+
+    /** One of the variants, or this shape. */
+    public FootShape pick(java.util.Random random) {
+        return alts == null ? this : alts[random.nextInt(alts.length)];
+    }
+
     private FootShape(String name, int cell, float width, float length) {
+        this.alts = null;
         this.name = name;
         this.cell = cell;
         this.width = width;
@@ -75,6 +91,14 @@ public final class FootShape {
     /** By name, case-insensitive; null if unknown. "boot", "bare" and "big" mean the left foot of the pair. */
     public static FootShape byName(String name) {
         String n = name.toLowerCase(Locale.ROOT);
+        if (n.indexOf('|') >= 0) {
+            List<FootShape> found = new java.util.ArrayList<>();
+            for (String part : n.split("[|]")) {
+                FootShape s = byName(part.trim());
+                if (s != null) found.add(s);
+            }
+            return found.isEmpty() ? null : new FootShape(n, found.toArray(new FootShape[0]));
+        }
         FootShape s = BY_NAME.get(n);
         return s != null ? s : BY_NAME.get(n + "_left");
     }

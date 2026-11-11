@@ -57,6 +57,14 @@ public final class FootprintsClient {
             FootProfiles.reset();
             lastLevel = level;
         }
+        if (level != null && level.getGameTime() % 40 == 0 && PackData.reloaded()) {
+            // F3+T or a pack switched: textures, shapes and rules again; pixel prints point at the old block atlas
+            PackData.invalidate();
+            FootprintAtlas.invalidate();
+            SurfaceRules.reset();
+            FootProfiles.reset();
+            POOL.forEachAlive(p -> p.pixel = false);
+        }
         if (level != null) FootprintAtlas.ensure();
         if (level == null || !FootprintsConfig.ENABLED.on() || mc.isPaused()) return;
         long now = level.getGameTime();

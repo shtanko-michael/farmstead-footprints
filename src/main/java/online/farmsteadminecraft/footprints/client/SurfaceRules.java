@@ -96,6 +96,8 @@ public final class SurfaceRules {
         List<TagKey<Block>> inTags = new ArrayList<>(), exTags = new ArrayList<>();
         parse(FootprintsConfig.SURFACE_INCLUDE.get(), inIds, inTags);
         parse(FootprintsConfig.SURFACE_EXCLUDE.get(), exIds, exTags);
+        parse(PackData.include(), inIds, inTags);
+        parse(PackData.exclude(), exIds, exTags);
         includeIds = inIds;
         excludeIds = exIds;
         includeTags = inTags;
