@@ -80,5 +80,21 @@
   "config.farmstead_footprints.effects.railSparks": "Iskry z szyn",
   "config.farmstead_footprints.effects.railSparks.tooltip": "Szybkie wagoniki krzeszą iskry z szyn, więcej na zasilanych torach.",
   "config.farmstead_footprints.effects.removeWhenBroken": "Usuwaj razem z blokiem",
-  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "Ślad znika, gdy blok pod nim zostanie zniszczony lub zastąpiony."
+  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "Ślad znika, gdy blok pod nim zostanie zniszczony lub zastąpiony.",
+  "config.farmstead_footprints.section.general": "Ogólne",
+  "config.farmstead_footprints.section.footprints": "Ślady",
+  "config.farmstead_footprints.section.effects": "Efekty",
+  "config.farmstead_footprints.section.surfaces": "Podłoże",
+  "config.farmstead_footprints.section.about": "O modzie",
+  "config.farmstead_footprints.try": "Wypróbuj",
+  "config.farmstead_footprints.try.tooltip": "Zamyka ekran i odbija ślady z obecnymi ustawieniami na ziemi, na którą patrzysz.",
+  "config.farmstead_footprints.about.unknown": "Sprawdzanie aktualizacji: nie wykonano (wyłączone albo Modrinth nie odpowiedział)",
+  "config.farmstead_footprints.about.current": "Masz najnowszą wersję.",
+  "config.farmstead_footprints.about.newer": "Wyszła nowa wersja: %s",
+  "config.farmstead_footprints.about.modrinth": "Strona na Modrinth",
+  "config.farmstead_footprints.about.curseforge": "Strona na CurseForge",
+  "config.farmstead_footprints.about.issues": "Zgłoś błąd lub pomysł",
+  "config.farmstead_footprints.about.wiki": "Jak dodać własne tekstury i reguły",
+  "config.farmstead_footprints.picker.add": "Dodaj jak wpisano",
+  "config.farmstead_footprints.picker.add.tooltip": "Dodaje dokładnie to, co wpisano: #tag albo id z moda, który nie jest wczytany."
 }

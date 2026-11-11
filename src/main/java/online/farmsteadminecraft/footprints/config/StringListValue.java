@@ -8,6 +8,20 @@ public final class StringListValue extends ConfigValue<List<String>> {
         super(file, section, key, List.copyOf(def));
     }
 
+    /** What the settings screen offers to pick from: block or entity ids. */
+    public enum Picker { BLOCKS, ENTITIES }
+
+    private Picker picker;
+
+    public StringListValue picker(Picker kind) {
+        this.picker = kind;
+        return this;
+    }
+
+    public Picker picker() {
+        return picker;
+    }
+
     public boolean contains(String s) {
         return value.contains(s);
     }

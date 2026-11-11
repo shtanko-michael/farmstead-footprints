@@ -80,5 +80,21 @@
   "config.farmstead_footprints.effects.railSparks": "Rail sparks",
   "config.farmstead_footprints.effects.railSparks.tooltip": "Fast minecarts throw sparks from the rails, more on powered rails.",
   "config.farmstead_footprints.effects.removeWhenBroken": "Remove with the block",
-  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "A print goes when the block under it is broken or replaced."
+  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "A print goes when the block under it is broken or replaced.",
+  "config.farmstead_footprints.section.general": "General",
+  "config.farmstead_footprints.section.footprints": "Prints",
+  "config.farmstead_footprints.section.effects": "Effects",
+  "config.farmstead_footprints.section.surfaces": "Ground",
+  "config.farmstead_footprints.section.about": "About",
+  "config.farmstead_footprints.try": "Try it",
+  "config.farmstead_footprints.try.tooltip": "Closes this screen and stamps prints with the current settings on the ground where you look.",
+  "config.farmstead_footprints.about.unknown": "Update check: not done (switched off, or no answer from Modrinth)",
+  "config.farmstead_footprints.about.current": "You have the latest version.",
+  "config.farmstead_footprints.about.newer": "A newer version is out: %s",
+  "config.farmstead_footprints.about.modrinth": "Modrinth page",
+  "config.farmstead_footprints.about.curseforge": "CurseForge page",
+  "config.farmstead_footprints.about.issues": "Report a bug or an idea",
+  "config.farmstead_footprints.about.wiki": "How to: own textures and pack rules",
+  "config.farmstead_footprints.picker.add": "Add as typed",
+  "config.farmstead_footprints.picker.add.tooltip": "Adds exactly what is typed, for a #tag or an id from a mod that is not loaded."
 }

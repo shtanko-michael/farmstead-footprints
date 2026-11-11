@@ -40,6 +40,9 @@ public final class FootprintsConfig {
             "minecraft:wither", "minecraft:ender_dragon", "minecraft:slime", "minecraft:magma_cube",
             "minecraft:silverfish", "minecraft:endermite", "minecraft:snow_golem", "minecraft:shulker"))
         .comment("Entities that never leave prints, by id or #tag (flying and footless ones by default).");
+    static {
+        ENTITY_BLACKLIST.picker(online.farmsteadminecraft.footprints.config.StringListValue.Picker.ENTITIES);
+    }
     public static final DoubleValue SIZE = FILE.number("footprints", "sizeMultiplier", 1.0, 0.25, 4.0)
         .comment("Makes every print bigger or smaller.");
     public static final DoubleValue LIFT = FILE.number("footprints", "lift", 0.0, -0.05, 0.5)
@@ -87,6 +90,9 @@ public final class FootprintsConfig {
             + "(sand 0.5, grass and gravel 0.6, wool 0.8). 0: only the blocks listed below.");
     public static final StringListValue SURFACE_INCLUDE = FILE.list("surfaces", "include", List.of("#minecraft:wool"))
         .comment("Blocks that always take prints, by id or #tag.");
+    static {
+        SURFACE_INCLUDE.picker(online.farmsteadminecraft.footprints.config.StringListValue.Picker.BLOCKS);
+    }
     public static final StringListValue SURFACE_EXCLUDE = FILE.list("surfaces", "exclude", List.of(
             "#minecraft:leaves", "#minecraft:impermeable", "#minecraft:ice", "#minecraft:beds",
             "#minecraft:pressure_plates", "#minecraft:trapdoors", "#minecraft:beehives", "minecraft:scaffolding",
@@ -95,6 +101,9 @@ public final class FootprintsConfig {
             "minecraft:magma_block", "minecraft:cactus", "minecraft:netherrack", "minecraft:big_dripleaf",
             "minecraft:turtle_egg", "minecraft:sniffer_egg", "minecraft:frogspawn"))
         .comment("Blocks that never take prints, by id or #tag; wins over the list above and the hardness rule.");
+    static {
+        SURFACE_EXCLUDE.picker(online.farmsteadminecraft.footprints.config.StringListValue.Picker.BLOCKS);
+    }
 
     public enum Style { DETAILED, PIXEL }
 

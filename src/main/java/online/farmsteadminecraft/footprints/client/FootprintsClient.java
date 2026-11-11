@@ -23,8 +23,41 @@ public final class FootprintsClient {
 
     /** The settings screen, for the mod list (NeoForge/Forge) and Mod Menu (Fabric). */
     public static net.minecraft.client.gui.screens.Screen configScreen(net.minecraft.client.gui.screens.Screen parent) {
+        String version = online.farmsteadminecraft.footprints.Footprints.VERSION;
+        String repo = "https://github.com/shtanko-michael/farmstead-footprints";
+        var extras = new online.farmsteadminecraft.footprints.config.ConfigScreen.Extras(
+            online.farmsteadminecraft.footprints.Footprints.NAME, version,
+            () -> online.farmsteadminecraft.footprints.brand.FarmsteadBrand.newerThan(version),
+            java.util.List.of(
+                new online.farmsteadminecraft.footprints.config.ConfigScreen.Link("modrinth", "Modrinth page", "https://modrinth.com/mod/footprints"),
+                new online.farmsteadminecraft.footprints.config.ConfigScreen.Link("curseforge", "CurseForge page", "https://www.curseforge.com/minecraft/mc-mods/footprints"),
+                new online.farmsteadminecraft.footprints.config.ConfigScreen.Link("issues", "Report a bug or an idea", repo + "/issues"),
+                new online.farmsteadminecraft.footprints.config.ConfigScreen.Link("wiki", "How to: own textures and pack rules", repo + "#your-own-prints")),
+            FootprintsClient::tryIt);
         return new online.farmsteadminecraft.footprints.config.ConfigScreen(parent, FootprintsConfig.FILE,
-            FootprintsConfig::save, FootprintsConfig::load);
+            FootprintsConfig::save, FootprintsConfig::load, extras);
+    }
+
+    /**
+     * "Try it" in the settings: rows of prints (yours, a horse's, a wolf's, a chicken's) stamped on the ground where you
+     * look, made with the current settings.
+     */
+    public static void tryIt() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null || mc.player == null) return;
+        net.minecraft.world.phys.HitResult hit = mc.player.pick(20, 1f, false);
+        Vec3 at = hit.getType() == net.minecraft.world.phys.HitResult.Type.BLOCK ? hit.getLocation() : mc.player.position();
+        float yaw = mc.player.getYRot();
+        double fx = -Math.sin(Math.toRadians(yaw)), fz = Math.cos(Math.toRadians(yaw));
+        double rx = -Math.cos(Math.toRadians(yaw)), rz = -Math.sin(Math.toRadians(yaw));
+        FootProfile[] lanes = {FootProfiles.of(mc.player), FootProfile.HORSE, FootProfile.WOLF, FootProfile.BIRD};
+        long now = mc.level.getGameTime();
+        for (int i = 0; i < lanes.length; i++) {
+            if (lanes[i] == null) continue;
+            double side = (i - 1.5) * 1.1;
+            double sx = at.x + rx * side - fx * 2.5, sz = at.z + rz * side - fz * 2.5;
+            TRACKER.demo(mc.level, mc.player, lanes[i], sx, at.y, sz, yaw, 5.0, now);
+        }
     }
 
     /** {@code /footprints config}: the chat screen closes after the command, so open on the next tick. */

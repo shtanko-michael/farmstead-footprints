@@ -80,5 +80,21 @@
   "config.farmstead_footprints.effects.railSparks": "Ray kıvılcımları",
   "config.farmstead_footprints.effects.railSparks.tooltip": "Hızlı maden arabaları raylardan kıvılcım çıkarır, elektrikli raylarda daha çok.",
   "config.farmstead_footprints.effects.removeWhenBroken": "Blokla birlikte kaldır",
-  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "Altındaki blok kırılınca ya da değişince iz de kaybolur."
+  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "Altındaki blok kırılınca ya da değişince iz de kaybolur.",
+  "config.farmstead_footprints.section.general": "Genel",
+  "config.farmstead_footprints.section.footprints": "İzler",
+  "config.farmstead_footprints.section.effects": "Efektler",
+  "config.farmstead_footprints.section.surfaces": "Zemin",
+  "config.farmstead_footprints.section.about": "Hakkında",
+  "config.farmstead_footprints.try": "Dene",
+  "config.farmstead_footprints.try.tooltip": "Bu ekranı kapatır ve baktığınız zemine şu anki ayarlarla iz basar.",
+  "config.farmstead_footprints.about.unknown": "Güncelleme denetimi: yapılmadı (kapalı ya da Modrinth yanıt vermedi)",
+  "config.farmstead_footprints.about.current": "En son sürüme sahipsiniz.",
+  "config.farmstead_footprints.about.newer": "Yeni bir sürüm çıktı: %s",
+  "config.farmstead_footprints.about.modrinth": "Modrinth sayfası",
+  "config.farmstead_footprints.about.curseforge": "CurseForge sayfası",
+  "config.farmstead_footprints.about.issues": "Hata ya da fikir bildir",
+  "config.farmstead_footprints.about.wiki": "Nasıl yapılır: kendi doku ve kurallarınız",
+  "config.farmstead_footprints.picker.add": "Yazıldığı gibi ekle",
+  "config.farmstead_footprints.picker.add.tooltip": "Yazılanı aynen ekler: bir #etiket ya da yüklü olmayan bir modun kimliği."
 }

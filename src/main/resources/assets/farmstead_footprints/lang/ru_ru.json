@@ -80,5 +80,21 @@
   "config.farmstead_footprints.effects.railSparks": "Искры от рельсов",
   "config.farmstead_footprints.effects.railSparks.tooltip": "Быстрые вагонетки высекают искры из рельсов, на энергорельсах чаще.",
   "config.farmstead_footprints.effects.removeWhenBroken": "Убирать вместе с блоком",
-  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "След исчезает, когда блок под ним сломан или заменён."
+  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "След исчезает, когда блок под ним сломан или заменён.",
+  "config.farmstead_footprints.section.general": "Общие",
+  "config.farmstead_footprints.section.footprints": "Следы",
+  "config.farmstead_footprints.section.effects": "Эффекты",
+  "config.farmstead_footprints.section.surfaces": "Поверхности",
+  "config.farmstead_footprints.section.about": "О моде",
+  "config.farmstead_footprints.try": "Показать",
+  "config.farmstead_footprints.try.tooltip": "Закрывает экран и печатает следы с текущими настройками там, куда вы смотрите.",
+  "config.farmstead_footprints.about.unknown": "Проверка обновлений: не выполнена (выключена или Modrinth не ответил)",
+  "config.farmstead_footprints.about.current": "У вас последняя версия.",
+  "config.farmstead_footprints.about.newer": "Вышла новая версия: %s",
+  "config.farmstead_footprints.about.modrinth": "Страница на Modrinth",
+  "config.farmstead_footprints.about.curseforge": "Страница на CurseForge",
+  "config.farmstead_footprints.about.issues": "Сообщить об ошибке или идее",
+  "config.farmstead_footprints.about.wiki": "Как добавить свои текстуры и правила",
+  "config.farmstead_footprints.picker.add": "Добавить как есть",
+  "config.farmstead_footprints.picker.add.tooltip": "Добавляет ровно то, что введено: #тег или id из мода, который сейчас не загружен."
 }

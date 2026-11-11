@@ -80,5 +80,21 @@
   "config.farmstead_footprints.effects.railSparks": "Chispas en los raíles",
   "config.farmstead_footprints.effects.railSparks.tooltip": "Las vagonetas rápidas sacan chispas de los raíles, más en los propulsores.",
   "config.farmstead_footprints.effects.removeWhenBroken": "Quitar con el bloque",
-  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "La huella desaparece cuando se rompe o cambia el bloque de debajo."
+  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "La huella desaparece cuando se rompe o cambia el bloque de debajo.",
+  "config.farmstead_footprints.section.general": "General",
+  "config.farmstead_footprints.section.footprints": "Huellas",
+  "config.farmstead_footprints.section.effects": "Efectos",
+  "config.farmstead_footprints.section.surfaces": "Terreno",
+  "config.farmstead_footprints.section.about": "Acerca de",
+  "config.farmstead_footprints.try": "Probar",
+  "config.farmstead_footprints.try.tooltip": "Cierra esta pantalla y estampa huellas con los ajustes actuales en el suelo al que miras.",
+  "config.farmstead_footprints.about.unknown": "Búsqueda de actualizaciones: no hecha (desactivada o Modrinth no respondió)",
+  "config.farmstead_footprints.about.current": "Tienes la última versión.",
+  "config.farmstead_footprints.about.newer": "Hay una versión nueva: %s",
+  "config.farmstead_footprints.about.modrinth": "Página en Modrinth",
+  "config.farmstead_footprints.about.curseforge": "Página en CurseForge",
+  "config.farmstead_footprints.about.issues": "Informar de un fallo o una idea",
+  "config.farmstead_footprints.about.wiki": "Cómo usar texturas y reglas propias",
+  "config.farmstead_footprints.picker.add": "Añadir tal cual",
+  "config.farmstead_footprints.picker.add.tooltip": "Añade exactamente lo escrito: una #etiqueta o un id de un mod no cargado."
 }

@@ -80,5 +80,21 @@
   "config.farmstead_footprints.effects.railSparks": "Schienenfunken",
   "config.farmstead_footprints.effects.railSparks.tooltip": "Schnelle Loren schlagen Funken aus den Schienen, mehr auf Antriebsschienen.",
   "config.farmstead_footprints.effects.removeWhenBroken": "Mit dem Block entfernen",
-  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "Eine Spur verschwindet, wenn der Block darunter abgebaut oder ersetzt wird."
+  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "Eine Spur verschwindet, wenn der Block darunter abgebaut oder ersetzt wird.",
+  "config.farmstead_footprints.section.general": "Allgemein",
+  "config.farmstead_footprints.section.footprints": "Spuren",
+  "config.farmstead_footprints.section.effects": "Effekte",
+  "config.farmstead_footprints.section.surfaces": "Untergrund",
+  "config.farmstead_footprints.section.about": "Über",
+  "config.farmstead_footprints.try": "Ausprobieren",
+  "config.farmstead_footprints.try.tooltip": "Schließt diesen Bildschirm und setzt Spuren mit den aktuellen Einstellungen auf den Boden, den du ansiehst.",
+  "config.farmstead_footprints.about.unknown": "Update-Prüfung: nicht erfolgt (abgeschaltet oder keine Antwort von Modrinth)",
+  "config.farmstead_footprints.about.current": "Du hast die neueste Version.",
+  "config.farmstead_footprints.about.newer": "Eine neuere Version ist erschienen: %s",
+  "config.farmstead_footprints.about.modrinth": "Modrinth-Seite",
+  "config.farmstead_footprints.about.curseforge": "CurseForge-Seite",
+  "config.farmstead_footprints.about.issues": "Fehler oder Idee melden",
+  "config.farmstead_footprints.about.wiki": "Anleitung: eigene Texturen und Regeln",
+  "config.farmstead_footprints.picker.add": "So hinzufügen",
+  "config.farmstead_footprints.picker.add.tooltip": "Fügt genau das Eingegebene hinzu, für ein #Tag oder eine ID aus einer nicht geladenen Mod."
 }

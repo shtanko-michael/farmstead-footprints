@@ -80,5 +80,21 @@
   "config.farmstead_footprints.effects.railSparks": "Іскри від рейок",
   "config.farmstead_footprints.effects.railSparks.tooltip": "Швидкі вагонетки висікають іскри з рейок, на енергорейках частіше.",
   "config.farmstead_footprints.effects.removeWhenBroken": "Прибирати разом із блоком",
-  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "Слід зникає, коли блок під ним зламано чи замінено."
+  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "Слід зникає, коли блок під ним зламано чи замінено.",
+  "config.farmstead_footprints.section.general": "Загальні",
+  "config.farmstead_footprints.section.footprints": "Сліди",
+  "config.farmstead_footprints.section.effects": "Ефекти",
+  "config.farmstead_footprints.section.surfaces": "Поверхні",
+  "config.farmstead_footprints.section.about": "Про мод",
+  "config.farmstead_footprints.try": "Показати",
+  "config.farmstead_footprints.try.tooltip": "Закриває екран і друкує сліди з поточними налаштуваннями там, куди ви дивитеся.",
+  "config.farmstead_footprints.about.unknown": "Перевірка оновлень: не виконана (вимкнена або Modrinth не відповів)",
+  "config.farmstead_footprints.about.current": "У вас остання версія.",
+  "config.farmstead_footprints.about.newer": "Вийшла нова версія: %s",
+  "config.farmstead_footprints.about.modrinth": "Сторінка на Modrinth",
+  "config.farmstead_footprints.about.curseforge": "Сторінка на CurseForge",
+  "config.farmstead_footprints.about.issues": "Повідомити про помилку чи ідею",
+  "config.farmstead_footprints.about.wiki": "Як додати свої текстури й правила",
+  "config.farmstead_footprints.picker.add": "Додати як є",
+  "config.farmstead_footprints.picker.add.tooltip": "Додає рівно те, що введено: #тег або id з мода, який зараз не завантажено."
 }

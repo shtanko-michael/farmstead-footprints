@@ -213,7 +213,11 @@ public final class StepTracker {
 
     private void place(ClientLevel level, LivingEntity e, FootProfile profile, FootShape shape, double x, double z, float yaw,
                        long now, float sizeMul) {
-        double y = e.getY();
+        place(level, e, profile, shape, x, z, yaw, now, sizeMul, e.getY());
+    }
+
+    private void place(ClientLevel level, LivingEntity e, FootProfile profile, FootShape shape, double x, double z, float yaw,
+                       long now, float sizeMul, double y) {
         // A thin cover (a snow layer) can sit in the block the feet are in; the print belongs on top of
         // it, not on the block underneath, or the cover hides it. Server-placed entities and camera-rig
         // actors often stand at the block's integer top with the layer around their feet.
@@ -325,6 +329,26 @@ public final class StepTracker {
 
     private static int clamp(float v) {
         return Math.max(0, Math.min(255, (int) v));
+    }
+
+    /**
+     * Prints along a straight line, as if {@code profile} walked there: for "Try it" in the settings. {@code viewer}
+     * stands in for the walker (sneaking, sprinting and size are read from it).
+     */
+    public void demo(ClientLevel level, LivingEntity viewer, FootProfile profile, double x, double y, double z, float yaw,
+                     double length, long now) {
+        double fx = -Math.sin(Math.toRadians(yaw)), fz = Math.cos(Math.toRadians(yaw));
+        double rx = -Math.cos(Math.toRadians(yaw)), rz = -Math.sin(Math.toRadians(yaw));
+        float lateral = profile.legs() != null && profile.legs().length >= 2 ? profile.legs()[0] : profile.spacing();
+        float stride = Math.max(0.15f, profile.stride());
+        wetNow = 0f;
+        boolean right = false;
+        for (double d = 0; d <= length; d += stride) {
+            double s = right ? lateral : -lateral;
+            FootShape shape = right ? profile.right() : profile.left();
+            place(level, viewer, profile, shape, x + fx * d + rx * s, z + fz * d + rz * s, yaw, now, 1f, y);
+            right = !right;
+        }
     }
 
     public void clear() {

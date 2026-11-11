@@ -50,6 +50,13 @@ public final class FarmsteadBrand {
         return latest;
     }
 
+    /** For a settings screen: null if not checked, "" if {@code version} is the newest, else the newer version. */
+    public static String newerThan(String version) {
+        String l = latest;
+        if (l == null) return null;
+        return compare(l, base(version)) > 0 ? l : "";
+    }
+
     /** Starts the check once per game session; repeated calls do nothing. */
     public static void checkForUpdate(Logger log, String name, String version, String loader, String minecraft, String slug) {
         if (started || !checksAllowed()) return;

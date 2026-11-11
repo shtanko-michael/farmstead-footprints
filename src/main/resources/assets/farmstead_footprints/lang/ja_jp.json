@@ -80,5 +80,21 @@
   "config.farmstead_footprints.effects.railSparks": "レールの火花",
   "config.farmstead_footprints.effects.railSparks.tooltip": "速いトロッコはレールから火花を散らします。パワードレールではもっと。",
   "config.farmstead_footprints.effects.removeWhenBroken": "ブロックと一緒に消す",
-  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "下のブロックが壊されたり置き換えられたりすると足跡も消えます。"
+  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "下のブロックが壊されたり置き換えられたりすると足跡も消えます。",
+  "config.farmstead_footprints.section.general": "全般",
+  "config.farmstead_footprints.section.footprints": "足跡",
+  "config.farmstead_footprints.section.effects": "エフェクト",
+  "config.farmstead_footprints.section.surfaces": "地面",
+  "config.farmstead_footprints.section.about": "情報",
+  "config.farmstead_footprints.try": "試す",
+  "config.farmstead_footprints.try.tooltip": "この画面を閉じ、今の設定で見ている地面に足跡を付けます。",
+  "config.farmstead_footprints.about.unknown": "更新の確認：未実施（オフ、または Modrinth から応答なし）",
+  "config.farmstead_footprints.about.current": "最新バージョンです。",
+  "config.farmstead_footprints.about.newer": "新しいバージョンがあります：%s",
+  "config.farmstead_footprints.about.modrinth": "Modrinth のページ",
+  "config.farmstead_footprints.about.curseforge": "CurseForge のページ",
+  "config.farmstead_footprints.about.issues": "不具合やアイデアを報告",
+  "config.farmstead_footprints.about.wiki": "自分のテクスチャとルールの使い方",
+  "config.farmstead_footprints.picker.add": "入力どおり追加",
+  "config.farmstead_footprints.picker.add.tooltip": "入力したとおりに追加します。#タグや読み込まれていない MOD の ID 用です。"
 }

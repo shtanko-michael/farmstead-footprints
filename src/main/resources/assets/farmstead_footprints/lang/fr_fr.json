@@ -80,5 +80,21 @@
   "config.farmstead_footprints.effects.railSparks": "Étincelles des rails",
   "config.farmstead_footprints.effects.railSparks.tooltip": "Les wagonnets rapides font jaillir des étincelles, plus sur les rails de propulsion.",
   "config.farmstead_footprints.effects.removeWhenBroken": "Retirer avec le bloc",
-  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "Une empreinte disparaît quand le bloc dessous est cassé ou remplacé."
+  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "Une empreinte disparaît quand le bloc dessous est cassé ou remplacé.",
+  "config.farmstead_footprints.section.general": "Général",
+  "config.farmstead_footprints.section.footprints": "Empreintes",
+  "config.farmstead_footprints.section.effects": "Effets",
+  "config.farmstead_footprints.section.surfaces": "Sols",
+  "config.farmstead_footprints.section.about": "À propos",
+  "config.farmstead_footprints.try": "Essayer",
+  "config.farmstead_footprints.try.tooltip": "Ferme cet écran et imprime des empreintes avec les réglages actuels au sol que vous regardez.",
+  "config.farmstead_footprints.about.unknown": "Vérification des mises à jour : non faite (désactivée ou pas de réponse de Modrinth)",
+  "config.farmstead_footprints.about.current": "Vous avez la dernière version.",
+  "config.farmstead_footprints.about.newer": "Une nouvelle version est sortie : %s",
+  "config.farmstead_footprints.about.modrinth": "Page Modrinth",
+  "config.farmstead_footprints.about.curseforge": "Page CurseForge",
+  "config.farmstead_footprints.about.issues": "Signaler un bug ou une idée",
+  "config.farmstead_footprints.about.wiki": "Guide : textures et règles perso",
+  "config.farmstead_footprints.picker.add": "Ajouter tel quel",
+  "config.farmstead_footprints.picker.add.tooltip": "Ajoute exactement ce qui est tapé : un #tag ou un id d'un mod non chargé."
 }

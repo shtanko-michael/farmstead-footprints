@@ -80,5 +80,21 @@
   "config.farmstead_footprints.effects.railSparks": "Faíscas nos trilhos",
   "config.farmstead_footprints.effects.railSparks.tooltip": "Carrinhos rápidos soltam faíscas dos trilhos, mais nos trilhos energizados.",
   "config.farmstead_footprints.effects.removeWhenBroken": "Remover com o bloco",
-  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "A pegada some quando o bloco embaixo é quebrado ou trocado."
+  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "A pegada some quando o bloco embaixo é quebrado ou trocado.",
+  "config.farmstead_footprints.section.general": "Geral",
+  "config.farmstead_footprints.section.footprints": "Pegadas",
+  "config.farmstead_footprints.section.effects": "Efeitos",
+  "config.farmstead_footprints.section.surfaces": "Terreno",
+  "config.farmstead_footprints.section.about": "Sobre",
+  "config.farmstead_footprints.try": "Experimentar",
+  "config.farmstead_footprints.try.tooltip": "Fecha esta tela e carimba pegadas com as configurações atuais no chão para onde você olha.",
+  "config.farmstead_footprints.about.unknown": "Verificação de atualização: não feita (desligada ou sem resposta do Modrinth)",
+  "config.farmstead_footprints.about.current": "Você tem a versão mais recente.",
+  "config.farmstead_footprints.about.newer": "Saiu uma versão nova: %s",
+  "config.farmstead_footprints.about.modrinth": "Página no Modrinth",
+  "config.farmstead_footprints.about.curseforge": "Página no CurseForge",
+  "config.farmstead_footprints.about.issues": "Relatar um bug ou ideia",
+  "config.farmstead_footprints.about.wiki": "Como usar texturas e regras próprias",
+  "config.farmstead_footprints.picker.add": "Adicionar como está",
+  "config.farmstead_footprints.picker.add.tooltip": "Adiciona exatamente o que foi digitado: uma #tag ou um id de um mod não carregado."
 }

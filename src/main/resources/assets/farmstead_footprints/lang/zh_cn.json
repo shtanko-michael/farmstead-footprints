@@ -80,5 +80,21 @@
   "config.farmstead_footprints.effects.railSparks": "铁轨火花",
   "config.farmstead_footprints.effects.railSparks.tooltip": "快速行驶的矿车会在铁轨上擦出火花，在动力铁轨上更多。",
   "config.farmstead_footprints.effects.removeWhenBroken": "方块破坏时清除",
-  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "脚印下的方块被破坏或替换时，脚印随之消失。"
+  "config.farmstead_footprints.effects.removeWhenBroken.tooltip": "脚印下的方块被破坏或替换时，脚印随之消失。",
+  "config.farmstead_footprints.section.general": "常规",
+  "config.farmstead_footprints.section.footprints": "脚印",
+  "config.farmstead_footprints.section.effects": "效果",
+  "config.farmstead_footprints.section.surfaces": "地面",
+  "config.farmstead_footprints.section.about": "关于",
+  "config.farmstead_footprints.try": "试试看",
+  "config.farmstead_footprints.try.tooltip": "关闭此界面，并按当前设置在你看着的地面上印出脚印。",
+  "config.farmstead_footprints.about.unknown": "更新检查：未进行（已关闭，或 Modrinth 没有响应）",
+  "config.farmstead_footprints.about.current": "你用的是最新版本。",
+  "config.farmstead_footprints.about.newer": "有新版本：%s",
+  "config.farmstead_footprints.about.modrinth": "Modrinth 页面",
+  "config.farmstead_footprints.about.curseforge": "CurseForge 页面",
+  "config.farmstead_footprints.about.issues": "报告问题或建议",
+  "config.farmstead_footprints.about.wiki": "如何添加自己的纹理和规则",
+  "config.farmstead_footprints.picker.add": "按输入添加",
+  "config.farmstead_footprints.picker.add.tooltip": "原样添加输入的内容，用于 #标签 或未加载模组的 ID。"
 }

@@ -59,6 +59,22 @@ public final class TestHooks {
                 } else if (file.equals("config.open")) {
                     Files.deleteIfExists(req);
                     FootprintsClient.openConfigNextTick();
+                } else if (file.equals("config.tab")) {
+                    String tab = Files.readString(req).trim();
+                    Files.deleteIfExists(req);
+                    if (screen(mc) instanceof online.farmsteadminecraft.footprints.config.ConfigScreen cs) cs.showTab(tab);
+                } else if (file.equals("config.pick")) {
+                    // "<path> <search>"
+                    String[] arg = Files.readString(req).trim().split(" ", 2);
+                    Files.deleteIfExists(req);
+                    if (screen(mc) instanceof online.farmsteadminecraft.footprints.config.ConfigScreen cs) cs.openPicker(arg[0], arg.length > 1 ? arg[1] : "");
+                } else if (file.equals("try.it")) {
+                    Files.deleteIfExists(req);
+                    //? if >=26.1 {
+                    /*mc.gui.setScreen(null);
+                    *///?} else
+                    mc.setScreen(null);
+                    FootprintsClient.tryIt();
                 } else if (file.equals("command.run")) {
                     // types a command as a player would (exercises the client command path of each loader)
                     String command = Files.readString(req).trim();
@@ -110,6 +126,13 @@ public final class TestHooks {
     *///?}
 
     /** Benchmark load: fills the whole pool with long-lived prints on the ground within 40 blocks of the player. */
+    private static net.minecraft.client.gui.screens.Screen screen(Minecraft mc) {
+        //? if >=26.1 {
+        /*return mc.gui.screen();
+        *///?} else
+        return mc.screen;
+    }
+
     private static void stressFill(Minecraft mc) {
         if (mc.level == null || mc.player == null) return;
         java.util.Random rnd = new java.util.Random(42);
