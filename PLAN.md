@@ -71,7 +71,7 @@
 
 ## 5. Конфиг
 
-### `imprint-client.toml`
+### `farmstead-imprint-client.toml`
 
 | Ключ | По умолчанию | Описание |
 | --- | --- | --- |
@@ -88,7 +88,7 @@
 | `weather.snowFillsPrints` | true | Снегопад заметает следы |
 | `debug.showStats` | false | Число декалей и время кадра в F3 |
 
-### `imprint-server.toml` (модуль тропинок)
+### `farmstead-imprint-server.toml` (модуль тропинок)
 
 | Ключ | По умолчанию | Описание |
 | --- | --- | --- |

@@ -12,7 +12,7 @@ import online.farmsteadminecraft.imprint.config.DoubleValue;
 import online.farmsteadminecraft.imprint.config.IntValue;
 import online.farmsteadminecraft.imprint.config.StringListValue;
 
-/** {@code config/imprint-client.toml}: every client setting, its comment, range and presets. */
+/** {@code config/farmstead-imprint-client.toml}: every client setting, its comment, range and presets. */
 public final class ImprintConfig {
     public static final ConfigFile FILE = new ConfigFile(Imprint.MOD_ID, "client", 1);
 

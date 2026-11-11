@@ -11,7 +11,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * One config file of a mod ({@code <modid>-client.toml}, {@code -server}, {@code -common}).
+ * One config file of a mod ({@code farmstead-<modid>-client.toml}, {@code -server}, {@code -common}).
  *
  * <p>Values are declared in code with a comment, a range and a default; the file is a flat TOML
  * subset (sections, {@code key = value}, {@code #} comments) that we read and write ourselves so
@@ -42,7 +42,17 @@ public final class ConfigFile {
         presets.put("default", Map.of());
     }
 
+    /**
+     * {@code farmstead-<modid>-<side>.toml}: every Farmstead mod's files start with "farmstead" so an
+     * admin finds all of them together in a config folder of hundreds.
+     */
     public String fileName() {
+        String base = modId.startsWith("farmstead") ? modId : "farmstead-" + modId;
+        return base + "-" + side + ".toml";
+    }
+
+    /** The name used before the "farmstead-" prefix; an old file is renamed on first load. */
+    private String legacyFileName() {
         return modId + "-" + side + ".toml";
     }
 
@@ -133,6 +143,14 @@ public final class ConfigFile {
     public List<String> load(Path dir) {
         Path file = dir.resolve(fileName());
         List<String> problems = new ArrayList<>();
+        Path legacy = dir.resolve(legacyFileName());
+        if (!Files.exists(file) && Files.exists(legacy)) {
+            try {
+                Files.move(legacy, file);
+            } catch (IOException e) {
+                problems.add("cannot rename " + legacyFileName() + " to " + fileName() + ": " + e.getMessage());
+            }
+        }
         Map<String, String> raw = new LinkedHashMap<>();
         if (Files.exists(file)) {
             try {
