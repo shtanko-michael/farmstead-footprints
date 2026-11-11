@@ -29,7 +29,7 @@
 | Source | https://github.com/shtanko-michael/farmstead-footprints |
 | Wiki | https://github.com/shtanko-michael/farmstead-footprints#readme |
 | Discord | — (если появится сервер Farmstead — добавить) |
-| Зависимости (ставит CI на каждую версию) | Fabric API — required (`P7dR8mSH`), Mod Menu — optional (`mOgUt4GM`); только для Fabric-файлов |
+| Зависимости (ставит CI на каждую версию) | **никаких обязательных**, даже Fabric API; Mod Menu — optional (`mOgUt4GM`), только для Fabric-файлов |
 
 У Modrinth нет отдельной категории «визуальное»: клиентская красота (Particle Rain, Falling Leaves, Wakes) живёт в `decoration`, поэтому и мы там.
 
@@ -46,7 +46,7 @@
 | Game versions | 1.20.1, 1.21, 1.21.1, 26.3 (по файлу) |
 | Java | 17 (1.20.1), 21 (1.21.x), 25 (26.3) |
 | Source / Issues / Wiki | те же ссылки на GitHub |
-| Relations (ставит CI) | Fabric API (`306612`) — Required Dependency, Mod Menu (`308702`) — Optional, только для Fabric-файлов |
+| Relations (ставит CI) | обязательных нет; Mod Menu (`308702`) — Optional, только для Fabric-файлов |
 
 ## Файлы и версии
 

@@ -133,7 +133,6 @@ jobs:
           if [ "${{ matrix.loader }}" = fabric ]; then
             {
               echo "deps<<EOF"
-              echo "fabric-api(required){modrinth:P7dR8mSH}{curseforge:306612}"
               echo "modmenu(optional){modrinth:mOgUt4GM}{curseforge:308702}"
               echo "EOF"
             } >> "$GITHUB_OUTPUT"

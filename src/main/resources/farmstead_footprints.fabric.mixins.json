@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "online.farmsteadminecraft.footprints.platform.fabric.mixin",
+  "compatibilityLevel": "${java}",
+  "client": [
+    "ClientLanguageMixin",
+    "ClientPacketListenerMixin",
+    "LevelRendererMixin",
+    "MinecraftMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

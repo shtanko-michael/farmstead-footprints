@@ -59,6 +59,11 @@ public final class TestHooks {
                 } else if (file.equals("config.open")) {
                     Files.deleteIfExists(req);
                     FootprintsClient.openConfigNextTick();
+                } else if (file.equals("command.run")) {
+                    // types a command as a player would (exercises the client command path of each loader)
+                    String command = Files.readString(req).trim();
+                    Files.deleteIfExists(req);
+                    if (mc.player != null) mc.player.connection.sendCommand(command);
                 } else if (file.equals("stress.fill")) {
                     Files.deleteIfExists(req);
                     stressFill(mc);

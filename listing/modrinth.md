@@ -51,7 +51,7 @@ English, Русский, 简体中文, Português (Brasil), Español, Deutsch, F
 | 1.21 – 1.21.1 | Fabric, Quilt, NeoForge |
 | 1.20.1 | Fabric, Quilt, Forge |
 
-On Fabric it needs **[Fabric API](https://modrinth.com/mod/fabric-api)**. **[Mod Menu](https://modrinth.com/mod/modmenu)** is optional.
+**No dependencies at all** — not even Fabric API. Drop in the jar and play. **[Mod Menu](https://modrinth.com/mod/modmenu)** is optional on Fabric.
 
 ## ✦ Coming next
 

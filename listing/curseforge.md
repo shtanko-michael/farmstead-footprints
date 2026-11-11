@@ -49,7 +49,7 @@ English, Русский, 简体中文, Português (Brasil), Español, Deutsch, F
 | 1.21 – 1.21.1 | Fabric, Quilt, NeoForge |
 | 1.20.1 | Fabric, Quilt, Forge |
 
-On Fabric it needs **[Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)**. **[Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu)** is optional.
+**No dependencies at all** — not even Fabric API. Drop in the jar and play. **[Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu)** is optional on Fabric.
 
 ## Coming next
 

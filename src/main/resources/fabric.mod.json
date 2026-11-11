@@ -18,15 +18,14 @@
     "client": ["online.farmsteadminecraft.footprints.platform.fabric.FootprintsFabricClient"],
     "modmenu": ["online.farmsteadminecraft.footprints.platform.fabric.FootprintsModMenu"]
   },
-  "mixins": ["farmstead_footprints.mixins.json"],
+  "mixins": [
+    "farmstead_footprints.mixins.json",
+    {"config": "farmstead_footprints.fabric.mixins.json", "environment": "client"}
+  ],
   "accessWidener": "farmstead_footprints.ct",
   "depends": {
     "fabricloader": ">=${loader}",
-    "minecraft": "${minecraft}",
-    "fabric-lifecycle-events-v1": "*",
-    "fabric-rendering-v1": "*",
-    "fabric-resource-loader-v0": "*",
-    "fabric-command-api-v2": "*"
+    "minecraft": "${minecraft}"
   },
   "suggests": {
     "modmenu": "*"

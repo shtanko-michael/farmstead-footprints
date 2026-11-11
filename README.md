@@ -44,7 +44,7 @@ More pictures in [docs/media/gallery](docs/media/gallery).
 
 Get it from [Modrinth](https://modrinth.com/mod/footprints), [CurseForge](https://www.curseforge.com/minecraft/mc-mods/footprints) or [GitHub Releases](https://github.com/shtanko-michael/farmstead-footprints/releases).
 
-**Requirements:** on Fabric, [Fabric API](https://modrinth.com/mod/fabric-api). [Mod Menu](https://modrinth.com/mod/modmenu) is optional and adds the settings button. Nothing else.
+**Requirements: none.** No library, not even Fabric API on Fabric: the jar is all you need. [Mod Menu](https://modrinth.com/mod/modmenu) is optional and adds a settings button on Fabric.
 
 **Server or client?** Client only. The server does not need it, and you can join any server with it. Installed on a dedicated server it only writes its start-up line to the log and checks for updates.
 

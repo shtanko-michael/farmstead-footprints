@@ -44,7 +44,7 @@
 
 Скачать: [Modrinth](https://modrinth.com/mod/footprints), [CurseForge](https://www.curseforge.com/minecraft/mc-mods/footprints) или [релизы на GitHub](https://github.com/shtanko-michael/farmstead-footprints/releases).
 
-**Что нужно:** на Fabric — [Fabric API](https://modrinth.com/mod/fabric-api). [Mod Menu](https://modrinth.com/mod/modmenu) не обязателен, он добавляет кнопку настроек. Больше ничего.
+**Что нужно: ничего.** Ни одной библиотеки, даже Fabric API на Fabric: достаточно самого jar. [Mod Menu](https://modrinth.com/mod/modmenu) не обязателен, он добавляет кнопку настроек на Fabric.
 
 **Клиент или сервер?** Только клиент. Серверу мод не нужен, с ним можно заходить на любой сервер. На выделенном сервере он только пишет строку о запуске в лог и проверяет обновления.
 
