@@ -116,14 +116,24 @@ public final class StepTracker {
 
     private void place(ClientLevel level, LivingEntity e, FootProfile profile, FootShape shape, double x, double z, float yaw, long now) {
         double y = e.getY();
-        BlockPos pos = BlockPos.containing(x, y - 0.05, z);
+        // A thin cover (a snow layer) can sit in the block the feet are in; the print belongs on top of
+        // it, not on the block underneath, or the cover hides it. Server-placed entities and camera-rig
+        // actors often stand at the block's integer top with the layer around their feet.
+        BlockPos pos = BlockPos.containing(x, y + 0.01, z);
         BlockState state = level.getBlockState(pos);
         Surface surface = Surfaces.of(state);
+        if (surface == null) {
+            pos = BlockPos.containing(x, y - 0.05, z);
+            state = level.getBlockState(pos);
+            surface = Surfaces.of(state);
+        }
         if (surface == null) return;
+        net.minecraft.world.phys.shapes.VoxelShape outline = state.getShape(level, pos);
+        double top = outline.isEmpty() ? pos.getY() : pos.getY() + outline.max(net.minecraft.core.Direction.Axis.Y);
         Footprint p = pool.add();
         // no two prints alike: a few degrees, a few percent, a few millimetres
         p.x = x + (random.nextFloat() - 0.5f) * 0.06f;
-        p.y = y;
+        p.y = Math.max(top, Math.min(y, top + 0.2));
         p.z = z + (random.nextFloat() - 0.5f) * 0.06f;
         p.yaw = yaw + (random.nextFloat() - 0.5f) * 14f;
         p.shape = e.isShiftKeyDown() && !profile.quadruped() ? FootShape.SNEAK : shape;

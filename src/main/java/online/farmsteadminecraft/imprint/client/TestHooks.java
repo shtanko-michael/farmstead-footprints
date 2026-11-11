@@ -26,7 +26,9 @@ public final class TestHooks {
     }
 
     public static void tick(Minecraft mc) {
-        if (!ENABLED) return;
+        // on with -Dfarmstead.testhooks=true, or when a <gameDir>/testhooks folder exists (capture rigs
+        // whose launch arguments we do not control)
+        if (!ENABLED && !Files.isDirectory(mc.gameDirectory.toPath().resolve("testhooks"))) return;
         //? if forge {
         /*if (JOIN != null && !joined && mc.level == null
             && mc.screen instanceof net.minecraft.client.gui.screens.TitleScreen title) {

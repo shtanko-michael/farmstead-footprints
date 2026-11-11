@@ -35,7 +35,7 @@ final class NeoForgeClientHooks {
         NeoForge.EVENT_BUS.addListener((RenderLevelStageEvent event) -> {
             // After particles the global model-view matrix carries the camera rotation, so the
             // event's identity pose stack plus camera-relative vertices land in the right place
-            if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
+            if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES) {
                 FootprintRenderer.renderImmediate(event.getPoseStack().last().pose(), event.getCamera().getPosition());
             }
         });
