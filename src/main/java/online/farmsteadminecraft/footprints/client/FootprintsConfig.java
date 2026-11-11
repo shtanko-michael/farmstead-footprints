@@ -9,6 +9,7 @@ import online.farmsteadminecraft.footprints.ModLoaderAccess;
 import online.farmsteadminecraft.footprints.config.BoolValue;
 import online.farmsteadminecraft.footprints.config.ConfigFile;
 import online.farmsteadminecraft.footprints.config.DoubleValue;
+import online.farmsteadminecraft.footprints.config.EnumValue;
 import online.farmsteadminecraft.footprints.config.IntValue;
 import online.farmsteadminecraft.footprints.config.StringListValue;
 
@@ -33,8 +34,37 @@ public final class FootprintsConfig {
         .comment("Multiplies how long prints stay before they fade (snow 5 min, sand 3 min at 1.0).");
     public static final DoubleValue OPACITY = FILE.number("footprints", "opacity", 0.95, 0.1, 1.0)
         .comment("How strongly prints show.");
-    public static final StringListValue ENTITY_BLACKLIST = FILE.list("footprints", "entityBlacklist", List.of())
-        .comment("Entity ids that never leave prints, e.g. [\"minecraft:villager\"].");
+    public static final StringListValue ENTITY_BLACKLIST = FILE.list("footprints", "entityBlacklist", List.of(
+            "minecraft:armor_stand", "minecraft:bat", "minecraft:bee", "minecraft:phantom", "minecraft:vex",
+            "minecraft:allay", "minecraft:ghast", "minecraft:happy_ghast", "minecraft:blaze", "minecraft:breeze",
+            "minecraft:wither", "minecraft:ender_dragon", "minecraft:slime", "minecraft:magma_cube",
+            "minecraft:silverfish", "minecraft:endermite", "minecraft:snow_golem", "minecraft:shulker"))
+        .comment("Entities that never leave prints, by id or #tag (flying and footless ones by default).");
+    public static final EnumValue<Sneaking> SNEAKING = FILE.choice("footprints", "sneaking", Sneaking.SHALLOW)
+        .comment("Sneaking feet leave shallow prints, or none at all (stealth).");
+    public static final BoolValue INVISIBLE = FILE.bool("footprints", "invisible", false)
+        .comment("Invisible players and mobs leave prints too.");
+    public static final StringListValue PROFILES = FILE.list("footprints", "profiles", List.of())
+        .comment("Prints per mob, overriding the built-in ones: \"<id or #tag> = shape:<name> size:<x> legs:<2|4|6|8> "
+            + "stride:<blocks> stance:<blocks> length:<blocks>\", any part optional. Shapes: boot, bare, paw, cat, hoof, "
+            + "cloven, bird, big, bear, or the file name of your own picture in config/farmstead_footprints/textures. "
+            + "Example: \"minecraft:fox = shape:paw size:0.8\".");
+
+    public static final DoubleValue HARDNESS = FILE.number("surfaces", "hardnessGate", 0.7, 0.0, 5.0)
+        .comment("Any block softer than this takes prints, so modded soil and sand work out of the box "
+            + "(sand 0.5, grass and gravel 0.6, wool 0.8). 0: only the blocks listed below.");
+    public static final StringListValue SURFACE_INCLUDE = FILE.list("surfaces", "include", List.of("#minecraft:wool"))
+        .comment("Blocks that always take prints, by id or #tag.");
+    public static final StringListValue SURFACE_EXCLUDE = FILE.list("surfaces", "exclude", List.of(
+            "#minecraft:leaves", "#minecraft:impermeable", "#minecraft:ice", "#minecraft:beds",
+            "#minecraft:pressure_plates", "#minecraft:trapdoors", "#minecraft:beehives", "minecraft:scaffolding",
+            "minecraft:slime_block", "minecraft:honey_block", "minecraft:tnt", "minecraft:target", "minecraft:composter",
+            "minecraft:daylight_detector", "minecraft:glowstone", "minecraft:sea_lantern", "minecraft:redstone_lamp",
+            "minecraft:magma_block", "minecraft:cactus", "minecraft:netherrack", "minecraft:big_dripleaf",
+            "minecraft:turtle_egg", "minecraft:sniffer_egg", "minecraft:frogspawn"))
+        .comment("Blocks that never take prints, by id or #tag; wins over the list above and the hardness rule.");
+
+    public enum Sneaking { SHALLOW, NONE }
 
     static {
         FILE.preset("vanilla_plus", Map.of(
@@ -63,11 +93,16 @@ public final class FootprintsConfig {
         List<String> problems = FILE.load(dir());
         problems.forEach(p -> Footprints.LOGGER.warn("config: {}", p));
         FootprintsClient.POOL.resize(MAX_PRINTS.value());
+        SurfaceRules.reset();
+        FootProfiles.reset();
+        FootprintAtlas.invalidate();
         return problems;
     }
 
     public static void save() {
         FILE.save(dir(), new java.util.ArrayList<>());
         FootprintsClient.POOL.resize(MAX_PRINTS.value());
+        SurfaceRules.reset();
+        FootProfiles.reset();
     }
 }

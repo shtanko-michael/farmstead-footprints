@@ -50,8 +50,12 @@ public final class FootprintsClient {
         if (level != lastLevel) {
             POOL.clear();
             TRACKER.clear();
+            // block and entity tags belong to the world (datapacks): resolve surfaces and mobs again
+            SurfaceRules.reset();
+            FootProfiles.reset();
             lastLevel = level;
         }
+        if (level != null) FootprintAtlas.ensure();
         if (level == null || !FootprintsConfig.ENABLED.on() || mc.isPaused()) return;
         long now = level.getGameTime();
         TRACKER.tick(level, cameraPos(mc), now);

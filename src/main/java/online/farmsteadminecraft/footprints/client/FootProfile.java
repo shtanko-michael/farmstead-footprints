@@ -23,16 +23,18 @@ package online.farmsteadminecraft.footprints.client;
  * @param register  four-legged: how far ahead of the front print the hind feet land
  * @param toeIn     degrees the toes turn towards the centre line (bears walk pigeon-toed)
  * @param scale     size multiplier for the mask
+ * @param hop       hoppers (rabbits, frogs): every stride (one bound) leaves a group of four, the hind feet
+ *                  side by side ahead of the two front feet, one behind the other
  */
 public record FootProfile(FootShape left, FootShape right, float stride, float spacing, float[] legs, float register,
-                          float toeIn, float scale) {
+                          float toeIn, float scale, boolean hop) {
 
     public boolean quadruped() {
         return legs != null;
     }
 
     static FootProfile biped(FootShape left, FootShape right, float stride, float spacing, float scale) {
-        return new FootProfile(left, right, stride, spacing, null, 0f, 0f, scale);
+        return new FootProfile(left, right, stride, spacing, null, 0f, 0f, scale, false);
     }
 
     /** {@code legs}: model pivots of the left legs in model pixels (x, z), front first; {@code model} the renderer scale. */
@@ -42,7 +44,21 @@ public record FootProfile(FootShape left, FootShape right, float stride, float s
             blocks[i] = Math.abs(legs[i]) / 16f * model;   // lateral
             blocks[i + 1] = -legs[i + 1] / 16f * model;     // model -z is forward
         }
-        return new FootProfile(shape, shape, stride, 0f, blocks, register, toeIn, scale);
+        return new FootProfile(shape, shape, stride, 0f, blocks, register, toeIn, scale, false);
+    }
+
+    /** A copy with other values; used by config overrides and generated profiles. */
+    public FootProfile with(FootShape shape, float scale, float stride, float stance, float[] legs) {
+        return new FootProfile(shape, shape == left ? right : shape, stride, stance, legs, register, toeIn, scale, hop);
+    }
+
+    public FootProfile hopping() {
+        return new FootProfile(left, right, stride, spacing, legs, register, toeIn, scale, true);
+    }
+
+    /** Hips for a four-legged body of the given half stance width and hip-to-hip length, in blocks. */
+    public static float[] fourLegs(float stance, float length) {
+        return new float[]{stance, length * 0.5f, stance, -length * 0.5f};
     }
 
     public static final FootProfile BOOTS = biped(FootShape.BOOT_LEFT, FootShape.BOOT_RIGHT, 0.92f, 0.13f, 1f);
@@ -75,5 +91,12 @@ public record FootProfile(FootShape left, FootShape right, float stride, float s
     public static final FootProfile CAMEL = quad(FootShape.CLOVEN, 1.75f, 1.05f, 0f, 0f, 1f, 4.9f, -10.5f, 4.9f, 9.5f);
     /** Six legs: the middle and hind feet both land in the front print. */
     public static final FootProfile SNIFFER = quad(FootShape.CLOVEN, 1.6f, 1.2f, 0f, 0f, 1f, 7.5f, -15f, 7.5f, 0f, 7.5f, 15f);
+    public static final FootProfile RABBIT = quad(FootShape.PAW, 0.45f, 0.9f, 0f, 0f, 1f, 1.5f, -2f, 2f, 3f).hopping();
+    public static final FootProfile FROG = quad(FootShape.BIRD, 0.5f, 0.8f, 0f, 0f, 1f, 2.5f, -2f, 3f, 3f).hopping();
+    public static final FootProfile SPIDER = quad(FootShape.CAT, 0.4f, 0.45f, 0f, 0f, 1f, 11f, -4f, 13f, -1f, 13f, 2f, 11f, 5f);
+    public static final FootProfile CAVE_SPIDER = quad(FootShape.CAT, 0.3f, 0.32f, 0f, 0f, 0.7f, 11f, -4f, 13f, -1f, 13f, 2f, 11f, 5f);
+    public static final FootProfile TURTLE = quad(FootShape.PAW, 0.7f, 0.35f, 0f, 0f, 1f, 7f, -6f, 6f, 6f);
+    public static final FootProfile AXOLOTL = quad(FootShape.CAT, 0.45f, 0.3f, 0f, 0f, 1f, 3f, -2f, 3f, 4f);
+    public static final FootProfile PARROT = biped(FootShape.BIRD, FootShape.BIRD, 0.2f, 0.05f, 0.5f);
     public static final FootProfile RAVAGER = quad(FootShape.HOOF, 1.6f, 0.95f, 0f, 0f, 1f, 8f, -5f, 8f, 18f);
 }

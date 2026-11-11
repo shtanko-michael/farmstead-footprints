@@ -72,7 +72,7 @@ public final class StepTracker {
                 continue;
             }
             FootProfile profile = FootProfiles.of(living);
-            if (profile == null) continue;
+            if (profile == null || sneakHidden(living)) continue;
             track.walked += moved;
             track.odometer += moved;
             for (java.util.Iterator<HindStep> it = track.hind.iterator(); it.hasNext(); ) {
@@ -84,10 +84,16 @@ public final class StepTracker {
             }
             // Steps lengthen with speed, like a walk turning into a trot (per tick: 0.1 is a stroll, 0.3+ a run)
             float pace = Mth.clamp(0.85f + 1.5f * (float) moved, 0.9f, 1.5f);
-            float stride = profile.stride() * pace * (profile.quadruped() ? scaleOf(living) : 1f);
+            float stride = profile.stride() * pace * (profile == FootProfile.CHILD ? 1f : scaleOf(living));
             if (track.walked >= stride) {
                 track.walked -= stride;
                 if (track.walked > stride) track.walked = 0;
+                // Hoppers leave one group of four per bound. Client-side, other mobs' small jumps barely show
+                // in their position, so a bound is measured by distance, like a step.
+                if (profile.hop()) {
+                    land(level, living, profile, now);
+                    continue;
+                }
                 step(level, living, profile, track, track.right, now);
                 track.right = !track.right;
             }
@@ -116,9 +122,39 @@ public final class StepTracker {
         return Math.abs(e.getY() - top) < 0.02;
     }
 
-    /** Babies are smaller; on 1.21+ the scale attribute too. */
-    private static float scaleOf(LivingEntity e) {
-        return Math.max(0.2f, e.getScale());
+    /**
+     * How much bigger or smaller this entity is than its kind: babies, the scale attribute, and size mods
+     * (Pehkui, Random Mob Sizes) all change the hitbox, so its width against the type's says it, without
+     * depending on any of them.
+     */
+    static float scaleOf(LivingEntity e) {
+        float base = e.getType().getWidth();
+        return base <= 0f ? 1f : Mth.clamp(e.getBbWidth() / base, 0.2f, 8f);
+    }
+
+    /** Sneaking with {@code footprints.sneaking = none}: no prints at all. */
+    private static boolean sneakHidden(LivingEntity e) {
+        return e.isShiftKeyDown() && FootprintsConfig.SNEAKING.get() == FootprintsConfig.Sneaking.NONE;
+    }
+
+    /**
+     * A hop (rabbits, frogs): the long hind feet land side by side ahead of the front feet, which come down
+     * one behind the other on the centre line — the "Y" of a rabbit track.
+     */
+    private void land(ClientLevel level, LivingEntity e, FootProfile profile, long now) {
+        float yaw = e.yBodyRot;
+        double rad = Math.toRadians(yaw);
+        double fx = -Math.sin(rad), fz = Math.cos(rad);
+        double rx = -Math.cos(rad), rz = -Math.sin(rad);
+        float k = scaleOf(e);
+        float[] legs = profile.legs();
+        double hindLat = (legs != null ? legs[legs.length - 2] : 0.1) * k;
+        double hindFwd = 0.12 * k, front1 = -0.12 * k, front2 = -0.3 * k;
+        FootShape shape = profile.left();
+        place(level, e, profile, shape, e.getX() + rx * hindLat + fx * hindFwd, e.getZ() + rz * hindLat + fz * hindFwd, yaw, now, 1f);
+        place(level, e, profile, shape, e.getX() - rx * hindLat + fx * hindFwd, e.getZ() - rz * hindLat + fz * hindFwd, yaw, now, 1f);
+        place(level, e, profile, shape, e.getX() + rx * 0.03 * k + fx * front1, e.getZ() + rz * 0.03 * k + fz * front1, yaw, now, 0.7f);
+        place(level, e, profile, shape, e.getX() - rx * 0.03 * k + fx * front2, e.getZ() - rz * 0.03 * k + fz * front2, yaw, now, 0.7f);
     }
 
     private void step(ClientLevel level, LivingEntity e, FootProfile profile, Track track, boolean right, long now) {
@@ -131,7 +167,7 @@ public final class StepTracker {
         double sign = right ? 1 : -1;
         FootShape shape = right ? profile.right() : profile.left();
         if (!profile.quadruped()) {
-            double side = sign * profile.spacing();
+            double side = sign * profile.spacing() * (profile == FootProfile.CHILD ? 1f : scaleOf(e));
             place(level, e, profile, shape, e.getX() + rx * side, e.getZ() + rz * side, yaw, now);
             return;
         }
@@ -164,17 +200,22 @@ public final class StepTracker {
     }
 
     private void place(ClientLevel level, LivingEntity e, FootProfile profile, FootShape shape, double x, double z, float yaw, long now) {
+        place(level, e, profile, shape, x, z, yaw, now, 1f);
+    }
+
+    private void place(ClientLevel level, LivingEntity e, FootProfile profile, FootShape shape, double x, double z, float yaw,
+                       long now, float sizeMul) {
         double y = e.getY();
         // A thin cover (a snow layer) can sit in the block the feet are in; the print belongs on top of
         // it, not on the block underneath, or the cover hides it. Server-placed entities and camera-rig
         // actors often stand at the block's integer top with the layer around their feet.
         BlockPos pos = BlockPos.containing(x, y + 0.01, z);
         BlockState state = level.getBlockState(pos);
-        Surface surface = Surfaces.of(state);
+        Surface surface = SurfaceRules.of(state);
         if (surface == null) {
             pos = BlockPos.containing(x, y - 0.05, z);
             state = level.getBlockState(pos);
-            surface = Surfaces.of(state);
+            surface = SurfaceRules.of(state);
         }
         if (surface == null) return;
         net.minecraft.world.phys.shapes.VoxelShape outline = state.getShape(level, pos);
@@ -186,7 +227,7 @@ public final class StepTracker {
         p.z = z + (random.nextFloat() - 0.5f) * 0.06f;
         p.yaw = yaw + (random.nextFloat() - 0.5f) * 14f;
         p.shape = e.isShiftKeyDown() && !profile.quadruped() ? FootShape.SNEAK : shape;
-        p.scale = profile.scale() * (0.92f + random.nextFloat() * 0.16f);
+        p.scale = profile.scale() * sizeMul * (profile == FootProfile.CHILD ? 1f : scaleOf(e)) * (0.92f + random.nextFloat() * 0.16f);
         p.depth = surface.depth() * (e.isShiftKeyDown() ? 0.55f : 1f) * (0.85f + random.nextFloat() * 0.2f)
             * (e.isSprinting() ? 1.1f : 1f);
         int ground = state.getMapColor(level, pos).col;

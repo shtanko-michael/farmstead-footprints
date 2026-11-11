@@ -15,4 +15,10 @@ public record Surface(String name, float depth, int lifeSecs, float darken) {
     public static final Surface SOIL = new Surface("soil", 0.70f, 120, 0.45f);
     public static final Surface CLAY = new Surface("clay", 0.72f, 200, 0.40f);
     public static final Surface SOUL = new Surface("soul", 0.70f, 150, 0.50f);
+    /** Grass and moss: the blades are pressed flat rather than dug out, so a lighter, shorter-lived print. */
+    public static final Surface GRASS = new Surface("grass", 0.55f, 120, 0.35f);
+    /** Wool, carpets: a soft dent. */
+    public static final Surface CLOTH = new Surface("cloth", 0.50f, 90, 0.30f);
+    /** Any other block soft enough by the hardness rule. */
+    public static final Surface SOFT = new Surface("soft", 0.60f, 120, 0.40f);
 }

@@ -87,7 +87,7 @@ public final class TestHooks {
     private static void stressFill(Minecraft mc) {
         if (mc.level == null || mc.player == null) return;
         java.util.Random rnd = new java.util.Random(42);
-        FootShape[] shapes = FootShape.values();
+        FootShape[] shapes = FootShape.builtIns().toArray(new FootShape[0]);
         long now = mc.level.getGameTime();
         int n = FootprintsClient.POOL.capacity();
         for (int i = 0; i < n; i++) {

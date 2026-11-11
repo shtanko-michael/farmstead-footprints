@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import online.farmsteadminecraft.footprints.Footprints;
 import online.farmsteadminecraft.footprints.client.Footprint;
+import online.farmsteadminecraft.footprints.client.FootprintAtlas;
 import online.farmsteadminecraft.footprints.client.FootprintsClient;
 import online.farmsteadminecraft.footprints.client.FootprintsConfig;
 import org.joml.Matrix4f;
@@ -33,8 +34,6 @@ import net.minecraft.client.renderer.RenderType;
  * stay precise far from the origin.
  */
 public final class FootprintRenderer {
-    public static final ResourceLocation SHADOW = Footprints.id("textures/footprints_shadow.png");
-    public static final ResourceLocation RIM = Footprints.id("textures/footprints_rim.png");
     private static final float LIFT = 0.012f;
     /** Quads drawn in the last frame; shown by debug output and test hooks. */
     public static int lastDrawn;
@@ -63,10 +62,11 @@ public final class FootprintRenderer {
         if (level == null || !FootprintsConfig.ENABLED.on() || FootprintsClient.POOL.alive() == 0) return;
         Matrix4f matrix = new Matrix4f(view);
         MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
-        RenderType shadow = renderType(SHADOW);
+        FootprintAtlas.ensure();
+        RenderType shadow = renderType(FootprintAtlas.shadow());
         emit(buffers.getBuffer(shadow), matrix, camera, level, false);
         buffers.endBatch(shadow);
-        RenderType rim = renderType(RIM);
+        RenderType rim = renderType(FootprintAtlas.rim());
         emit(buffers.getBuffer(rim), matrix, camera, level, true);
         buffers.endBatch(rim);
     }
@@ -77,8 +77,9 @@ public final class FootprintRenderer {
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null || !FootprintsConfig.ENABLED.on() || FootprintsClient.POOL.alive() == 0) return;
         Matrix4f matrix = new Matrix4f(pose.last().pose());
-        collector.submitCustomGeometry(pose, renderType(SHADOW), (p, vc) -> emit(vc, matrix, camera, level, false));
-        collector.submitCustomGeometry(pose, renderType(RIM), (p, vc) -> emit(vc, matrix, camera, level, true));
+        FootprintAtlas.ensure();
+        collector.submitCustomGeometry(pose, renderType(FootprintAtlas.shadow()), (p, vc) -> emit(vc, matrix, camera, level, false));
+        collector.submitCustomGeometry(pose, renderType(FootprintAtlas.rim()), (p, vc) -> emit(vc, matrix, camera, level, true));
     }
     *///?}
 

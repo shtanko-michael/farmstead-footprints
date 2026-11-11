@@ -28,6 +28,18 @@ public final class Footprints {
         FarmsteadBrand.checkForUpdate(LOGGER, NAME, VERSION, ModLoaderAccess.get().loaderName(), MINECRAFT, MODRINTH_SLUG);
     }
 
+    /** {@code "minecraft:sand"} or {@code "sand"} to an id; null if malformed. */
+    public static ResourceLocation parseId(String text) {
+        try {
+            //? if <1.21 {
+            /*return new ResourceLocation(text);
+             *///?} else
+            return ResourceLocation.parse(text);
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
     public static ResourceLocation id(String path) {
         //? if <1.21 {
         /*return new ResourceLocation(MOD_ID, path);

@@ -3,12 +3,10 @@ package online.farmsteadminecraft.footprints.client;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Which blocks take prints and how. Keyed by block id for now; tag- and resource-pack-driven
- * surfaces (so modded sand and snow work out of the box) come in M2.
+ * Hand-tuned vanilla surfaces by block id. The general rule for every other block (hardness gate,
+ * include/exclude lists with tags, sound type) is in {@link SurfaceRules}.
  */
 public final class Surfaces {
     private static final Map<String, Surface> BY_ID = new HashMap<>();
@@ -30,8 +28,8 @@ public final class Surfaces {
     private Surfaces() {
     }
 
-    /** @return the surface, or {@code null} if the block keeps no prints */
-    public static Surface of(BlockState state) {
-        return BY_ID.get(BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString());
+    /** The hand-tuned vanilla surfaces; everything else goes through {@link SurfaceRules}. */
+    static Surface byId(String id) {
+        return BY_ID.get(id);
     }
 }
