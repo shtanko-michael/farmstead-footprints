@@ -25,32 +25,34 @@ public final class FootProfiles {
                 "skeleton", "stray", "wither_skeleton", "bogged", "enderman"}) {
             BY_ID.put("minecraft:" + id, FootProfile.BAREFOOT);
         }
-        for (String id : new String[]{"wolf", "fox", "armadillo"}) {
-            BY_ID.put("minecraft:" + id, FootProfile.PAW);
-        }
-        for (String id : new String[]{"cat", "ocelot", "creeper"}) {
-            BY_ID.put("minecraft:" + id, FootProfile.SMALL_PAW);
-        }
-        for (String id : new String[]{"horse", "donkey", "mule", "skeleton_horse", "zombie_horse"}) {
-            BY_ID.put("minecraft:" + id, FootProfile.HOOF);
-        }
-        for (String id : new String[]{"cow", "mooshroom", "llama", "trader_llama", "hoglin", "zoglin"}) {
-            BY_ID.put("minecraft:" + id, FootProfile.CLOVEN);
-        }
-        for (String id : new String[]{"pig", "sheep", "goat"}) {
-            BY_ID.put("minecraft:" + id, FootProfile.SMALL_HOOF);
-        }
-        BY_ID.put("minecraft:chicken", FootProfile.BIRD);
-        for (String id : new String[]{"iron_golem", "ravager", "warden"}) {
-            BY_ID.put("minecraft:" + id, FootProfile.GIANT);
-        }
-        BY_ID.put("minecraft:camel", FootProfile.CAMEL);
-        for (String id : new String[]{"polar_bear", "panda", "sniffer"}) {
-            BY_ID.put("minecraft:" + id, FootProfile.GIANT_PAW);
-        }
+        put(FootProfile.WOLF, "wolf");
+        put(FootProfile.FOX, "fox");
+        put(FootProfile.ARMADILLO, "armadillo");
+        put(FootProfile.CAT, "cat");
+        put(FootProfile.OCELOT, "ocelot");
+        put(FootProfile.CREEPER, "creeper");
+        put(FootProfile.HORSE, "horse", "skeleton_horse", "zombie_horse");
+        put(FootProfile.DONKEY, "donkey");
+        put(FootProfile.MULE, "mule");
+        put(FootProfile.COW, "cow", "mooshroom");
+        put(FootProfile.LLAMA, "llama", "trader_llama");
+        put(FootProfile.HOGLIN, "hoglin", "zoglin");
+        put(FootProfile.PIG, "pig", "sheep");
+        put(FootProfile.GOAT, "goat");
+        put(FootProfile.BIRD, "chicken");
+        put(FootProfile.GIANT, "iron_golem", "warden");
+        put(FootProfile.RAVAGER, "ravager");
+        put(FootProfile.POLAR_BEAR, "polar_bear");
+        put(FootProfile.PANDA, "panda");
+        put(FootProfile.SNIFFER, "sniffer");
+        put(FootProfile.CAMEL, "camel");
     }
 
     private FootProfiles() {
+    }
+
+    private static void put(FootProfile profile, String... ids) {
+        for (String id : ids) BY_ID.put("minecraft:" + id, profile);
     }
 
     /** @return the profile, or {@code null} if this entity leaves no prints */

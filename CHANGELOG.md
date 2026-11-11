@@ -7,7 +7,7 @@ All notable changes to Footprints. Versions follow [Semantic Versioning](https:/
 First release.
 
 - Footprints for players and 47 mobs, each with its own foot shape; children and baby zombies leave smaller prints.
-- Four-legged animals walk with a real gait: the hind foot lands in the front print of the same side.
+- Four-legged animals leave real track patterns: one zig-zag line as wide as the animal's stance (hip positions from each vanilla model), the hind foot landing in the front print of the same side; bears overstep slightly and walk pigeon-toed; sniffers put all three feet of a side in one print. Steps lengthen with speed.
 - Soft surfaces: snow, powder snow, sand, red sand, mud, muddy mangrove roots, gravel, dirt, coarse dirt, rooted dirt, podzol, mycelium, farmland, clay, soul sand, soul soil. Prints sit on top of thin snow layers.
 - Two-layer prints (hollow and lip) coloured from the ground they sit on; they fade after 1.5–5 minutes depending on the surface.
 - Works with Sodium and Iris shader packs.

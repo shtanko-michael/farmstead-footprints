@@ -307,11 +307,12 @@ def shot_gait(vet=True):
     (alternating left/right, the hind foot in the front print) can be read at a glance."""
     frames = 300
     setup, cues = [], []
-    for i, (kind, x) in enumerate([("polar_bear", 1781.5), ("wolf", 1786.5), ("camel", 1791.5)]):
+    for i, (kind, x) in enumerate([("horse", 1777.5), ("polar_bear", 1781.5), ("wolf", 1785.5), ("cow", 1789.0),
+                                   ("camel", 1793.0)]):
         a, b = (x, -1778.0), (x, -1796.0)
         setup.append(summon(kind, f"gait{i}", a, SNOW_Y, toward=b))
         cues += mob_cues(f"@e[tag=gait{i},limit=1]", [a, b], frames, SNOW_Y)
-    key = {"pos": [1786.5, 106.0, -1783.0], "look": [1786.5, SNOW_Y, -1788.0], "fov": 60, "ease": "linear"}
+    key = {"pos": [1785.5, 108.0, -1783.0], "look": [1785.5, SNOW_Y, -1788.0], "fov": 62, "ease": "linear"}
     cam = [dict(key, frame=0), dict(key, frame=frames)]
     return vet_or_record("footprints_gait", cam, frames, setup, cues=cues, vet=vet)
 

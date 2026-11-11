@@ -63,6 +63,42 @@ def left_heavy(ink: Image.Image) -> bool:
     return total > 0 and mx / total < w / 2
 
 
+def frog_toward_toe(ink: Image.Image) -> Image.Image:
+    """The Codex horse print has its frog (the V inside the shoe) pointing at the heel. On a real hoof the
+    frog's point faces the toe, so the frog — the inked blob not joined to the shoe — is flipped top to
+    bottom in place."""
+    w, h = ink.size
+    px = ink.load()
+    seen = [[False] * w for _ in range(h)]
+    blobs = []
+    for y0 in range(h):
+        for x0 in range(w):
+            if seen[y0][x0] or px[x0, y0] <= 40:
+                continue
+            stack, pts = [(x0, y0)], []
+            seen[y0][x0] = True
+            while stack:
+                x, y = stack.pop()
+                pts.append((x, y))
+                for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if 0 <= nx < w and 0 <= ny < h and not seen[ny][nx] and px[nx, ny] > 40:
+                        seen[ny][nx] = True
+                        stack.append((nx, ny))
+            blobs.append(pts)
+    blobs.sort(key=len, reverse=True)
+    if len(blobs) < 2:
+        return ink
+    frog = blobs[1]  # the shoe is the biggest blob, the frog the next one
+    top, bottom = min(y for _, y in frog), max(y for _, y in frog)
+    out = ink.copy()
+    op = out.load()
+    for x, y in frog:
+        op[x, y] = 0
+    for x, y in frog:
+        op[x, top + bottom - y] = px[x, y]
+    return out
+
+
 def fit(print_ink: Image.Image) -> tuple[Image.Image, float]:
     pw, ph = print_ink.size
     scale = FILL * CELL / max(pw, ph)
@@ -102,6 +138,7 @@ def layers(ink: Image.Image, seed: int) -> tuple[Image.Image, Image.Image]:
 def main(sheet_path: str) -> None:
     ink = ink_of(Image.open(sheet_path))
     prints = {i: cut(ink, i) for i in range(12)}
+    prints[6] = frog_toward_toe(prints[6])
     for left, right in ((0, 1), (2, 3)):
         if left_heavy(prints[left]) and not left_heavy(prints[right]):
             prints[left], prints[right] = prints[right], prints[left]
