@@ -315,6 +315,30 @@ T = {
         "ja_jp": "雨や雪の間、屋外の足跡はこの倍率で早く消えます。1：天気の影響なし。",
         "ko_kr": "비나 눈이 오는 동안 하늘 아래 발자국은 이 배수만큼 빨리 사라집니다. 1: 날씨 영향 없음.",
         "tr_tr": "Yağmur ya da kar yağarken açık havadaki izler bu kadar kat hızlı eskir. 1: hava etkilemez."},
+    "config.farmstead_footprints.effects.decay": {
+        "en_us": "How old prints go", "ru_ru": "Как исчезают старые следы", "zh_cn": "旧脚印如何消失", "pt_br": "Como as pegadas somem",
+        "es_es": "Cómo desaparecen las huellas", "de_de": "Wie alte Spuren vergehen", "fr_fr": "Disparition des empreintes",
+        "pl_pl": "Jak znikają stare ślady", "uk_ua": "Як зникають старі сліди", "ja_jp": "古い足跡の消え方", "ko_kr": "오래된 발자국이 사라지는 방식",
+        "tr_tr": "Eski izler nasıl kaybolur"},
+    "config.farmstead_footprints.effects.decay.tooltip": {
+        "en_us": "Crumble: the edges crumble in over the second half of a print's life. Fade: the print just fades out.",
+        "ru_ru": "Осыпаются: со второй половины жизни след осыпается от краёв к середине. Бледнеют: след просто тает.",
+        "zh_cn": "崩塌：脚印在后半段寿命里从边缘向内塌落。淡出：脚印只是逐渐变淡。",
+        "pt_br": "Desmoronar: na segunda metade da vida, as bordas desmoronam para dentro. Desbotar: a pegada só some aos poucos.",
+        "es_es": "Desmoronarse: en la segunda mitad de su vida, los bordes se desmoronan hacia dentro. Desvanecerse: la huella solo se desvanece.",
+        "de_de": "Zerbröseln: In der zweiten Hälfte ihrer Lebenszeit bröckeln die Ränder nach innen. Verblassen: die Spur verblasst einfach.",
+        "fr_fr": "S'effriter : dans la seconde moitié de sa vie, l'empreinte s'effrite des bords vers le centre. S'estomper : elle s'efface simplement.",
+        "pl_pl": "Kruszenie: w drugiej połowie życia krawędzie śladu osypują się do środka. Blaknięcie: ślad po prostu blednie.",
+        "uk_ua": "Осипаються: з другої половини життя слід осипається від країв до середини. Бліднуть: слід просто тане.",
+        "ja_jp": "崩れる：寿命の後半に縁から内側へ崩れていきます。薄れる：足跡はただ薄れて消えます。",
+        "ko_kr": "부서짐: 수명의 후반부에 가장자리부터 안쪽으로 무너집니다. 흐려짐: 발자국이 그냥 흐려집니다.",
+        "tr_tr": "Ufalanma: ömrünün ikinci yarısında iz kenarlarından içe doğru ufalanır. Solma: iz sadece solar."},
+    "config.farmstead_footprints.effects.decay.crumble": {
+        "en_us": "Crumble", "ru_ru": "Осыпаются", "zh_cn": "崩塌", "pt_br": "Desmoronar", "es_es": "Desmoronarse", "de_de": "Zerbröseln",
+        "fr_fr": "S'effriter", "pl_pl": "Kruszenie", "uk_ua": "Осипаються", "ja_jp": "崩れる", "ko_kr": "부서짐", "tr_tr": "Ufalanma"},
+    "config.farmstead_footprints.effects.decay.fade": {
+        "en_us": "Fade", "ru_ru": "Бледнеют", "zh_cn": "淡出", "pt_br": "Desbotar", "es_es": "Desvanecerse", "de_de": "Verblassen",
+        "fr_fr": "S'estomper", "pl_pl": "Blaknięcie", "uk_ua": "Бліднуть", "ja_jp": "薄れる", "ko_kr": "흐려짐", "tr_tr": "Solma"},
     "config.farmstead_footprints.effects.dust": {
         "en_us": "Dust under feet",
         "ru_ru": "Пыль из-под ног",

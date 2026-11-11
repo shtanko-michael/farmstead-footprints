@@ -37,6 +37,8 @@ public final class FootprintAtlas {
     private static final int NOISE = 18;
     private static final float FILL = 0.80f;
 
+    /** Crumbling decay: the atlas holds this many copies of every print, each worn further from the edges. */
+    private static int stages = 6;
     private static int grid = BUILT_IN_GRID;
     private static boolean built;
     private static int generation;
@@ -49,6 +51,11 @@ public final class FootprintAtlas {
 
     public static int grid() {
         return grid;
+    }
+
+    /** Decay stages stacked downwards in the texture; stage 0 (the top) is the fresh print. */
+    public static int stages() {
+        return stages;
     }
 
     public static ResourceLocation texture() {
@@ -118,11 +125,20 @@ public final class FootprintAtlas {
             }
         }
         generation++;
-        NativeImage both = new NativeImage(size * 2, size, true);
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                set(both, x, y, get(shadow, x, y));
-                set(both, size + x, y, get(rim, x, y));
+        // a big atlas of players' own pictures gets fewer stages, to keep the texture small
+        stages = g >= 16 ? 3 : 6;
+        NativeImage both = new NativeImage(size * 2, size * stages, true);
+        float[] shadowOrder = new float[size * size], rimOrder = new float[size * size];
+        for (int c = 0; c < g * g; c++) erosionOrder(shadow, rim, c, g, shadowOrder, rimOrder);
+        for (int s = 0; s < stages; s++) {
+            // stage s wears away every pixel whose order is below t: the lip first, then the hollow from its edge in
+            float t = s / (float) stages;
+            for (int y = 0; y < size; y++) {
+                for (int x = 0; x < size; x++) {
+                    int i = y * size + x;
+                    set(both, x, s * size + y, wear(get(shadow, x, y), shadowOrder[i], t));
+                    set(both, size + x, s * size + y, wear(get(rim, x, y), rimOrder[i], Math.min(1f, t * 1.7f)));
+                }
             }
         }
         shadow.close();
@@ -132,6 +148,85 @@ public final class FootprintAtlas {
         FootprintsClient.POOL.forEachAlive(Footprint::prepare);
         FootProfiles.reset();
         if (!customNames.isEmpty()) Footprints.LOGGER.info("textures: {} own picture(s): {}", customNames.size(), customNames);
+    }
+
+    /** Keeps a pixel while its erosion order is above the stage threshold, with a soft edge. */
+    private static int wear(int pixel, float order, float threshold) {
+        if (threshold <= 0f) return pixel;
+        float keep = Math.max(0f, Math.min(1f, (order - threshold) / 0.07f));
+        int a = (int) (((pixel >>> 24) & 0xFF) * keep);
+        return (a << 24) | (pixel & 0xFFFFFF);
+    }
+
+    /**
+     * When each pixel of one cell crumbles away, 0 (first) .. 1 (last). Inside the hollow it goes by the distance from
+     * the print's edge, broken up by coarse noise so the edge crumbles in bites rather than shrinking evenly; the lip
+     * crumbles in noisy patches.
+     */
+    private static void erosionOrder(NativeImage shadow, NativeImage rim, int cell, int g, float[] shadowOrder, float[] rimOrder) {
+        int size = g * CELL, ox = (cell % g) * CELL, oy = (cell / g) * CELL;
+        // city-block distance from the outside of the print, two passes
+        int[] d = new int[CELL * CELL];
+        int max = 0;
+        for (int y = 0; y < CELL; y++) {
+            for (int x = 0; x < CELL; x++) {
+                boolean in = ((get(shadow, ox + x, oy + y) >>> 24) & 0xFF) > 60;
+                int v = 0;
+                if (in) {
+                    int left = x > 0 ? d[y * CELL + x - 1] : 0, up = y > 0 ? d[(y - 1) * CELL + x] : 0;
+                    v = Math.min(left, up) + 1;
+                }
+                d[y * CELL + x] = v;
+            }
+        }
+        for (int y = CELL - 1; y >= 0; y--) {
+            for (int x = CELL - 1; x >= 0; x--) {
+                int i = y * CELL + x, v = d[i];
+                if (v == 0) continue;
+                int right = x < CELL - 1 ? d[i + 1] : 0, down = y < CELL - 1 ? d[i + CELL] : 0;
+                v = Math.min(v, Math.min(right, down) + 1);
+                d[i] = v;
+                max = Math.max(max, v);
+            }
+        }
+        Random rnd = new Random(cell * 7919L + 17);
+        // coarse value noise on a 9 px lattice: the edge goes in bites, not as an even shrink
+        int lattice = 9, n = CELL / lattice + 2;
+        float[] lat = new float[n * n];
+        for (int i = 0; i < lat.length; i++) lat[i] = rnd.nextFloat();
+        for (int y = 0; y < CELL; y++) {
+            for (int x = 0; x < CELL; x++) {
+                float fx = x / (float) lattice, fy = y / (float) lattice;
+                int ix = (int) fx, iy = (int) fy;
+                float tx = fx - ix, ty = fy - iy;
+                tx = tx * tx * (3 - 2 * tx);
+                ty = ty * ty * (3 - 2 * ty);
+                float a = lat[iy * n + ix], b = lat[iy * n + ix + 1], c = lat[(iy + 1) * n + ix], e = lat[(iy + 1) * n + ix + 1];
+                float top = a + (b - a) * tx, bottom = c + (e - c) * tx;
+                float coarse = top + (bottom - top) * ty;
+                float fine = rnd.nextFloat();
+                float depth = max == 0 ? 0f : d[y * CELL + x] / (float) max;
+                int i = (oy + y) * size + ox + x;
+                shadowOrder[i] = 0.62f * depth + 0.30f * coarse + 0.08f * fine;
+                rimOrder[i] = 0.75f * coarse + 0.25f * fine;
+            }
+        }
+        // ranks, not raw values: stage s of n then wears away s/n of the print, whatever its shape
+        rank(shadow, ox, oy, size, shadowOrder);
+        rank(rim, ox, oy, size, rimOrder);
+    }
+
+    private static void rank(NativeImage layer, int ox, int oy, int size, float[] order) {
+        List<int[]> px = new ArrayList<>();
+        for (int y = 0; y < CELL; y++) {
+            for (int x = 0; x < CELL; x++) {
+                int i = (oy + y) * size + ox + x;
+                if (((get(layer, ox + x, oy + y) >>> 24) & 0xFF) > 6) px.add(new int[]{i, Float.floatToIntBits(order[i])});
+                else order[i] = 0.001f;
+            }
+        }
+        px.sort((a, b) -> Float.compare(Float.intBitsToFloat(a[1]), Float.intBitsToFloat(b[1])));
+        for (int k = 0; k < px.size(); k++) order[px.get(k)[0]] = (k + 1f) / px.size();
     }
 
     private static List<Path> listPictures() throws IOException {

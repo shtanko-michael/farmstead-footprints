@@ -70,6 +70,14 @@ public final class TestHooks {
                 } else if (file.equals("prints.clear")) {
                     Files.deleteIfExists(req);
                     FootprintsClient.POOL.clear();
+                } else if (file.equals("prints.age")) {
+                    // every print jumps to this share of its life (0..1): decay stages on demand
+                    float share = Float.parseFloat(Files.readString(req).trim());
+                    Files.deleteIfExists(req);
+                    if (mc.level != null) {
+                        long now = mc.level.getGameTime();
+                        FootprintsClient.POOL.forEachAlive(p -> p.bornTick = now - (long) (share * p.lifeTicks));
+                    }
                 } else if (file.equals("config.reload")) {
                     Files.deleteIfExists(req);
                     Footprints.LOGGER.info("test hook reload: problems={}", FootprintsConfig.load());

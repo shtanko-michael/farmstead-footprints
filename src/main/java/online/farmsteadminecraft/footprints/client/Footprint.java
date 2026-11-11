@@ -34,6 +34,8 @@ public final class Footprint {
     /** Corner offsets from the centre, x/z pairs: toe-left, heel-left, heel-right, toe-right. */
     public final float[] corners = new float[8];
     public float u0, v0, u1, v1;
+    /** Texture offset from one decay stage to the next. */
+    public float stageStep;
     public int light;
     public long lightTick = Long.MIN_VALUE;
 
@@ -56,9 +58,12 @@ public final class Footprint {
         corners[7] = -bz;
         // the shadow half of the atlas; the lip is the same cell in the right half (+0.5)
         u0 = shape.u0() * 0.5f;
-        v0 = shape.v0();
         u1 = shape.u1() * 0.5f;
-        v1 = shape.v1();
+        // stage 0 (fresh) is the top band of the atlas; worn stages lie below it, one band each
+        float band = 1f / FootprintAtlas.stages();
+        v0 = shape.v0() * band;
+        v1 = shape.v1() * band;
+        stageStep = band;
         lightTick = Long.MIN_VALUE;
     }
 
@@ -66,13 +71,24 @@ public final class Footprint {
         return nowTick - lightTick > LIGHT_TTL;
     }
 
-    /** 1 while fresh, fading to 0 over the last quarter of its life. */
-    public float fade(long nowTick) {
+    /**
+     * 1 while fresh, then down to 0 at the end of its life. With crumbling decay the print wears from the edges over
+     * the second half of its life ({@link #stage}) and only the last remains fade out; plain decay fades it over the
+     * last quarter.
+     */
+    public float fade(long nowTick, boolean crumble) {
         long age = nowTick - bornTick;
         if (age >= lifeTicks) return 0f;
-        float fadeStart = lifeTicks * 0.75f;
+        float fadeStart = lifeTicks * (crumble ? 0.9f : 0.75f);
         if (age <= fadeStart) return 1f;
         float t = (age - fadeStart) / (lifeTicks - fadeStart);
         return 1f - t * t * (3f - 2f * t);
+    }
+
+    /** Which worn copy of the print to draw: 0 for the first half of its life, then step by step to the last. */
+    public int stage(long nowTick, int stages) {
+        float progress = ((nowTick - bornTick) / (float) lifeTicks - 0.5f) * 2f;
+        if (progress <= 0f) return 0;
+        return Math.min(stages - 1, 1 + (int) (progress * (stages - 1)));
     }
 }

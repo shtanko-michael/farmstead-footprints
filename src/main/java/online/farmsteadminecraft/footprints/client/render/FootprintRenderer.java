@@ -89,6 +89,7 @@ public final class FootprintRenderer {
     /** Prints that passed the distance, fade and view-cone tests this frame, with their alpha. */
     private static int[] visible = new int[256];
     private static float[] alphas = new float[256];
+    private static int[] stages = new int[256];
     private static int visibleCount;
     /** cos of the widest angle from the view direction a print may sit at and still be drawn (80°). */
     private static final float CONE_COS = 0.17f;
@@ -109,13 +110,14 @@ public final class FootprintRenderer {
             float y = (float) (p.y - camera.y) + LIFT + (n & 15) * 0.0004f;
             float[] c = p.corners;
             int light = p.light;
+            float dv = stages[n] * p.stageStep, v0 = p.v0 + dv, v1 = p.v1 + dv;
             // the hollow's shadow (left half of the atlas)
             int rgb = p.shadowRgb, a = Math.min(255, (int) (alphas[n] * 255));
             int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF;
-            vertex(vc, matrix, cx + c[0], y, cz + c[1], p.u0, p.v0, r, g, b, a, light);
-            vertex(vc, matrix, cx + c[2], y, cz + c[3], p.u0, p.v1, r, g, b, a, light);
-            vertex(vc, matrix, cx + c[4], y, cz + c[5], p.u1, p.v1, r, g, b, a, light);
-            vertex(vc, matrix, cx + c[6], y, cz + c[7], p.u1, p.v0, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[0], y, cz + c[1], p.u0, v0, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[2], y, cz + c[3], p.u0, v1, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[4], y, cz + c[5], p.u1, v1, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[6], y, cz + c[7], p.u1, v0, r, g, b, a, light);
             if (p.rim <= 0f) continue;
             // the lip around it (right half), a hair higher
             float yr = y + 0.0002f;
@@ -124,10 +126,10 @@ public final class FootprintRenderer {
             r = (rgb >> 16) & 0xFF;
             g = (rgb >> 8) & 0xFF;
             b = rgb & 0xFF;
-            vertex(vc, matrix, cx + c[0], yr, cz + c[1], p.u0 + 0.5f, p.v0, r, g, b, a, light);
-            vertex(vc, matrix, cx + c[2], yr, cz + c[3], p.u0 + 0.5f, p.v1, r, g, b, a, light);
-            vertex(vc, matrix, cx + c[4], yr, cz + c[5], p.u1 + 0.5f, p.v1, r, g, b, a, light);
-            vertex(vc, matrix, cx + c[6], yr, cz + c[7], p.u1 + 0.5f, p.v0, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[0], yr, cz + c[1], p.u0 + 0.5f, v0, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[2], yr, cz + c[3], p.u0 + 0.5f, v1, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[4], yr, cz + c[5], p.u1 + 0.5f, v1, r, g, b, a, light);
+            vertex(vc, matrix, cx + c[6], yr, cz + c[7], p.u1 + 0.5f, v0, r, g, b, a, light);
         }
         lastDrawn = visibleCount;
     }
@@ -136,7 +138,10 @@ public final class FootprintRenderer {
         if (visible.length < prints.length) {
             visible = new int[prints.length];
             alphas = new float[prints.length];
+            stages = new int[prints.length];
         }
+        boolean crumble = FootprintsConfig.DECAY.get() == FootprintsConfig.Decay.CRUMBLE;
+        int stageCount = FootprintAtlas.stages();
         long now = level.getGameTime();
         double maxSq = (double) FootprintsConfig.RENDER_DISTANCE.value() * FootprintsConfig.RENDER_DISTANCE.value();
         float opacity = FootprintsConfig.OPACITY.floatValue();
@@ -152,7 +157,7 @@ public final class FootprintRenderer {
             double dot = dx * look.x() + dy * look.y() + dz * look.z();
             double len2 = distSq + dy * dy;
             if (len2 > 9.0 && (dot < 0 || dot * dot < CONE_COS * CONE_COS * len2)) continue;
-            float alpha = p.depth * p.fade(now) * opacity;
+            float alpha = p.depth * p.fade(now, crumble) * opacity;
             if (alpha <= 0.01f) continue;
             if (p.lightStale(now)) {
                 p.light = light(level, p);
@@ -160,6 +165,7 @@ public final class FootprintRenderer {
             }
             visible[count] = i;
             alphas[count] = alpha;
+            stages[count] = crumble ? p.stage(now, stageCount) : 0;
             count++;
         }
         visibleCount = count;

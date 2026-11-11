@@ -58,6 +58,8 @@ public final class FootprintsConfig {
         .comment("Prints under open sky age this many times faster while it rains or snows. 1: weather does nothing.");
     public static final EnumValue<Dust> DUST = FILE.choice("effects", "dust", Dust.ALL)
         .comment("A puff of snow, sand or dust from under the feet on loose ground.");
+    public static final EnumValue<Decay> DECAY = FILE.choice("effects", "decay", Decay.CRUMBLE)
+        .comment("How old prints go: CRUMBLE wears them from the edges in over the second half of their life, FADE just fades them out.");
 
     public static final DoubleValue HARDNESS = FILE.number("surfaces", "hardnessGate", 0.7, 0.0, 5.0)
         .comment("Any block softer than this takes prints, so modded soil and sand work out of the box "
@@ -76,6 +78,8 @@ public final class FootprintsConfig {
     public enum Sneaking { SHALLOW, NONE }
 
     public enum Dust { OFF, PLAYERS, ALL }
+
+    public enum Decay { CRUMBLE, FADE }
 
     static {
         FILE.preset("vanilla_plus", Map.of(
