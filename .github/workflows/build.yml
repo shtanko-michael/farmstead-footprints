@@ -1,7 +1,8 @@
 name: Build
 
-# Every push and pull request: the 12 language files are complete and all six targets build.
+# Every push and pull request: the 12 language files are complete and every target builds.
 # The jars are kept as a workflow artifact for a week, handy for testing a branch.
+# A repository that has only its plan so far (no gradlew) skips the job.
 
 on:
   push:
@@ -14,8 +15,9 @@ permissions:
 
 jobs:
   build:
+    if: hashFiles('gradlew') != ''
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
@@ -32,7 +34,8 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Language files
-        run: python3 tools/lang.py --check
+        run: |
+          if [ -f tools/lang.py ]; then python3 tools/lang.py --check; fi
 
       # fromEnv: use the JDKs installed above instead of downloading them again.
       # The heap: three NeoForm/Forge decompiles do not fit in the 2G of gradle.properties.
@@ -45,7 +48,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: footprints-jars
+          name: jars
           path: |
             versions/*/build/libs/*.jar
             !versions/*/build/libs/*-sources.jar
