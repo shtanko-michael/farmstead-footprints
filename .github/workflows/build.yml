@@ -15,7 +15,6 @@ permissions:
 
 jobs:
   build:
-    if: hashFiles('gradlew') != ''
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -24,6 +23,7 @@ jobs:
       # Gradle itself runs on 25 (Stonecutter 0.10); 17 and 21 are the toolchains of the
       # 1.20.1 and 1.21.1 targets. The last version listed becomes JAVA_HOME.
       - uses: actions/setup-java@v4
+        if: hashFiles('gradlew') != ''
         with:
           distribution: temurin
           java-version: |
@@ -32,14 +32,17 @@ jobs:
             25
 
       - uses: gradle/actions/setup-gradle@v4
+        if: hashFiles('gradlew') != ''
 
       - name: Language files
+        if: hashFiles('gradlew') != ''
         run: |
           if [ -f tools/lang.py ]; then python3 tools/lang.py --check; fi
 
       # fromEnv: use the JDKs installed above instead of downloading them again.
       # The heap: three NeoForm/Forge decompiles do not fit in the 2G of gradle.properties.
       - name: Build all targets
+        if: hashFiles('gradlew') != ''
         run: |
           chmod +x gradlew
           ./gradlew build --stacktrace --no-daemon \
@@ -47,6 +50,7 @@ jobs:
             -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g"
 
       - uses: actions/upload-artifact@v4
+        if: hashFiles('gradlew') != ''
         with:
           name: jars
           path: |
