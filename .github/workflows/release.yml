@@ -76,7 +76,7 @@ jobs:
           with open(os.environ["GITHUB_OUTPUT"], "a") as out:
               out.write(f"version={version}\n")
               out.write(f"name={mod['name']}\n")
-              out.write(f"file={mod['file']}\n")
+              out.write(f"file={mod.get('file', mod['id'])}\n")
               out.write(f"count={len(targets)}\n")
               out.write(f"matrix={json.dumps({'include': targets})}\n")
 
