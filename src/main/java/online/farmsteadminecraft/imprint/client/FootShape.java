@@ -5,15 +5,21 @@ package online.farmsteadminecraft.imprint.client;
  * and its size in blocks. Width is across the foot, length along the walking direction.
  */
 public enum FootShape {
-    BOOT_LEFT(0, 0.32f, 0.57f),
-    BOOT_RIGHT(1, 0.32f, 0.57f),
-    BARE_LEFT(2, 0.30f, 0.51f),
-    BARE_RIGHT(3, 0.30f, 0.51f),
-    PAW(4, 0.32f, 0.32f),
-    HOOF(5, 0.35f, 0.38f),
-    BIRD(6, 0.32f, 0.32f),
-    BIG_LEFT(7, 0.57f, 0.68f),
-    BIG_RIGHT(8, 0.57f, 0.68f);
+    // width/length follow each mask's aspect ratio (tools/build_footprints.py prints them)
+    BOOT_LEFT(0, 0.31f, 0.55f),
+    BOOT_RIGHT(1, 0.31f, 0.55f),
+    BARE_LEFT(2, 0.25f, 0.50f),
+    BARE_RIGHT(3, 0.25f, 0.50f),
+    PAW(4, 0.29f, 0.30f),
+    HOOF(5, 0.34f, 0.34f),
+    BIRD(6, 0.27f, 0.32f),
+    BIG_LEFT(7, 0.64f, 0.70f),
+    BIG_RIGHT(8, 0.64f, 0.70f),
+    CAT(9, 0.23f, 0.20f),
+    CLOVEN(10, 0.26f, 0.27f),
+    BEAR(11, 0.50f, 0.48f),
+    /** A shuffling, shallow print: anything that sneaks. */
+    SNEAK(12, 0.26f, 0.50f);
 
     public static final int GRID = 4;
 

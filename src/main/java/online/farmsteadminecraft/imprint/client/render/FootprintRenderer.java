@@ -27,11 +27,17 @@ import net.minecraft.client.renderer.RenderType;
 //?}
 
 /**
- * Draws every live footprint as one flat quad lying on the ground, all in a single batch.
- * Vertex positions are relative to the camera so they stay precise far from the origin.
+ * Draws every live footprint as two translucent layers lying on the ground: first the hollow's
+ * shadow, then the pushed-up lip around it. Neither layer is opaque, so the block texture shows
+ * through and the print reads as pressed into the sand or snow rather than painted on it.
+ * Each layer is one batch for all prints. Vertex positions are relative to the camera so they
+ * stay precise far from the origin.
  */
 public final class FootprintRenderer {
-    public static final ResourceLocation TEXTURE = Imprint.id("textures/footprints.png");
+    public static final ResourceLocation SHADOW = Imprint.id("textures/footprints_shadow.png");
+    public static final ResourceLocation RIM = Imprint.id("textures/footprints_rim.png");
+    /** The print takes this share of its texture cell; the rest is room for the lip. */
+    private static final float CELL_FILL = 0.80f;
     private static final float LIFT = 0.012f;
     /** Quads drawn in the last frame; shown by debug output and test hooks. */
     public static int lastDrawn;
@@ -40,11 +46,11 @@ public final class FootprintRenderer {
     private FootprintRenderer() {
     }
 
-    public static RenderType renderType() {
+    public static RenderType renderType(ResourceLocation texture) {
         //? if >=26.1 {
-        /*return RenderTypes.entityTranslucent(TEXTURE);
+        /*return RenderTypes.entityTranslucent(texture);
         *///?} else
-        return RenderType.entityTranslucent(TEXTURE);
+        return RenderType.entityTranslucent(texture);
     }
 
     //? if <26.1 {
@@ -59,9 +65,12 @@ public final class FootprintRenderer {
         if (level == null || !ImprintConfig.enabled || ImprintClient.POOL.alive() == 0) return;
         Matrix4f matrix = new Matrix4f(view);
         MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
-        RenderType type = renderType();
-        emit(buffers.getBuffer(type), matrix, camera, level);
-        buffers.endBatch(type);
+        RenderType shadow = renderType(SHADOW);
+        emit(buffers.getBuffer(shadow), matrix, camera, level, false);
+        buffers.endBatch(shadow);
+        RenderType rim = renderType(RIM);
+        emit(buffers.getBuffer(rim), matrix, camera, level, true);
+        buffers.endBatch(rim);
     }
     //?} else {
     /*/^* 26+ path: hand our geometry to the frame's submit collector. ^/
@@ -69,25 +78,27 @@ public final class FootprintRenderer {
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null || !ImprintConfig.enabled || ImprintClient.POOL.alive() == 0) return;
         Matrix4f matrix = new Matrix4f(pose.last().pose());
-        collector.submitCustomGeometry(pose, renderType(), (p, vc) -> emit(vc, matrix, camera, level));
+        collector.submitCustomGeometry(pose, renderType(SHADOW), (p, vc) -> emit(vc, matrix, camera, level, false));
+        collector.submitCustomGeometry(pose, renderType(RIM), (p, vc) -> emit(vc, matrix, camera, level, true));
     }
     *///?}
 
-    private static void emit(VertexConsumer vc, Matrix4f matrix, Vec3 camera, ClientLevel level) {
+    private static void emit(VertexConsumer vc, Matrix4f matrix, Vec3 camera, ClientLevel level, boolean rim) {
         long now = level.getGameTime();
         double maxSq = ImprintConfig.renderDistance * ImprintConfig.renderDistance;
         int[] order = {0};
-        frames++;
+        if (!rim) frames++;
         ImprintClient.POOL.forEachAlive(p -> {
             double dx = p.x - camera.x, dz = p.z - camera.z;
             if (dx * dx + dz * dz > maxSq) return;
             float alpha = p.depth * p.fade(now) * ImprintConfig.opacity;
             if (alpha <= 0.01f) return;
             // A tiny per-print lift keeps overlapping prints from z-fighting each other
-            float y = (float) (p.y - camera.y) + LIFT + (order[0]++ % 16) * 0.0004f;
-            quad(vc, matrix, p, (float) dx, y, (float) dz, alpha, light(level, p));
+            float y = (float) (p.y - camera.y) + LIFT + (order[0]++ % 16) * 0.0004f + (rim ? 0.0002f : 0f);
+            quad(vc, matrix, p, (float) dx, y, (float) dz, rim ? alpha * 0.85f : alpha,
+                rim ? p.rimRgb : p.shadowRgb, light(level, p));
         });
-        lastDrawn = order[0];
+        if (!rim) lastDrawn = order[0];
     }
 
     private static int light(ClientLevel level, Footprint p) {
@@ -98,13 +109,16 @@ public final class FootprintRenderer {
         return LevelRenderer.getLightColor(level, pos);
     }
 
-    private static void quad(VertexConsumer vc, Matrix4f m, Footprint p, float cx, float y, float cz, float alpha, int light) {
+    private static void quad(VertexConsumer vc, Matrix4f m, Footprint p, float cx, float y, float cz, float alpha,
+                             int rgb, int light) {
         FootShape s = p.shape;
         double rad = Math.toRadians(p.yaw);
         float fx = (float) -Math.sin(rad), fz = (float) Math.cos(rad);
         float rx = (float) -Math.cos(rad), rz = (float) -Math.sin(rad);
-        float hl = s.length * p.scale * 0.5f, hw = s.width * p.scale * 0.5f;
-        int r = (p.rgb >> 16) & 0xFF, g = (p.rgb >> 8) & 0xFF, b = p.rgb & 0xFF, a = (int) (alpha * 255);
+        // texture cells are square, the print fills CELL_FILL of the longer side
+        float half = Math.max(s.width, s.length) * p.scale * 0.5f / CELL_FILL;
+        float hl = half, hw = half;
+        int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF, a = Math.min(255, (int) (alpha * 255));
         // toe-left, heel-left, heel-right, toe-right (counter-clockwise seen from above)
         vertex(vc, m, cx + fx * hl - rx * hw, y, cz + fz * hl - rz * hw, s.u0(), s.v0(), r, g, b, a, light);
         vertex(vc, m, cx - fx * hl - rx * hw, y, cz - fz * hl - rz * hw, s.u0(), s.v1(), r, g, b, a, light);

@@ -21,6 +21,7 @@ public final class StepTracker {
 
     private final Int2ObjectMap<Track> tracks = new Int2ObjectOpenHashMap<>();
     private final FootprintPool pool;
+    private final java.util.Random random = new java.util.Random();
 
     public StepTracker(FootprintPool pool) {
         this.pool = pool;
@@ -120,29 +121,47 @@ public final class StepTracker {
         Surface surface = Surfaces.of(state);
         if (surface == null) return;
         Footprint p = pool.add();
-        p.x = x;
+        // no two prints alike: a few degrees, a few percent, a few millimetres
+        p.x = x + (random.nextFloat() - 0.5f) * 0.06f;
         p.y = y;
-        p.z = z;
-        p.yaw = yaw;
-        p.shape = shape;
-        p.scale = profile.scale();
-        p.depth = surface.depth() * (e.isShiftKeyDown() ? 0.6f : 1f);
-        p.rgb = tint(state.getMapColor(level, pos).col, surface.darken());
+        p.z = z + (random.nextFloat() - 0.5f) * 0.06f;
+        p.yaw = yaw + (random.nextFloat() - 0.5f) * 14f;
+        p.shape = e.isShiftKeyDown() && !profile.quadruped() ? FootShape.SNEAK : shape;
+        p.scale = profile.scale() * (0.92f + random.nextFloat() * 0.16f);
+        p.depth = surface.depth() * (e.isShiftKeyDown() ? 0.55f : 1f) * (0.85f + random.nextFloat() * 0.2f)
+            * (e.isSprinting() ? 1.1f : 1f);
+        int ground = state.getMapColor(level, pos).col;
+        p.shadowRgb = shadowColour(ground, surface);
+        p.rimRgb = rimColour(ground);
         p.bornTick = now;
-        p.lifeTicks = (int) Math.max(40, surface.lifeSecs() * 20 * ImprintConfig.lifetimeMultiplier);
+        p.lifeTicks = (int) Math.max(40, surface.lifeSecs() * 20 * ImprintConfig.lifetimeMultiplier
+            * (0.9f + random.nextFloat() * 0.2f));
+    }
+
+    private static float luminance(int rgb) {
+        return (0.299f * ((rgb >> 16) & 0xFF) + 0.587f * ((rgb >> 8) & 0xFF) + 0.114f * (rgb & 0xFF)) / 255f;
     }
 
     /**
-     * Vertex tint for a print. The texture darkens the floor of the print by up to half and
-     * keeps the rim at full value, so the tint is a little brighter than the ground: the rim
-     * reads as pushed-up edge, the floor as shadow. Dark ground (mud, soul soil) would swallow
-     * a shadow, so there the tint is lifted further and reads as a wet sheen instead.
+     * What the hollow darkens towards. Snow scatters skylight into its shadows, so they go blue;
+     * other ground keeps its own hue, darker. Dark ground has nothing to darken: there the hollow
+     * holds a film of water and is drawn lighter, as a wet sheen.
      */
-    private static int tint(int rgb, float darken) {
-        int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF;
-        float lum = (0.299f * r + 0.587f * g + 0.114f * b) / 255f;
-        float k = lum < 0.30f ? 2.1f : 1.0f - darken * 0.1f;
-        return (clamp(r * k) << 16) | (clamp(g * k) << 8) | clamp(b * k);
+    static int shadowColour(int ground, Surface surface) {
+        if (surface == Surface.SNOW) return 0x56688E;
+        if (luminance(ground) < 0.30f) return scale(ground, 2.3f, 38);
+        return scale(ground, 0.42f, 0);
+    }
+
+    /** The lip of pushed-up material catches more light than the flat ground around it. */
+    static int rimColour(int ground) {
+        if (luminance(ground) < 0.30f) return scale(ground, 0.7f, 0);
+        return scale(ground, 1.12f, 20);
+    }
+
+    private static int scale(int rgb, float k, int add) {
+        int r = clamp(((rgb >> 16) & 0xFF) * k + add), g = clamp(((rgb >> 8) & 0xFF) * k + add), b = clamp((rgb & 0xFF) * k + add);
+        return (r << 16) | (g << 8) | b;
     }
 
     private static int clamp(float v) {

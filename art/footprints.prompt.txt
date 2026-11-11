@@ -1,0 +1,19 @@
+Draw a texture sprite sheet for a Minecraft mod: footprint impressions left in the ground, seen from directly above.
+
+Layout: a 4 x 3 grid of equal square cells on a PURE WHITE background (#FFFFFF). No grid lines, no borders, no text, no numbers, no shadows outside the prints. Each cell holds exactly ONE print, centred, pointing UP (toes / front at the top of the cell), filling about 70% of the cell height, with clean white margin all around so cells never touch.
+
+Rendering: each print is a soft pressed-in hollow drawn in neutral greys only (no colour). The deepest parts (heel, ball of the foot, pads, hoof wall) are darkest charcoal; shallower parts are mid grey; the outline is crisp and readable when shrunk to 32 pixels. Slightly chunky, stylised, game-decal look that suits Minecraft — not photographic, no soil texture, no background.
+
+Cells, left to right, top to bottom:
+1. Left boot sole: chunky lug tread pattern (rows of rectangular lugs), separate heel block with a small gap before it.
+2. Right boot sole: exact mirror image of cell 1.
+3. Left bare human foot: big toe on the right side of this left foot, four smaller toes, ball of foot, arch narrowing, round heel.
+4. Right bare human foot: exact mirror image of cell 3.
+5. Wolf / dog paw: four oval toe pads in an arc above a triangular-lobed main pad, small claw dots above the two middle toes.
+6. Cat paw: like the dog paw but rounder, smaller and with no claw marks.
+7. Horse hoof: a U-shaped horseshoe-print rim, open at the bottom, with a V-shaped frog in the middle.
+8. Cloven hoof (cow, pig): two teardrop halves side by side with a narrow gap between them.
+9. Chicken / bird track: three thin forward toes spreading like an arrow and one short toe pointing back, with tiny claw tips.
+10. Giant golem foot: big round heavy print with three blunt square toes at the top, deep and dark.
+11. Bear paw: wide kidney-shaped main pad with five round toe pads in a row and five claw marks above them.
+12. Sneaking soft print: a blurred, shallow, oval smudge of a shoe, very light grey.

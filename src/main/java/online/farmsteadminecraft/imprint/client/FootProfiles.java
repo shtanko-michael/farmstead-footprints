@@ -31,9 +31,11 @@ public final class FootProfiles {
         for (String id : new String[]{"cat", "ocelot", "creeper"}) {
             BY_ID.put("minecraft:" + id, FootProfile.SMALL_PAW);
         }
-        for (String id : new String[]{"horse", "donkey", "mule", "skeleton_horse", "zombie_horse", "cow",
-                "mooshroom", "llama", "trader_llama", "hoglin", "zoglin"}) {
+        for (String id : new String[]{"horse", "donkey", "mule", "skeleton_horse", "zombie_horse"}) {
             BY_ID.put("minecraft:" + id, FootProfile.HOOF);
+        }
+        for (String id : new String[]{"cow", "mooshroom", "llama", "trader_llama", "hoglin", "zoglin"}) {
+            BY_ID.put("minecraft:" + id, FootProfile.CLOVEN);
         }
         for (String id : new String[]{"pig", "sheep", "goat"}) {
             BY_ID.put("minecraft:" + id, FootProfile.SMALL_HOOF);

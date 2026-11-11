@@ -6,7 +6,10 @@ public final class Footprint {
     public float yaw;
     public float scale;
     public FootShape shape;
-    public int rgb;
+    /** Colour the hollow darkens the ground towards (bluish on snow, warm on sand). */
+    public int shadowRgb;
+    /** Colour of the displaced lip around the hollow. */
+    public int rimRgb;
     public float depth;
     public long bornTick;
     public int lifeTicks;
