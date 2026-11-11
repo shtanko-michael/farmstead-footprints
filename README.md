@@ -1,3 +1,7 @@
+<p align="center"><img src="docs/media/logo.png" width="560" alt="Footprints by Farmstead"></p>
+
+<p align="center"><img src="docs/media/banner.webp" width="100%" alt="A polar bear walks toward a sunlit cliff, leaving paw prints in the snow"></p>
+
 # Footprints
 
 **Realistic footprints for players and mobs.** Walk through snow, sand or mud and your steps stay behind you, pressed into the ground, lit like the blocks around them, fading over time. Wolves leave paw prints, horses leave hooves, chickens leave three-toed scratches. Client-side: install it and it works on any server, vanilla included.
@@ -7,6 +11,17 @@
 [![License: MIT](https://img.shields.io/badge/code-MIT-blue)](LICENSE)
 
 By [Farmstead](https://farmsteadminecraft.online). Русская версия — [README.ru.md](README.ru.md).
+
+## See it
+
+| | |
+| --- | --- |
+| ![A trail toward the mountains](docs/media/gifs/snow_hero.gif) | ![A wolf pack in fresh snow](docs/media/gifs/wolves.gif) |
+| Your trail grows behind you | Every mob has its own tracks |
+| ![Camel and player on red sand](docs/media/gifs/savanna.gif) | ![Chicken prints up close](docs/media/gifs/chicken.gif) |
+| Sand, red sand, mud, gravel, soil | Down to the smallest feet |
+
+More pictures in [docs/media/gallery](docs/media/gallery).
 
 ## Features
 

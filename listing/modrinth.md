@@ -10,6 +10,14 @@ And it is not only you. **47 mobs** leave their own tracks: wolves trot past in 
 
 ---
 
+## ✦ See it
+
+![Your trail grows behind you](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/snow_hero.gif)
+![A wolf pack leaves a carpet of paw prints](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/wolves.gif)
+![A camel and a player cross the red sand](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/savanna.gif)
+![Three-toed chicken prints up close](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/chicken.gif)
+![From above: a bear, a wolf and a camel, each with its own gait](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/gait.gif)
+
 ## ✦ What makes it different
 
 - **Pressed in, not painted on.** Each print is two layers, a shadowed hollow and a lit lip, so the block texture shows through. Snow gets cold blue shadows, sand darkens, dark mud takes a wet sheen.

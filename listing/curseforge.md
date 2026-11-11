@@ -1,4 +1,4 @@
-![Footprints — a polar bear walks into the sunset, leaving a trail of paw prints](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/banner.webp)
+![Footprints — a polar bear walks into the sunset, leaving a trail of paw prints](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/banner.gif)
 
 # Your steps stay behind you
 
@@ -7,6 +7,14 @@
 And it is not only you. **47 mobs** leave their own tracks: wolves trot past in a carpet of paw prints, horses leave hooves, camels two-toed pads, polar bears huge clawed paws, chickens tiny three-toed scratches.
 
 **Client-side.** Install it and it works on any server, vanilla included. No server mod, no resource pack.
+
+## See it
+
+![Your trail grows behind you](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/snow_hero.gif)
+![A wolf pack leaves a carpet of paw prints](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/wolves.gif)
+![A camel and a player cross the red sand](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/savanna.gif)
+![Three-toed chicken prints up close](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/chicken.gif)
+![From above: a bear, a wolf and a camel, each with its own gait](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/gait.gif)
 
 ## What makes it different
 

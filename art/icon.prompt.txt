@@ -1,0 +1,11 @@
+Square app icon for a Minecraft mod called "Footprints", 1024x1024 pixels.
+
+Style: Minecraft pixel art. Crisp square pixels, a limited palette, flat shading in a few steps, no smooth gradients, no anti-aliasing blur, no photorealism.
+
+Composition: one big isometric Minecraft snow block (snowy white top with cool blue-grey shading, brown dirt sides with the classic grass-block-like snowy overhang) filling about 70% of the canvas, centred, slightly from above so the top face is large. Pressed into the top face of the snow is a short diagonal trail crossing it from the front-left corner to the back-right corner: three human bare footprints alternating left and right, and next to them a line of four small wolf paw prints. The prints are hollows: cold blue shadow inside, a lighter raised rim on the far edge.
+
+Background: dark night green-black (#0e100e at the corners to #1f2326 behind the block), a soft round glow behind the block. A warm golden sunset rim light (#f1c30c) catches the top-right edges of the block; three or four tiny aqua (#55ffff) snow sparkles in the air.
+
+Must read clearly at 64x64: big shapes, strong contrast, nothing small or busy.
+
+No text, no letters, no numbers, no logo, no frame or border, no watermark.

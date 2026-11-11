@@ -1,3 +1,7 @@
+<p align="center"><img src="docs/media/logo.png" width="560" alt="Footprints by Farmstead"></p>
+
+<p align="center"><img src="docs/media/banner.webp" width="100%" alt="Белый медведь идёт к освещённой скале и оставляет следы на снегу"></p>
+
 # Footprints
 
 **Реалистичные следы игроков и мобов.** Пройдите по снегу, песку или грязи — шаги останутся позади: вдавленные в землю, освещённые так же, как блоки вокруг, и постепенно исчезающие. Волки оставляют отпечатки лап, лошади — копыт, куры — трёхпалые царапины. Мод клиентский: поставили — и он работает на любом сервере, включая ванильный.
@@ -7,6 +11,17 @@
 [![License: MIT](https://img.shields.io/badge/code-MIT-blue)](LICENSE)
 
 От [Farmstead](https://farmsteadminecraft.online). English version — [README.md](README.md).
+
+## Как это выглядит
+
+| | |
+| --- | --- |
+| ![A trail toward the mountains](docs/media/gifs/snow_hero.gif) | ![A wolf pack in fresh snow](docs/media/gifs/wolves.gif) |
+| Цепочка следов растёт за вами | У каждого моба свои следы |
+| ![Camel and player on red sand](docs/media/gifs/savanna.gif) | ![Chicken prints up close](docs/media/gifs/chicken.gif) |
+| Песок, красный песок, грязь, гравий, земля | Даже самые маленькие лапки |
+
+Ещё картинки — в [docs/media/gallery](docs/media/gallery).
 
 ## Возможности
 
