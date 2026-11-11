@@ -195,6 +195,7 @@ public final class StepTracker {
         p.bornTick = now;
         p.lifeTicks = (int) Math.max(40, surface.lifeSecs() * 20 * FootprintsConfig.LIFETIME.value()
             * (0.9f + random.nextFloat() * 0.2f));
+        p.prepare();
     }
 
     private static float luminance(int rgb) {

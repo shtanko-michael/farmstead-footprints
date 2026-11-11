@@ -49,12 +49,19 @@ public final class TestHooks {
         try (Stream<Path> files = Files.list(dir)) {
             for (Path req : files.toList()) {
                 String file = req.getFileName().toString();
-                if (file.endsWith(".shot")) {
+                if (file.endsWith(".bench")) {
+                    String secs = Files.readString(req).trim();
+                    Files.deleteIfExists(req);
+                    Bench.start(file.substring(0, file.length() - 6), secs.isEmpty() ? 10 : Integer.parseInt(secs));
+                } else if (file.endsWith(".shot")) {
                     Files.deleteIfExists(req);
                     shoot(mc, file.substring(0, file.length() - 5));
                 } else if (file.equals("config.open")) {
                     Files.deleteIfExists(req);
                     FootprintsClient.openConfigNextTick();
+                } else if (file.equals("stress.fill")) {
+                    Files.deleteIfExists(req);
+                    stressFill(mc);
                 } else if (file.equals("prints.clear")) {
                     Files.deleteIfExists(req);
                     FootprintsClient.POOL.clear();
@@ -75,6 +82,32 @@ public final class TestHooks {
             new net.minecraft.client.multiplayer.ServerData("test", JOIN, false), false);
     }
     *///?}
+
+    /** Benchmark load: fills the whole pool with long-lived prints on the ground within 40 blocks of the player. */
+    private static void stressFill(Minecraft mc) {
+        if (mc.level == null || mc.player == null) return;
+        java.util.Random rnd = new java.util.Random(42);
+        FootShape[] shapes = FootShape.values();
+        long now = mc.level.getGameTime();
+        int n = FootprintsClient.POOL.capacity();
+        for (int i = 0; i < n; i++) {
+            double x = mc.player.getX() + (rnd.nextDouble() - 0.5) * 80, z = mc.player.getZ() + (rnd.nextDouble() - 0.5) * 80;
+            Footprint p = FootprintsClient.POOL.add();
+            p.x = x;
+            p.z = z;
+            p.y = mc.level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, (int) Math.floor(x), (int) Math.floor(z));
+            p.yaw = rnd.nextFloat() * 360f;
+            p.shape = shapes[rnd.nextInt(shapes.length - 1)];
+            p.scale = 1f;
+            p.depth = 0.8f;
+            p.shadowRgb = 0x6B5A3A;
+            p.rimRgb = 0xE0D2A8;
+            p.bornTick = now;
+            p.lifeTicks = 20 * 60 * 30;
+            p.prepare();
+        }
+        Footprints.LOGGER.info("test hook stress: {} prints", FootprintsClient.POOL.alive());
+    }
 
     private static void shoot(Minecraft mc, String name) {
         File gameDir = mc.gameDirectory;

@@ -57,6 +57,11 @@ public final class FootprintPool {
         alive = 0;
     }
 
+    /** The backing array, for the renderer's tight loop; check {@link Footprint#alive}. */
+    public Footprint[] array() {
+        return prints;
+    }
+
     public int alive() {
         return alive;
     }

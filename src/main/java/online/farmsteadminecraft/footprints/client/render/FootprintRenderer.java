@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import online.farmsteadminecraft.footprints.Footprints;
-import online.farmsteadminecraft.footprints.client.FootShape;
 import online.farmsteadminecraft.footprints.client.Footprint;
 import online.farmsteadminecraft.footprints.client.FootprintsClient;
 import online.farmsteadminecraft.footprints.client.FootprintsConfig;
@@ -36,8 +35,6 @@ import net.minecraft.client.renderer.RenderType;
 public final class FootprintRenderer {
     public static final ResourceLocation SHADOW = Footprints.id("textures/footprints_shadow.png");
     public static final ResourceLocation RIM = Footprints.id("textures/footprints_rim.png");
-    /** The print takes this share of its texture cell; the rest is room for the lip. */
-    private static final float CELL_FILL = 0.80f;
     private static final float LIFT = 0.012f;
     /** Quads drawn in the last frame; shown by debug output and test hooks. */
     public static int lastDrawn;
@@ -60,6 +57,7 @@ public final class FootprintRenderer {
      * model-view matrix the loaders expose from 1.20.5 on (their pose stack is identity there).
      */
     public static void renderImmediate(Matrix4f view, Vec3 camera) {
+        online.farmsteadminecraft.footprints.client.Bench.frame();
         Minecraft mc = Minecraft.getInstance();
         ClientLevel level = mc.level;
         if (level == null || !FootprintsConfig.ENABLED.on() || FootprintsClient.POOL.alive() == 0) return;
@@ -75,6 +73,7 @@ public final class FootprintRenderer {
     //?} else {
     /*/^* 26+ path: hand our geometry to the frame's submit collector. ^/
     public static void submit(SubmitNodeCollector collector, PoseStack pose, Vec3 camera) {
+        online.farmsteadminecraft.footprints.client.Bench.frame();
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null || !FootprintsConfig.ENABLED.on() || FootprintsClient.POOL.alive() == 0) return;
         Matrix4f matrix = new Matrix4f(pose.last().pose());
@@ -83,22 +82,76 @@ public final class FootprintRenderer {
     }
     *///?}
 
+    /** Prints that passed the distance, fade and view-cone tests this frame, with their alpha. */
+    private static int[] visible = new int[256];
+    private static float[] alphas = new float[256];
+    private static int visibleCount;
+    /** cos of the widest angle from the view direction a print may sit at and still be drawn (80°). */
+    private static final float CONE_COS = 0.17f;
+
+    /**
+     * The shadow pass picks the prints once (in reach, not faded out, not behind the camera) and refreshes
+     * stale light values; the rim pass reuses that list. Each print then costs four vertex writes per
+     * layer: corners, texture cell and light were worked out when it was placed.
+     */
     private static void emit(VertexConsumer vc, Matrix4f matrix, Vec3 camera, ClientLevel level, boolean rim) {
+        long t0 = online.farmsteadminecraft.footprints.client.Bench.now();
+        Footprint[] prints = FootprintsClient.POOL.array();
+        if (!rim) {
+            frames++;
+            collect(prints, camera, level);
+        }
+        float opacity = rim ? 0.85f : 1f;
+        float lift = LIFT + (rim ? 0.0002f : 0f);
+        for (int n = 0; n < visibleCount; n++) {
+            Footprint p = prints[visible[n]];
+            float cx = (float) (p.x - camera.x), cz = (float) (p.z - camera.z);
+            // a tiny per-print lift keeps overlapping prints from z-fighting each other
+            float y = (float) (p.y - camera.y) + lift + (n & 15) * 0.0004f;
+            int rgb = rim ? p.rimRgb : p.shadowRgb;
+            int a = Math.min(255, (int) (alphas[n] * opacity * 255));
+            int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF;
+            float[] c = p.corners;
+            vertex(vc, matrix, cx + c[0], y, cz + c[1], p.u0, p.v0, r, g, b, a, p.light);
+            vertex(vc, matrix, cx + c[2], y, cz + c[3], p.u0, p.v1, r, g, b, a, p.light);
+            vertex(vc, matrix, cx + c[4], y, cz + c[5], p.u1, p.v1, r, g, b, a, p.light);
+            vertex(vc, matrix, cx + c[6], y, cz + c[7], p.u1, p.v0, r, g, b, a, p.light);
+        }
+        if (!rim) lastDrawn = visibleCount;
+        online.farmsteadminecraft.footprints.client.Bench.render(t0, rim ? 0 : visibleCount);
+    }
+
+    private static void collect(Footprint[] prints, Vec3 camera, ClientLevel level) {
+        if (visible.length < prints.length) {
+            visible = new int[prints.length];
+            alphas = new float[prints.length];
+        }
         long now = level.getGameTime();
         double maxSq = (double) FootprintsConfig.RENDER_DISTANCE.value() * FootprintsConfig.RENDER_DISTANCE.value();
-        int[] order = {0};
-        if (!rim) frames++;
-        FootprintsClient.POOL.forEachAlive(p -> {
-            double dx = p.x - camera.x, dz = p.z - camera.z;
-            if (dx * dx + dz * dz > maxSq) return;
-            float alpha = p.depth * p.fade(now) * FootprintsConfig.OPACITY.floatValue();
-            if (alpha <= 0.01f) return;
-            // A tiny per-print lift keeps overlapping prints from z-fighting each other
-            float y = (float) (p.y - camera.y) + LIFT + (order[0]++ % 16) * 0.0004f + (rim ? 0.0002f : 0f);
-            quad(vc, matrix, p, (float) dx, y, (float) dz, rim ? alpha * 0.85f : alpha,
-                rim ? p.rimRgb : p.shadowRgb, light(level, p));
-        });
-        if (!rim) lastDrawn = order[0];
+        float opacity = FootprintsConfig.OPACITY.floatValue();
+        org.joml.Vector3f look = FootprintsClient.lookVector(Minecraft.getInstance());
+        int count = 0;
+        for (int i = 0; i < prints.length; i++) {
+            Footprint p = prints[i];
+            if (!p.alive) continue;
+            double dx = p.x - camera.x, dy = p.y - camera.y, dz = p.z - camera.z;
+            double distSq = dx * dx + dz * dz;
+            if (distSq > maxSq) continue;
+            // behind the camera or far out to the side: off screen whatever the field of view
+            double dot = dx * look.x() + dy * look.y() + dz * look.z();
+            double len2 = distSq + dy * dy;
+            if (len2 > 9.0 && (dot < 0 || dot * dot < CONE_COS * CONE_COS * len2)) continue;
+            float alpha = p.depth * p.fade(now) * opacity;
+            if (alpha <= 0.01f) continue;
+            if (p.lightStale(now)) {
+                p.light = light(level, p);
+                p.lightTick = now;
+            }
+            visible[count] = i;
+            alphas[count] = alpha;
+            count++;
+        }
+        visibleCount = count;
     }
 
     private static int light(ClientLevel level, Footprint p) {
@@ -107,23 +160,6 @@ public final class FootprintRenderer {
         /*return LightCoordsUtil.getLightCoords(level, pos);
         *///?} else
         return LevelRenderer.getLightColor(level, pos);
-    }
-
-    private static void quad(VertexConsumer vc, Matrix4f m, Footprint p, float cx, float y, float cz, float alpha,
-                             int rgb, int light) {
-        FootShape s = p.shape;
-        double rad = Math.toRadians(p.yaw);
-        float fx = (float) -Math.sin(rad), fz = (float) Math.cos(rad);
-        float rx = (float) -Math.cos(rad), rz = (float) -Math.sin(rad);
-        // texture cells are square, the print fills CELL_FILL of the longer side
-        float half = Math.max(s.width, s.length) * p.scale * 0.5f / CELL_FILL;
-        float hl = half, hw = half;
-        int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF, a = Math.min(255, (int) (alpha * 255));
-        // toe-left, heel-left, heel-right, toe-right (counter-clockwise seen from above)
-        vertex(vc, m, cx + fx * hl - rx * hw, y, cz + fz * hl - rz * hw, s.u0(), s.v0(), r, g, b, a, light);
-        vertex(vc, m, cx - fx * hl - rx * hw, y, cz - fz * hl - rz * hw, s.u0(), s.v1(), r, g, b, a, light);
-        vertex(vc, m, cx - fx * hl + rx * hw, y, cz - fz * hl + rz * hw, s.u1(), s.v1(), r, g, b, a, light);
-        vertex(vc, m, cx + fx * hl + rx * hw, y, cz + fz * hl + rz * hw, s.u1(), s.v0(), r, g, b, a, light);
     }
 
     private static void vertex(VertexConsumer vc, Matrix4f m, float x, float y, float z, float u, float v,

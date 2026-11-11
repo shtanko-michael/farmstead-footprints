@@ -32,6 +32,12 @@ public final class FootprintsClient {
     }
 
     public static void tick(Minecraft mc) {
+        long t0 = Bench.now();
+        tickInner(mc);
+        Bench.tick(t0);
+    }
+
+    private static void tickInner(Minecraft mc) {
         TestHooks.tick(mc);
         if (openConfig) {
             openConfig = false;
@@ -50,6 +56,14 @@ public final class FootprintsClient {
         long now = level.getGameTime();
         TRACKER.tick(level, cameraPos(mc), now);
         POOL.tick(now);
+    }
+
+    /** Unit vector the camera looks along. */
+    public static org.joml.Vector3f lookVector(Minecraft mc) {
+        //? if >=26.1 {
+        /*return new org.joml.Vector3f(mc.gameRenderer.mainCamera().forwardVector());
+        *///?} else
+        return new org.joml.Vector3f(mc.gameRenderer.getMainCamera().getLookVector());
     }
 
     public static Vec3 cameraPos(Minecraft mc) {
