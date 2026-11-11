@@ -105,6 +105,22 @@ jobs:
           - { mc: "1.20.1", loader: forge, loaders: "forge", games: "1.20.1", java: 17, title: "Forge 1.20.1" }
           - { mc: "1.21.1", loader: fabric, loaders: "fabric quilt", games: "1.21 1.21.1", java: 21, title: "Fabric 1.21.1" }
           - { mc: "1.21.1", loader: neoforge, loaders: "neoforge", games: "1.21 1.21.1", java: 21, title: "NeoForge 1.21.1" }
+          - { mc: "1.21.3", loader: fabric, loaders: "fabric quilt", games: "1.21.2 1.21.3", java: 21, title: "Fabric 1.21.3" }
+          - { mc: "1.21.3", loader: neoforge, loaders: "neoforge", games: "1.21.2 1.21.3", java: 21, title: "NeoForge 1.21.3" }
+          - { mc: "1.21.4", loader: fabric, loaders: "fabric quilt", games: "1.21.4", java: 21, title: "Fabric 1.21.4" }
+          - { mc: "1.21.4", loader: neoforge, loaders: "neoforge", games: "1.21.4", java: 21, title: "NeoForge 1.21.4" }
+          - { mc: "1.21.5", loader: fabric, loaders: "fabric quilt", games: "1.21.5", java: 21, title: "Fabric 1.21.5" }
+          - { mc: "1.21.5", loader: neoforge, loaders: "neoforge", games: "1.21.5", java: 21, title: "NeoForge 1.21.5" }
+          - { mc: "1.21.8", loader: fabric, loaders: "fabric quilt", games: "1.21.7 1.21.8", java: 21, title: "Fabric 1.21.8" }
+          - { mc: "1.21.8", loader: neoforge, loaders: "neoforge", games: "1.21.7 1.21.8", java: 21, title: "NeoForge 1.21.8" }
+          - { mc: "1.21.10", loader: fabric, loaders: "fabric quilt", games: "1.21.9 1.21.10", java: 21, title: "Fabric 1.21.10" }
+          - { mc: "1.21.10", loader: neoforge, loaders: "neoforge", games: "1.21.9 1.21.10", java: 21, title: "NeoForge 1.21.10" }
+          - { mc: "1.21.11", loader: fabric, loaders: "fabric quilt", games: "1.21.11", java: 21, title: "Fabric 1.21.11" }
+          - { mc: "1.21.11", loader: neoforge, loaders: "neoforge", games: "1.21.11", java: 21, title: "NeoForge 1.21.11" }
+          - { mc: "26.1", loader: fabric, loaders: "fabric quilt", games: "26.1 26.1.1 26.1.2", java: 25, title: "Fabric 26.1" }
+          - { mc: "26.1", loader: neoforge, loaders: "neoforge", games: "26.1 26.1.1 26.1.2", java: 25, title: "NeoForge 26.1" }
+          - { mc: "26.2", loader: fabric, loaders: "fabric quilt", games: "26.2", java: 25, title: "Fabric 26.2" }
+          - { mc: "26.2", loader: neoforge, loaders: "neoforge", games: "26.2", java: 25, title: "NeoForge 26.2" }
           - { mc: "26.3", loader: fabric, loaders: "fabric quilt", games: "26.3", java: 25, title: "Fabric 26.3" }
           - { mc: "26.3", loader: neoforge, loaders: "neoforge", games: "26.3", java: 25, title: "NeoForge 26.3" }
     # job-level env, because a step's `if:` cannot read secrets directly
