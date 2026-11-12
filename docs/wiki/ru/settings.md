@@ -4,7 +4,7 @@
 | --- | --- | --- | --- |
 | `preset` | `default` | `default`, `vanilla_plus`, `cinematic`, `performance` | Задаёт все значения ниже разом |
 | `general.enabled` | `true` | | Главный выключатель |
-| `general.checkUpdates` | `true` | | Один раз при запуске проверить новую версию на Modrinth (см. ниже) |
+| `general.checkUpdates` | `true` | | Один раз при запуске проверить новую версию на Modrinth (или CurseForge) (см. ниже) |
 | `footprints.players` | `true` | | Следы игроков, включая ваши |
 | `footprints.mobs` | `true` | | Следы животных и монстров |
 | `footprints.maxPrints` | `2048` | 64 – 16384 | Сколько следов живёт одновременно; первыми исчезают старые |

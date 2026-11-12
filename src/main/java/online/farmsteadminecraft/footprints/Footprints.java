@@ -10,6 +10,8 @@ public final class Footprints {
     public static final String NAME = "Footprints";
     /** Project slug on Modrinth: the start-up line links there and the update check asks it. */
     public static final String MODRINTH_SLUG = "farmstead-footprints";
+    /** CurseForge project id: the update check asks CurseForge when Modrinth cannot answer ("" to skip). */
+    public static final String CURSEFORGE_ID = "1799135";
     public static final Logger LOGGER = LoggerFactory.getLogger("Footprints");
     public static final String VERSION = /*$ mod_version*/"0.1.0";
     public static final String MINECRAFT = /*$ minecraft*/"1.21.1";
@@ -25,7 +27,13 @@ public final class Footprints {
     }
 
     public static void checkForUpdate() {
-        FarmsteadBrand.checkForUpdate(LOGGER, NAME, VERSION, ModLoaderAccess.get().loaderName(), MINECRAFT, MODRINTH_SLUG);
+        FarmsteadBrand.checkForUpdate(LOGGER, new FarmsteadBrand.Project(NAME, VERSION, ModLoaderAccess.get().loaderName(),
+            MINECRAFT, MODRINTH_SLUG, CURSEFORGE_ID));
+    }
+
+    /** The player switched the check off in the settings: one line saying so. */
+    public static void updateCheckOff() {
+        FarmsteadBrand.off(LOGGER, NAME);
     }
 
     /** {@code "minecraft:sand"} or {@code "sand"} to an id; null if malformed. */

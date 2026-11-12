@@ -2,6 +2,15 @@
 
 All notable changes to Footprints. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.1.2] — unreleased
+
+- Update check: the log now always gets exactly one line about it: the latest version (and the catalogue that said so), a newer version with its download link, or that Modrinth and CurseForge could not be reached (with a short reason, no stack trace). Before, only a newer version was logged, so a check that failed or found nothing was invisible.
+- Update check falls back to CurseForge when Modrinth cannot answer (unreachable, project not public, no versions for the loader and Minecraft version). The About tab shows which catalogue answered.
+- With `general.checkUpdates = false` or `-Dfarmstead.updateCheck=false` the log says `update check off`.
+- `/footprints stats` reported the last frame that had prints ("0 prints of 2048, drawn last frame: 142") after every print had faded; it now says 0.
+- The config file header named a command that does not exist (`/farmstead_footprints reload`); it now says `/footprints reload`.
+- Forge 1.20.1: no more "Reference map 'farmstead_footprints.refmap.json' ... could not be read" warning in every player's log (the jar registered an empty mixin config pointing at a refmap that is never built); the Fabric mixin config is no longer packed into the Forge jar.
+
 ## [0.1.1] — 2026-11-12
 
 - Settings screen on Minecraft 26.x: the title, the setting names and the About tab are centred again (26.x draws text widgets left-aligned).

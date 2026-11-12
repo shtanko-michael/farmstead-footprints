@@ -19,6 +19,7 @@ public final class FootprintsClient {
     public static void init() {
         FootprintsConfig.load();
         if (FootprintsConfig.CHECK_UPDATES.on()) online.farmsteadminecraft.footprints.Footprints.checkForUpdate();
+        else online.farmsteadminecraft.footprints.Footprints.updateCheckOff();
     }
 
     /** The settings screen, for the mod list (NeoForge/Forge) and Mod Menu (Fabric). */
@@ -28,6 +29,7 @@ public final class FootprintsClient {
         var extras = new online.farmsteadminecraft.footprints.config.ConfigScreen.Extras(
             online.farmsteadminecraft.footprints.Footprints.NAME, version,
             () -> online.farmsteadminecraft.footprints.brand.FarmsteadBrand.newerThan(version),
+            online.farmsteadminecraft.footprints.brand.FarmsteadBrand::source,
             java.util.List.of(
                 new online.farmsteadminecraft.footprints.config.ConfigScreen.Link("modrinth", "Modrinth page", "https://modrinth.com/mod/farmstead-footprints"),
                 new online.farmsteadminecraft.footprints.config.ConfigScreen.Link("curseforge", "CurseForge page", "https://www.curseforge.com/minecraft/mc-mods/farmstead-footprints"),

@@ -34,6 +34,8 @@ public final class ConfigFile {
     private final Map<String, Map<String, Object>> presets = new LinkedHashMap<>();
     private final Map<String, String> renamed = new LinkedHashMap<>();
     private String preset = "default";
+    /** The command named in the file header ({@code /<command> reload}); the mod id unless set. */
+    private String command;
 
     public ConfigFile(String modId, String side, int version) {
         this.modId = modId;
@@ -98,6 +100,12 @@ public final class ConfigFile {
     }
 
     /** A preset: {@code "section.key" -> value} overrides on top of the defaults. */
+    /** The mod's command, for the "reload in game" hint in the file header. */
+    public ConfigFile command(String name) {
+        this.command = name;
+        return this;
+    }
+
     public ConfigFile preset(String name, Map<String, Object> overrides) {
         presets.put(name, overrides);
         return this;
@@ -200,7 +208,7 @@ public final class ConfigFile {
         sb.append("# Pick a preset; lines starting with '#key' follow the preset.").append(NL);
         sb.append("# Remove the '#' in front of a key to set it yourself; your value then wins over the preset.").append(NL);
         sb.append("# Presets: ").append(String.join(", ", presets.keySet())).append(NL);
-        sb.append("# Reload in game with /").append(modId).append(" reload").append(NL).append(NL);
+        sb.append("# Reload in game with /").append(command != null ? command : modId).append(" reload").append(NL).append(NL);
         sb.append(PRESET_KEY).append(" = \"").append(preset).append('"').append(NL);
         sb.append(VERSION_KEY).append(" = ").append(version).append(NL);
         Map<String, Object> overrides = presets.getOrDefault(preset, Map.of());

@@ -77,7 +77,7 @@
 | --- | --- | --- | --- |
 | `preset` | `default` | `default`, `vanilla_plus`, `cinematic`, `performance` | Задаёт все значения ниже разом |
 | `general.enabled` | `true` | | Главный выключатель |
-| `general.checkUpdates` | `true` | | Один раз при запуске проверить новую версию на Modrinth (см. ниже) |
+| `general.checkUpdates` | `true` | | Один раз при запуске проверить новую версию на Modrinth (или CurseForge) (см. ниже) |
 | `footprints.players` | `true` | | Следы игроков, включая ваши |
 | `footprints.mobs` | `true` | | Следы животных и монстров |
 | `footprints.maxPrints` | `2048` | 64 – 16384 | Сколько следов живёт одновременно; первыми исчезают старые |
@@ -119,13 +119,21 @@
 
 ## Проверка обновлений и приватность
 
-При запуске игры Footprints пишет в лог одну строку:
+При запуске игры Footprints пишет в лог строку о старте:
 
 ```
 [Farmstead] Footprints 0.1.0 started (neoforge, Minecraft 1.21.1) - https://modrinth.com/mod/farmstead-footprints
 ```
 
-Затем один раз за сессию, в фоне, он спрашивает публичный API Modrinth, нет ли более новой версии для вашего загрузчика и версии Minecraft. Если есть — пишет об этом в лог со ссылкой на скачивание. В запросе нет никаких данных о вас, вашем мире или сервере; ничего не скачивается и не устанавливается. Выключить: `general.checkUpdates = false`, а для всех модов Farmstead сразу — флаг JVM `-Dfarmstead.updateCheck=false` или переменная окружения `FARMSTEAD_UPDATE_CHECK=false`.
+Затем один раз за сессию, в фоне, он спрашивает публичный API Modrinth, нет ли более новой версии для вашего загрузчика и версии Minecraft, а если Modrinth не отвечает — CurseForge. При любом ответе в лог попадает ровно одна строка:
+
+```
+[Farmstead] Footprints 0.1.1 is the latest version (checked on Modrinth)
+[Farmstead] Footprints 0.1.2 is available, this is 0.1.1. Download: https://modrinth.com/mod/farmstead-footprints/version/...
+[Farmstead] Footprints update check: could not reach Modrinth or CurseForge (...)
+```
+
+Тот же результат и каталог, который ответил, видны на вкладке «О моде» в настройках. В запросе нет никаких данных о вас, вашем мире или сервере; ничего не скачивается и не устанавливается, а неудачная проверка никогда не мешает игре. Выключить: `general.checkUpdates = false`, а для всех модов Farmstead сразу — флаг JVM `-Dfarmstead.updateCheck=false` или переменная окружения `FARMSTEAD_UPDATE_CHECK=false`; тогда в логе будет `[Farmstead] Footprints update check off`.
 
 ## Совместимость
 

@@ -73,7 +73,11 @@ public final class FootprintRenderer {
         if (pass != PASS_WATER) online.farmsteadminecraft.footprints.client.Bench.frame();
         Minecraft mc = Minecraft.getInstance();
         ClientLevel level = mc.level;
-        if (level == null || !FootprintsConfig.ENABLED.on() || FootprintsClient.POOL.alive() == 0) return;
+        if (level == null || !FootprintsConfig.ENABLED.on() || FootprintsClient.POOL.alive() == 0) {
+            // nothing drawn: /footprints stats must not keep showing the last frame that had prints
+            lastDrawn = 0;
+            return;
+        }
         long t0 = online.farmsteadminecraft.footprints.client.Bench.now();
         Matrix4f matrix = new Matrix4f(view);
         MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
@@ -97,7 +101,11 @@ public final class FootprintRenderer {
     public static void submit(SubmitNodeCollector collector, PoseStack pose, Vec3 camera) {
         online.farmsteadminecraft.footprints.client.Bench.frame();
         ClientLevel level = Minecraft.getInstance().level;
-        if (level == null || !FootprintsConfig.ENABLED.on() || FootprintsClient.POOL.alive() == 0) return;
+        if (level == null || !FootprintsConfig.ENABLED.on() || FootprintsClient.POOL.alive() == 0) {
+            // nothing drawn: /footprints stats must not keep showing the last frame that had prints
+            lastDrawn = 0;
+            return;
+        }
         Matrix4f matrix = new Matrix4f(pose.last().pose());
         FootprintAtlas.ensure();
         long t0 = online.farmsteadminecraft.footprints.client.Bench.now();

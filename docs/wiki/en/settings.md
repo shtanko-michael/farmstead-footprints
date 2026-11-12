@@ -4,7 +4,7 @@ Open them from Mod Menu (Fabric) or the mod list (NeoForge, Forge), type `/footp
 | --- | --- | --- | --- |
 | `preset` | `default` | `default`, `vanilla_plus`, `cinematic`, `performance` | Sets every value below at once |
 | `general.enabled` | `true` | | Master switch |
-| `general.checkUpdates` | `true` | | Look for a newer version on Modrinth once at start-up (see below) |
+| `general.checkUpdates` | `true` | | Look for a newer version on Modrinth (or CurseForge) once at start-up (see below) |
 | `footprints.players` | `true` | | Prints of players, yourself included |
 | `footprints.mobs` | `true` | | Prints of animals and monsters |
 | `footprints.maxPrints` | `2048` | 64 – 16384 | Prints alive at once; the oldest go first |

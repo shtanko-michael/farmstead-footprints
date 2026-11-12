@@ -15,12 +15,12 @@ import online.farmsteadminecraft.footprints.config.StringListValue;
 
 /** {@code config/farmstead_footprints-client.toml}: every client setting, its comment, range and presets. */
 public final class FootprintsConfig {
-    public static final ConfigFile FILE = new ConfigFile(Footprints.MOD_ID, "client", 1);
+    public static final ConfigFile FILE = new ConfigFile(Footprints.MOD_ID, "client", 1).command("footprints");
 
     public static final BoolValue ENABLED = FILE.bool("general", "enabled", true)
         .comment("Master switch. Off: no prints are made or drawn.");
     public static final BoolValue CHECK_UPDATES = FILE.bool("general", "checkUpdates", true)
-        .comment("Once at start-up, ask Modrinth whether a newer Footprints is out and say so in the log. Sends nothing about you.");
+        .comment("Once at start-up, ask Modrinth (or CurseForge if Modrinth does not answer) whether a newer Footprints is out and say so in the log. Sends nothing about you.");
 
     public static final BoolValue PLAYERS = FILE.bool("footprints", "players", true)
         .comment("Prints of players, yourself included.");
