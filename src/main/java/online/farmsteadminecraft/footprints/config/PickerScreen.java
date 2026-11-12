@@ -90,7 +90,7 @@ public class PickerScreen extends Screen {
     @Override
     protected void init() {
         int center = width / 2;
-        addRenderableWidget(new StringWidget(0, 8, width, 12, title, font));
+        addRenderableWidget(new StringWidget((width - Math.min(width, font.width(title))) / 2, 8, Math.min(width, font.width(title)), 12, title, font));
         search = new EditBox(font, center - 150, 26, 220, 20, Component.literal("search"));
         search.setValue(query);
         search.setResponder(s -> {

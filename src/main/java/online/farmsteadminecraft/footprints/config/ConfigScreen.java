@@ -77,7 +77,7 @@ public class ConfigScreen extends Screen {
         if (extras != null) tabs.add(ABOUT);
         if (tab == null || !tabs.contains(tab)) tab = tabs.get(0);
         int center = width / 2;
-        addRenderableWidget(new StringWidget(0, 6, width, 12, title, font));
+        addRenderableWidget(centered(0, 6, width, title));
 
         // tabs
         int tabW = Math.min(110, (width - 20) / tabs.size());
@@ -118,7 +118,7 @@ public class ConfigScreen extends Screen {
             for (int i = from; i < to; i++) {
                 ConfigValue<?> v = values.get(i);
                 int y = top + (i - from) * ROW;
-                addRenderableWidget(new StringWidget(labelX, y + 5, labelW, 12, name(v), font));
+                addRenderableWidget(centered(labelX, y + 5, labelW, name(v)));
                 for (AbstractWidget control : controls(v, controlX, y)) {
                     control.setTooltip(Tooltip.create(tooltip(v)));
                     addRenderableWidget(control);
@@ -159,14 +159,14 @@ public class ConfigScreen extends Screen {
 
     private void about(int center) {
         int y = 54;
-        addRenderableWidget(new StringWidget(0, y, width, 12, Component.literal(extras.name() + " " + extras.version()), font));
+        addRenderableWidget(centered(0, y, width, Component.literal(extras.name() + " " + extras.version())));
         String latest = extras.latest().get();
         Component status = latest == null
             ? text("about.unknown", "Update check: not done (switched off, or no answer from Modrinth)")
             : latest.isEmpty()
                 ? text("about.current", "You have the latest version.")
                 : Component.translatableWithFallback("config." + file.modId() + ".about.newer", "A newer version is out: %s", latest);
-        addRenderableWidget(new StringWidget(0, y + 16, width, 12, status, font));
+        addRenderableWidget(centered(0, y + 16, width, status));
         y += 40;
         for (Link link : extras.links()) {
             addRenderableWidget(Button.builder(text("about." + link.key(), link.fallback()), b -> openLink(link.url()))
@@ -304,6 +304,12 @@ public class ConfigScreen extends Screen {
     static String pretty(String key) {
         String spaced = key.replace('_', ' ').replaceAll("([a-z])([A-Z])", "$1 $2").toLowerCase(Locale.ROOT);
         return spaced.isEmpty() ? key : Character.toUpperCase(spaced.charAt(0)) + spaced.substring(1);
+    }
+
+    /** Text centred in a box: 26.x StringWidget draws left-aligned, so the widget is sized to the text. */
+    private StringWidget centered(int x, int y, int w, Component text) {
+        int tw = Math.min(w, font.width(text));
+        return new StringWidget(x + (w - tw) / 2, y, tw, 12, text, font);
     }
 
     private static final class Slider extends AbstractSliderButton {

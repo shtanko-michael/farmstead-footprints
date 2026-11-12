@@ -2,7 +2,11 @@
 
 All notable changes to Footprints. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [0.1.0] — unreleased
+## [0.1.1] — 2026-11-12
+
+- Settings screen on Minecraft 26.x: the title, the setting names and the About tab are centred again (26.x draws text widgets left-aligned).
+
+## [0.1.0] — 2026-11-12
 
 First release.
 
