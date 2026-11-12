@@ -131,7 +131,10 @@ def write_github(pages, out):
         if slug == "":
             other = "[Русская версия](Home-ru)" if lang == "en" else "[English version](Home)"
             head = f"{other}\n\n" + head
-        (out / f"{github_name(lang, slug)}.md").write_text(head + re.sub(r'<p class="cta-row">.*?</p>\n*', "", text), encoding="utf-8")
+        text = re.sub(r'<p class="cta-row">.*?</p>\n*', "", text)
+        # README in-page anchors point at sections that are separate wiki pages here
+        text = text.replace("](#your-own-prints)", "](Your-own-prints)").replace("](#свои-следы)", "](Your-own-prints-ru)")
+        (out / f"{github_name(lang, slug)}.md").write_text(head + text, encoding="utf-8")
     side = ["**Footprints**", ""]
     for slug in order:
         side.append(f"- [{TITLES['en'][slug][1] or TITLES['en'][slug][0]}]({github_name('en', slug)})")
