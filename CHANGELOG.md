@@ -2,7 +2,7 @@
 
 All notable changes to Footprints. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [0.1.2] — unreleased
+## [0.1.2] — 2026-11-12
 
 - Update check: the log now always gets exactly one line about it: the latest version (and the catalogue that said so), a newer version with its download link, or that Modrinth and CurseForge could not be reached (with a short reason, no stack trace). Before, only a newer version was logged, so a check that failed or found nothing was invisible.
 - Update check falls back to CurseForge when Modrinth cannot answer (unreachable, project not public, no versions for the loader and Minecraft version). The About tab shows which catalogue answered.
