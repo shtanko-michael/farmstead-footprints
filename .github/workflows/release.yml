@@ -21,6 +21,14 @@ on:
         description: "Build and plan only: no GitHub Release, no uploads"
         type: boolean
         default: true
+      catalogues_only:
+        description: "Upload to Modrinth and CurseForge only (the GitHub Release already exists)"
+        type: boolean
+        default: false
+      targets:
+        description: "Only these targets, e.g. 1.21.1-fabric,26.1-neoforge (empty: all)"
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -39,6 +47,8 @@ jobs:
       - name: Plan (version, targets)
         id: plan
         shell: python3 {0}
+        env:
+          ONLY: ${{ inputs.targets }}
         run: |
           import json, os, sys, tomllib
           props = tomllib.load(open("stonecutter.properties.toml", "rb"))
@@ -65,14 +75,18 @@ jobs:
                       "mc": mc,
                       "loader": loader,
                       "loaders": "fabric quilt" if loader == "fabric" else loader,
-                      "games": " ".join(games),
+                      # one per line: mc-publish does not split game versions on spaces
+                      "games": "\n".join(games),
                       "java": java(mc),
                       "title": f"{names[loader]} {mc}",
                   })
           targets.sort(key=lambda t: (mc_key(t["mc"]), t["loader"]))
+          only = [x.strip() for x in os.environ.get("ONLY", "").split(",") if x.strip()]
+          if only:
+              targets = [t for t in targets if f"{t['mc']}-{t['loader']}" in only]
           print(f"{len(targets)} targets:")
           for t in targets:
-              print(f"  {t['title']:<20} games {t['games']}")
+              print(f"  {t['title']:<20} games {', '.join(t['games'].splitlines())}")
           with open(os.environ["GITHUB_OUTPUT"], "a") as out:
               out.write(f"version={version}\n")
               out.write(f"name={mod['name']}\n")
@@ -107,7 +121,7 @@ jobs:
           cp versions/*/build/libs/${{ steps.plan.outputs.file }}-*.jar dist/
           rm -f dist/*-sources.jar
           ls -la dist
-          test "$(ls dist | wc -l)" -eq "${{ steps.plan.outputs.count }}"
+          if [ -z "${{ inputs.targets }}" ]; then test "$(ls dist | wc -l)" -eq "${{ steps.plan.outputs.count }}"; fi
 
       - uses: actions/upload-artifact@v4
         with:
@@ -118,7 +132,7 @@ jobs:
 
   github:
     needs: build
-    if: github.event_name == 'push' || !inputs.dry_run
+    if: github.event_name == 'push' || (!inputs.dry_run && !inputs.catalogues_only)
     runs-on: ubuntu-latest
     permissions:
       contents: write
