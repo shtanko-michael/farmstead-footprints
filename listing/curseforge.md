@@ -12,10 +12,12 @@ And it is not only you. **47 mobs** leave their own tracks, and **modded mobs** 
 
 ## See it
 
-<p align="center"><img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/snow_hero.gif" alt="Your trail grows behind you" width="49%"> <img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/wolves.gif" alt="A wolf pack leaves a carpet of paw prints" width="49%"></p>
-<p align="center"><img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/crumble.gif" alt="Old prints crumble from the edges in" width="49%"> <img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/styles.gif" alt="The same prints, detailed and pixel style" width="49%"></p>
-<p align="center"><img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/wake.gif" alt="A boat leaves a foam wake" width="49%"> <img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/ripples.gif" alt="Rings spread where you wade" width="49%"></p>
-<p align="center"><img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/gait.gif" alt="Each animal with its own gait" width="49%"> <img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/tryit.gif" alt="Try it: prints stamped where you look" width="49%"></p>
+| | |
+| --- | --- |
+| <img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/snow_hero.gif" alt="Your trail stays behind you" width="100%"><br>**Your trail stays behind you** | <img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/wolves.gif" alt="Every mob leaves its own prints" width="100%"><br>**Every mob leaves its own prints** |
+| <img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/crumble.gif" alt="Old prints crumble from the edges in" width="100%"><br>**Old prints crumble from the edges in** | <img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/styles.gif" alt="Two looks: detailed and pixel" width="100%"><br>**Two looks: detailed and pixel** |
+| <img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/wake.gif" alt="Boats leave a foam wake" width="100%"><br>**Boats leave a foam wake** | <img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/ripples.gif" alt="Rings spread where you wade" width="100%"><br>**Rings spread where you wade** |
+| <img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/gait.gif" alt="Real gaits: hind foot in the front print" width="100%"><br>**Real gaits: hind foot in the front print** | <img src="https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/gifs/tryit.gif" alt="Settings with a live Try it" width="100%"><br>**Settings with a live "Try it"** |
 
 ## What makes it different
 
