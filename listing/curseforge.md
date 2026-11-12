@@ -1,4 +1,4 @@
-![Footprints — a polar bear walks into the sunset, leaving a trail of paw prints](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/banner.webp)
+![Footprints — a polar bear walks into the sunset, leaving a trail of paw prints](https://raw.githubusercontent.com/shtanko-michael/farmstead-footprints/main/docs/media/banner.gif)
 
 # Your steps stay behind you
 
