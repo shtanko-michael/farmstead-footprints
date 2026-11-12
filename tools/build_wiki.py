@@ -148,6 +148,40 @@ def write_github(pages, out):
 KEYWORDS = ["Footprints", "farmstead_footprints", "/footprints", "footprint", "следы"]
 
 
+def site_gallery(md):
+    """The README's picture table -> a responsive grid of figures (styled by .gallery in the site's CSS)."""
+    lines = md.splitlines()
+    out, i = [], 0
+    while i < len(lines):
+        if lines[i].startswith("| ![") or lines[i].startswith("| <img"):
+            figs = []
+            j = i
+            while j < len(lines) and lines[j].startswith("|"):
+                row = lines[j]
+                if "![" in row:
+                    imgs = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", row)
+                    caps = [c.strip() for c in lines[j + 1].strip().strip("|").split("|")] if j + 1 < len(lines) else []
+                    for k, (alt, src) in enumerate(imgs):
+                        cap = caps[k] if k < len(caps) else alt
+                        figs.append(f'<figure><img src="{src}" alt="{alt}" loading="lazy"><figcaption>{cap}</figcaption></figure>')
+                    j += 2
+                else:
+                    j += 1
+            # drop the empty header rows that came before
+            while out and out[-1].startswith("|"):
+                out.pop()
+            out.append('<div class="gallery">' + "".join(figs) + "</div>")
+            i = j
+            continue
+        out.append(lines[i])
+        i += 1
+    text = "\n".join(out)
+    text = re.sub(r"(?m)^(More pictures in|Больше картинок в) \[[^\]]*\]\([^)]*\)\.?$",
+                  lambda m: ("More pictures in the " if m.group(1).startswith("More") else "Больше картинок в ")
+                  + f"[{'gallery' if m.group(1).startswith('More') else 'галерее'}]({REPO}/tree/main/docs/media/gallery).", text)
+    return text
+
+
 def write_site(pages, content):
     content = Path(content)
     for lang, base in (("ru", content / "footprints"), ("en", content / "en" / "footprints")):
@@ -165,7 +199,10 @@ def write_site(pages, content):
             if slug == "settings":
                 entry["wide"] = True
             meta["pages"].append(entry)
-            (base / f"{slug or 'index'}.md").write_text(pages[(lang, slug)], encoding="utf-8")
+            text = pages[(lang, slug)]
+            if slug == "":
+                text = site_gallery(text)
+            (base / f"{slug or 'index'}.md").write_text(text, encoding="utf-8")
         if lang == "ru":
             (base / "_meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         else:
